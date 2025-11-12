@@ -1,0 +1,11 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+RewriteCond %{REQUEST_URI} ^/emailtemplate$
+RewriteCond %{QUERY_STRING} ^v=([^&]+)&w=([^&]+)$
+RewriteRule ^emailtemplate$ /usercontent/%2/images/mypage/%1/index.html? [L]
+
+RewriteRule ^ index.html [L]

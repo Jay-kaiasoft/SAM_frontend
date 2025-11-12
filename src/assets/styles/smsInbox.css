@@ -1,0 +1,104 @@
+.contactWrapper {
+    background-color: white;
+}
+
+.contactWrapper:hover {
+    background-color: #d3d3d3;
+    cursor: pointer;
+}
+
+.contactWrapperSelected {
+    background-color: var(--website-color);
+    cursor: pointer;
+}
+
+.border-right {
+    border-right: 1px solid #ddd;
+}
+
+.border-left {
+    border-left: 1px solid #ddd;
+}
+
+.border-top {
+    border-top: 1px solid #ddd;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #ddd;
+}
+
+.reply-count-div {
+    height: 25px;
+    width: 25px;
+    border-radius: 12.5px;
+    background-color: #f42525;
+    color: white;
+}
+
+.self-sms-container {
+    background-color: var(--website-color);
+    border-radius: 5px;
+    max-width: 75%;
+    white-space: pre-line !important;
+}
+
+.other-sms-container {
+    background-color: rgb(171, 193, 255);
+    border-radius: 5px;
+    max-width: 75%;
+    white-space: pre-line !important;
+}
+
+.sms-date-container{
+    background-color: rgb(212,247,168);
+    border-radius: 5px;
+}
+
+.notification-icon{
+    font-size: 10px;
+    position: absolute;
+    top: 0px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    background-color: #f42525;
+    color:#ffffff;
+}
+
+.attachments-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 16px 20px 16px 12px;
+    background-color: #F4F4F4;
+    border-radius: 6px;
+}
+
+.attachment-file {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.attachment-file-name {
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 12px;
+    margin-right: 12px;
+    color: #242424;
+}
+.reply-count-box {
+    height: 20px;
+    width: 20px;
+    border-radius: 12.5px;
+    background-color: #f42525;
+    color: white;
+    margin-left: 10px;
+    font-size: 10px;
+}

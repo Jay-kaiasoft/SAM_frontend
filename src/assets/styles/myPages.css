@@ -1,0 +1,14 @@
+.language-button {
+    margin-right: 15px;
+    padding: 10px 15px 10px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.language-button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

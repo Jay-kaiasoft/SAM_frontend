@@ -1,0 +1,382 @@
+.slideRight-enter {
+  transform: translateX(-100%);
+}
+.slideRight-enter-active {
+  transform: translateX(0%);
+  transition: all 1000ms;
+}
+.slideRight-exit {
+  transform: translateX(0%);
+}
+.slideRight-exit-active {
+  transform: translateX(200%);
+  transition: all 1000ms ease;
+}
+
+.slideLeft-enter {
+  transform: translateX(200%);
+}
+.slideLeft-enter-active {
+  transform: translateX(0%);
+  transition: all 1000ms;
+}
+.slideLeft-exit {
+  transform: translateX(0%);
+}
+.slideLeft-exit-active {
+  transform: translateX(-100%);
+  transition: all 1000ms ease;
+}
+
+.slideTop-enter {
+  transform: translateY(200%);
+}
+.slideTop-enter-active {
+  transform: translateY(0%);
+  transition: all 1000ms;
+}
+.slideTop-exit {
+  transform: translateY(0%);
+}
+.slideTop-exit-active {
+  transform: translateY(-100%);
+  transition: all 1000ms ease;
+}
+
+.slideBottom-enter {
+  transform: translateY(-100%);
+}
+.slideBottom-enter-active {
+  transform: translateY(0%);
+  transition: all 1000ms;
+}
+.slideBottom-exit {
+  transform: translateY(0%);
+}
+.slideBottom-exit-active {
+  transform: translateY(200%);
+  transition: all 1000ms;
+}
+
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: all 1000ms ease-in-out;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: all 1000ms ease-in-out;
+}
+
+.rollIn-enter {
+  opacity: 0;
+  transform: translateX(-100%) rotate(-120deg);
+}
+.rollIn-enter-active{
+  opacity: 1;
+  transform: translateX(0%) rotate(0deg);
+  transition: all 1000ms;
+}
+.rollIn-exit{
+  opacity: 1;
+  transform: translateX(0%) rotate(0deg);
+}
+.rollIn-exit-active{
+  opacity: 1;
+  transform: translateX(200%) rotate(120deg);
+  transition: all 1000ms;
+}
+
+.scaleHorizontal-enter{
+  transform: scaleX(0);
+}
+.scaleHorizontal-enter-active{
+  transform: scaleX(1);
+  transition: all 1000ms ease;
+}
+.scaleHorizontal-exit{
+  transform: scaleX(1);
+}
+.scaleHorizontal-exit-active{
+  transform: scaleX(0);
+  transition: all 1000ms ease;
+}
+
+.scaleVertical-enter{
+  transform: scaleY(0);
+}
+.scaleVertical-enter-active{
+  transform: scaleY(1);
+  transition: all 1000ms ease-in-out;
+}
+.scaleVertical-exit{
+  transform: scaleY(1);
+}
+.scaleVertical-exit-active{
+  transform: scaleY(0);
+  transition: all 1000ms ease-in-out;
+}
+
+.flipLeft-enter{
+  perspective: 500px;
+  transform-origin: right;
+  transform: translateZ(-500px) rotateY(-90deg) scale(0.75);
+}
+.flipLeft-enter-active{
+  perspective: 500px;
+  transform-origin: right;
+  transform: translateZ(0px) rotateY(0deg) scale(1);
+  transition: all 1000ms ease-in-out;
+}
+.flipLeft-exit{
+  perspective: 500px;
+  transform-origin: right;
+  transform: translateZ(0px) rotateY(0deg) scale(1);
+}
+.flipLeft-exit-active{
+  perspective: 500px;
+  transform-origin: right;
+  transform: translateZ(-500px) rotateY(-90deg) scale(0.75);
+  transition: all 1000ms ease-in-out;
+}
+
+.flipRight-enter{
+  perspective: 500px;
+  transform-origin: right;
+  transform: translateZ(-500px) rotateY(90deg) scale(0.75);
+}
+.flipRight-enter-active{
+  perspective: 500px;
+  transform-origin: right;
+  transform: translateZ(0px) rotateY(0deg) scale(1);
+  transition: all 1000ms ease-in-out;
+}
+.flipRight-exit{
+  perspective: 500px;
+  transform-origin: right;
+  transform: translateZ(0px) rotateY(0deg) scale(1);
+}
+.flipRight-exit-active{
+  perspective: 500px;
+  transform-origin: right;
+  transform: translateZ(-500px) rotateY(90deg) scale(0.75);
+  transition: all 1000ms ease-in-out;
+}
+
+.flipTop-enter{
+  perspective: 500px;
+  transform: translateZ(-500px) rotateX(90deg) scale(0.75);
+}
+.flipTop-enter-active{
+  perspective: 500px;
+  transform: translateZ(0px) rotateX(0deg) scale(1);
+  transition: all 1000ms ease-in-out;
+}
+.flipTop-exit{
+  perspective: 500px;
+  transform: translateZ(0px) rotateX(0deg) scale(1);
+}
+.flipTop-exit-active{
+  perspective: 500px;
+  transform: translateZ(-500px) rotateX(90deg) scale(0.75);
+  transition: all 1000ms ease-in-out;
+}
+
+.flipBottom-enter{
+  perspective: 500px;
+  transform: translateZ(-500px) rotateX(-90deg) scale(0.75);
+}
+.flipBottom-enter-active{
+  perspective: 500px;
+  transform: translateZ(0px) rotateX(0deg) scale(1);
+  transition: all 1000ms ease-in-out;
+}
+.flipBottom-exit{
+  perspective: 500px;
+  transform: translateZ(0px) rotateX(0deg) scale(1);
+}
+.flipBottom-exit-active{
+  perspective: 500px;
+  transform: translateZ(-500px) rotateX(-90deg) scale(0.75);
+  transition: all 1000ms ease-in-out;
+}
+
+.carouselLeft-enter{
+  transform-origin: 0% 50%;
+  transform: translateX(200%) scale(.4) rotateY(65deg);
+}
+.carouselLeft-enter-active{
+  transform-origin: 0% 50%;
+  transform: translateX(0%) scale(1) rotateY(0deg);
+  transition: all 1000ms ease-in-out;
+}
+.carouselLeft-exit{
+  transform-origin: 100% 50%;
+  transform: translateX(0%) scale(1) rotateY(0deg);
+}
+.carouselLeft-exit-active{
+  transform-origin: 100% 50%;
+  transform: translateX(-150%) scale(.4) rotateY(-65deg);
+  transition: all 1000ms ease-in-out;
+}
+
+.carouselRight-enter{
+  transform-origin: 100% 50%;
+  transform: translateX(-200%) scale(.4) rotateY(-65deg);
+}
+.carouselRight-enter-active{
+  transform-origin: 100% 50%;
+  transform: translateX(0%) scale(1) rotateY(0deg);
+  transition: all 1000ms ease-in-out;
+}
+.carouselRight-exit{
+  transform-origin: 0% 50%;
+  transform: translateX(0%) scale(1) rotateY(0deg);
+}
+.carouselRight-exit-active{
+  transform-origin: 0% 50%;
+  transform: translateX(200%) scale(.4) rotateY(65deg);
+  transition: all 1000ms ease-in-out;
+}
+
+.carouselTop-enter{
+  transform-origin: 50% 0%;
+  transform: translateY(200%) scale(.4) rotateX(-65deg);
+}
+.carouselTop-enter-active{
+  transform-origin: 50% 0%;
+  transform: translateY(0%) scale(1) rotateX(0deg);
+  transition: all 1000ms ease-in-out;
+}
+.carouselTop-exit{
+  transform-origin: 50% 100%;
+  transform: translateY(0%) scale(1) rotateX(0deg);
+}
+.carouselTop-exit-active{
+  transform-origin: 50% 100%;
+  transform: translateY(-200%) scale(.4) rotateX(65deg);
+  transition: all 1000ms ease-in-out;
+}
+
+.carouselBottom-enter{
+  transform-origin: 50% 100%;
+  transform: translateY(-200%) scale(.4) rotateX(65deg);
+}
+.carouselBottom-enter-active{
+  transform-origin: 50% 100%;
+  transform: translateY(0%) scale(1) rotateX(0deg);
+  transition: all 1000ms ease-in-out;
+}
+.carouselBottom-exit{
+  transform-origin: 50% 0%;
+  transform: translateY(0%) scale(1) rotateX(0deg);
+}
+.carouselBottom-exit-active{
+  transform-origin: 50% 0%;
+  transform: translateY(200%) scale(.4) rotateX(-65deg);
+  transition: all 1000ms ease-in-out;
+}
+
+.newsPaper-enter{
+  transform-origin: 50% 50%;
+  background-color: black;
+  transform: translateZ(-3000px) rotateZ(-360deg); opacity: 0;
+}
+.newsPaper-enter-active{
+  transform-origin: 50% 50%;
+  background-color: white;
+  transform: translateZ(0px) rotateZ(0deg); opacity: 1;
+  transition: all 1000ms ease-in-out;
+}
+.newsPaper-exit{
+  transform-origin: 50% 50%;
+  background-color: white;
+  transform: translateZ(0px) rotateZ(0deg); opacity: 1;
+}
+.newsPaper-exit-active{
+  transform-origin: 50% 50%;
+  background-color: black;
+  transform: translateZ(-3000px) rotateZ(360deg); opacity: 0;
+  transition: all 1000ms ease-in-out;
+}
+
+.glueLeft-enter{
+  transform-origin: left;
+  transform: rotateY(90deg); 
+}
+.glueLeft-enter-active{
+  transform-origin: left;
+  transform: rotateY(0deg);
+  transition: all 1000ms ease-in-out;
+}
+.glueLeft-exit{
+  transform-origin: left;
+  transform: rotateY(0deg);
+}
+.glueLeft-exit-active{
+  transform-origin: left;
+  transform: rotateY(90deg);  
+  transition: all 1000ms ease-in-out;
+}
+
+.glueRight-enter{
+  transform-origin: right;
+  transform: rotateY(90deg); 
+}
+.glueRight-enter-active{
+  transform-origin: right;
+  transform: rotateY(0deg);
+  transition: all 1000ms ease-in-out;
+}
+.glueRight-exit{
+  transform-origin: right;
+  transform: rotateY(0deg);
+}
+.glueRight-exit-active{
+  transform-origin: right;
+  transform: rotateY(90deg);  
+  transition: all 1000ms ease-in-out;
+}
+
+.glueTop-enter{
+  transform-origin: top;
+  transform: rotateX(90deg); 
+}
+.glueTop-enter-active{
+  transform-origin: top;
+  transform: rotateX(0deg);
+  transition: all 1000ms ease-in-out;
+}
+.glueTop-exit{
+  transform-origin: top;
+  transform: rotateX(0deg);
+}
+.glueTop-exit-active{
+  transform-origin: top;
+  transform: rotateX(90deg);  
+  transition: all 1000ms ease-in-out;
+}
+
+.glueBottom-enter{
+  transform-origin: bottom;
+  transform: rotateX(90deg); 
+}
+.glueBottom-enter-active{
+  transform-origin: bottom;
+  transform: rotateX(0deg);
+  transition: all 1000ms ease-in-out;
+}
+.glueBottom-exit{
+  transform-origin: bottom;
+  transform: rotateX(0deg);
+}
+.glueBottom-exit-active{
+  transform-origin: bottom;
+  transform: rotateX(90deg);  
+  transition: all 1000ms ease-in-out;
+}

@@ -1,0 +1,118 @@
+{
+  "name": "sam_webapp",
+  "version": "0.1.0",
+  "homepage": "https://webapp.salesandmarketing.ai",
+  "private": true,
+  "dependencies": {
+    "@authid/react-component": "^1.4.0",
+    "@craco/craco": "^7.1.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@fortawesome/fontawesome-pro": "^5.15.3",
+    "@mui/icons-material": "^5.17.1",
+    "@mui/lab": "^5.0.0-alpha.176",
+    "@mui/material": "^5.17.1",
+    "@mui/styled-engine": "^5.16.14",
+    "@mui/x-date-pickers": "^7.28.2",
+    "@telnyx/webrtc": "^2.22.7",
+    "@uiw/react-signature": "^1.3.3",
+    "axios": "^1.8.4",
+    "bootstrap": "^4.6.0",
+    "chart.js": "^4.4.8",
+    "color-thief-browser": "^2.0.2",
+    "credit-card-type": "^10.0.2",
+    "d3-ease": "^3.0.1",
+    "datatables": "^1.10.18",
+    "date-fns": "^4.0.0",
+    "draft-js": "^0.11.7",
+    "draftjs-to-html": "^0.9.1",
+    "emoji-js": "^3.8.1",
+    "emoji-picker-react": "^4.12.2",
+    "env-cmd": "^10.1.0",
+    "export-to-csv": "^1.4.0",
+    "google-libphonenumber": "^3.2.40",
+    "html-to-draftjs": "^1.5.0",
+    "html-to-pdf-js": "^0.9.3",
+    "html2canvas": "^1.4.1",
+    "image-conversion": "^2.1.1",
+    "jquery": "^3.7.1",
+    "jquery-slimscroll": "^1.3.8",
+    "jquery-ui": "^1.14.1",
+    "jquery-ui-touch-punch": "^0.2.3",
+    "localforage": "^1.10.0",
+    "lottie-react": "^2.4.1",
+    "openai": "^4.89.0",
+    "pdfmake": "^0.2.18",
+    "ramda": "^0.30.1",
+    "react": "^18.2.0",
+    "react-big-calendar": "^0.40.1",
+    "react-circular-progressbar": "^2.1.0",
+    "react-credit-cards-2": "^1.0.2",
+    "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
+    "react-draggable": "^4.4.6",
+    "react-dropzone": "^14.3.8",
+    "react-google-recaptcha-v3": "^1.10.1",
+    "react-hook-form": "^7.54.2",
+    "react-move": "^6.5.0",
+    "react-number-format": "^5.4.3",
+    "react-otp-input": "^3.1.1",
+    "react-player": "^2.16.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^5.3.4",
+    "react-scripts": "^5.0.1",
+    "react-sortablejs": "^6.1.4",
+    "react-svg-worldmap": "^2.0.0-alpha.16",
+    "react-use-cookie": "^1.6.1",
+    "reactflow": "^11.11.4",
+    "reactstrap": "^8.9.0",
+    "redux": "^5.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-saga": "^1.3.0",
+    "sam_webapp": "file:",
+    "spectrum-colorpicker": "^1.8.1",
+    "titleize": "^4.0.0",
+    "ua-parser-js": "^2.0.3",
+    "uuid": "^11.1.0",
+    "video-metadata-thumbnails": "^1.0.22",
+    "webrtc-adapter": "^9.0.1"
+  },
+  "scripts": {
+    "start": "env-cmd -f .env.local craco start",
+    "build:local": "env-cmd -f .env.local craco build",
+    "build:dev": "env-cmd -f .env.dev craco build",
+    "build:qa": "env-cmd -f .env.qa craco build",
+    "build:prod": "env-cmd -f .env.prod craco build",
+    "test": "craco test",
+    "eject": "craco eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "rules": {
+      "react-hooks/exhaustive-deps": "off"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "overrides": {
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.41",
+    "jspdf": "^3.0.1"
+  },
+  "resolutions": {
+    "@mui/x-date-pickers/AdapterDateFns": "npm:@mui/x-date-pickers/AdapterDateFnsV3"
+  }
+}

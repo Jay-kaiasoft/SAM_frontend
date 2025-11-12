@@ -1,0 +1,44 @@
+.conversation-main {
+    height: calc(-400px + 100vh);
+    overflow: auto;
+}
+
+.conversation-wrapper {
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.bottom-container {
+    padding: 16px;
+    border-top: 1px solid #eee;
+}
+
+.file-container {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.file-main {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+}
+
+.file-text {
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.bottom-button-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    gap: 12px;
+}

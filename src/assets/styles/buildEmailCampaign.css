@@ -1,0 +1,314 @@
+.spam-check-indicator {
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.lds-ripple {
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+}
+
+.lds-ripple div {
+    position: absolute;
+    border: 1px solid #000;
+    opacity: 1;
+    border-radius: 50%;
+    animation: lds-ripple 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.lds-ripple div:nth-child(2) {
+    animation-delay: -1s;
+}
+
+@keyframes lds-ripple {
+    0% {
+        top: 10px;
+        left: 10px;
+        width: 0;
+        height: 0;
+        opacity: 1;
+    }
+
+    100% {
+        top: 0px;
+        left: 0px;
+        width: 20px;
+        height: 20px;
+        opacity: 0;
+    }
+}
+
+.spam-check-indicator.red {
+    background: #ef3c24;
+    color: #ef3c24;
+    border-radius: 50%;
+}
+
+.spam-check-indicator.green {
+    background: #2dd40c;
+    color: #2dd40c;
+    border-radius: 50%;
+}
+
+.error-circle {
+    font-size: 16px;
+    color: #ff0000;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-top: 2px;
+}
+
+.card {
+    position: relative;
+    overflow: hidden;
+    height: 300px;
+    width: 100%;
+    border: 1px solid #d5d5d6;
+    cursor: pointer;
+}
+
+.modal-card {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+}
+
+.card.active-tmpt {
+    border: 1px solid #016ca2 !important;
+    box-shadow: none !important;
+}
+
+.card:hover {
+    box-shadow: 8px 12px 31px -10px #ab98ab;
+    border: 1px solid #e5ad2a;
+}
+
+.card-img-wrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    height: 270px;
+    overflow: hidden;
+}
+
+.card-img-top {
+    width: 100%;
+}
+
+.card-body {
+    display: flex;
+    height: 30px;
+    background-color: #fbfbfb;
+    transition: 1.5s ease;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+}
+
+.card-title {
+    transition: 1.5s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+.card-container {
+    display: flex;
+    flex-direction: column;
+    float: none;
+    margin-bottom: 30px;
+}
+
+.pages-container{
+    display: flex;
+    margin-right: -15px;
+    margin-left: -15px;
+    overflow-x: auto;
+}
+
+.spanAB {
+    background-color: #eee;
+    border: 1px solid #e1e1e1;
+    font-size: 16px;
+    padding: 7px 10px;
+    margin-right: 10px;
+    height: 40px;
+    width: 40px;
+    text-align: center;
+}
+
+@media (min-width: 1080px) {
+    .spam-container {
+        display: flex;
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 1080px) {
+    .margin-top {
+        margin-top: 3rem;
+    }
+}
+
+.spam-container-inner {
+    width: 100%;
+    border: 2px solid #cccccc;
+    padding: 10px;
+}
+
+.inner-heading {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.row-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.thead-style {
+    background-color: #424242;
+    color: #ffffff;
+}
+
+.dettdright {
+    text-align: left;
+}
+.esMain .input-container{
+    display: flex;
+    align-items: center;
+}
+.esMain .input-box{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-flex-wrap: wrap;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    font-size: 16px;
+    height: auto;
+    width: 100%;
+}
+.esMain .input-wrapper{
+    position: relative;
+}
+.imgdiv {
+    height: 165px;
+    overflow: hidden;
+}
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+.slider {
+    border: 1px solid #e1e1e1 !important;
+
+}
+#mainselectsplitgroup {
+    background-color: #c4cdd3;
+    width: 100%;
+}
+.splitter_panel {
+    position: relative;
+}
+#selectper {
+    display: flex;
+    height: 100%;
+}
+.splitter_panel .right_panel {
+    left: 0;
+    top: 0;
+    height: 100%;
+    position: absolute;
+    overflow: auto
+}
+.splitter_panel .right_panel {
+    right: 0;
+    height: 100%;
+    position: absolute;
+    overflow: auto
+}
+.splitter_panel .vsplitter {
+    top: 0;
+    height: 100%;
+    position: absolute;
+    overflow: auto;
+    cursor: col-resize;
+    z-index: 900;
+    width: 11px !important;
+    background: url(vsizegrip.png) center center no-repeat #535353;
+}
+#selectper .a {
+    background-color: #4285f4;
+    display: inline-flex;
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-size: 47px;
+    color: #ffffff;
+    overflow: hidden;
+}
+#selectper .b {
+    background-color: #fbae17;
+    display: inline-flex;
+    width: 50%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-size: 47px;
+    color: #ffffff;
+    overflow: hidden;
+}
+#totO {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: #ffffff;
+}
+#displayper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+#selectsplitgroup #slider{
+    height: 70px;
+    position: absolute;
+    width: 100%;
+    top: 0;
+}
+#selectsplitgroup .ui-widget-content, #selectsplitgroup .ui-state-default{
+    background-color: unset !important;
+    border: unset !important;
+}
+.box-round {
+    display: inline-block;
+    background-color: var(--website-color);
+    color: #fff;
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    padding: 10px 0;
+    text-align: center;
+}
+
+.gray-background{
+    background-color: #eee;
+}

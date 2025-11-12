@@ -1,0 +1,177 @@
+.formReportTableWrapper{
+    overflow: auto;
+    height: calc(100vh - 300px);
+}
+.formReportTableWrapper table thead tr th,.formReportTableWrapper table thead tr td{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+.formReportTableWrapper table thead tr th input[type="checkbox"],.formReportTableWrapper table tbody tr td input[type="checkbox"]{
+    position: unset !important;
+    margin: 0 !important;
+}
+.formReportItem{
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    margin-right: 10px;
+    border-radius: 8px;
+    border: 1px solid #d0d0d0;
+}
+.formReportItem div{
+    background-image: url("/src/images/blocks_sprite_2.png");
+    background-size: cover;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background-repeat: no-repeat;
+}
+.formReportItem.openEndedIcon div{
+    background-position:0 center;
+}
+.formReportItem.singleAnswerCIcon div{
+    background-position:-32px center;
+}
+.formReportItem.singleAnswerIcon div{
+    background-position:-64px center;
+}
+.formReportItem.singleAnswerBIcon div{
+    background-position:-96px center;
+}
+.formReportItem.singleAnswerComboIcon div{
+    background-position:-128px center;
+}
+.formReportItem.matrixIcon div{
+    background-position:-160px center;
+}
+.formReportItem.imageFIcon div{
+    background-position:-192px center;
+}
+.formReportItem.imageWithTextFIcon div{
+    background-position:-224px center;
+}
+.formReportItem.ratingBox div{
+    background-position: -256px center;
+}
+.formReportItem.ratingSymbol div{
+    background-position: -288px center;
+}
+.formReportItem.ratingRadio div{
+    background-position: -320px center;
+}
+.formReportItem.yesNo div{
+    background-position: -352px center;
+}
+.formReportItem.rank div{
+    background-position: -384px center;
+}
+.formReportItem.dateControlIcon div{
+    background-position:-416px center;
+}
+.formReportItem.timeControlIcon div{
+    background-position:-448px center;
+}
+.formReportItem.consentAgreement div{
+    background-position: -480px center;
+}
+.formReportItem.emailIcon div{
+    background-position:-512px center;
+}
+.formReportItem.phoneIcon div{
+    background-position:-544px center;
+}
+.formReportItem.constantSum div{
+    background-position: -576px center;
+}
+.formReportItem.contactFormIcon div{
+    background-position:-608px center;
+}
+.formReportItem.matrixWithCommentIcon div{
+    background-position:-736px center;
+}
+.columnResizer {
+    width: 6px;
+    min-width: 6px;
+    max-width: 6px;
+    padding: 0 !important;
+    border: none !important;
+    cursor: col-resize !important;
+}
+.columnResizer:before,.columnResizer:after{
+    content: '';
+    width: 6px;
+    position: absolute;
+}
+.columnResizer:before{
+    height: 70%;
+    top:8px;
+    border-left: 1px solid #cdcdcd;
+    border-right: 1px solid #cdcdcd;
+}
+.columnResizer:after{
+    height: 100%;
+    top: 0;
+    border-top: 1px solid #cdcdcd;
+    border-bottom: 1px solid #cdcdcd;
+}
+.columnResizer:hover{
+    cursor: col-resize !important;
+}
+.table-form-report{
+    table-layout: fixed;
+}
+.table-form-report-th{
+    width: 200px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.table-form-report-td{
+    white-space: unset !important;
+    width: 200px;
+    word-wrap: anywhere;
+}
+.table-form-report th{
+    background-color: #FFFFFF !important;
+    color: #212529 !important;
+    vertical-align: middle !important;
+    border:none !important;
+}
+.table-form-report th:after,
+.table-form-report th:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+.table-form-report th:before {
+    top: 0;
+    border-top: 1px solid #cdcdcd;
+}
+.table-form-report th:after {
+    bottom: 0;
+    border-bottom: 1px solid #cdcdcd;
+}
+.table-form-report tbody td{
+    background-color: #fafafa !important;
+    color: #212529 !important;
+    border-top: 0 solid #cdcdcd !important;
+    border-bottom: 1px solid #cdcdcd;
+    vertical-align: middle !important;
+}
+.question-div{
+    min-width: 150px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-right: 5px;
+}
+.answer-bg{
+    background-color: #FFFFFF;
+    padding: 3px 5px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    display: block;
+    width: fit-content;
+    margin-bottom: 5px;
+}

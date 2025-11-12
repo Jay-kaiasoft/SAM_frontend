@@ -1,0 +1,89 @@
+/* popup_box DIV-Styles*/
+#popup_box_main{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.1);
+    opacity: 0;
+    animation: fadeOut 1s ease-out;
+    z-index: 999999;
+}
+#popup_box_main.active{
+    opacity: 1;
+    animation: fadeIn 1s ease-in;
+}
+#popup_box {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #DFDFDF;
+    border-radius: 3px 3px 3px 3px;
+    box-shadow: 0 0 6px #DFDFDF;
+    font-size: 13px;
+    position: relative;
+    width: max-content;
+    vertical-align: baseline;
+    outline: 0;
+}
+
+#popupBoxButton { bottom: 50px; position: absolute; width: 100%; text-align:center; }
+#popupBoxfooter { bottom: 0; color: #999999; left: 0; width: 100%; text-align:center; margin-bottom:15px}
+#popupBoxfooter a{ color: #999999; border:none; text-decoration:none;}
+.buttons { -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-right-colors: none; -moz-border-top-colors: none; background: -moz-linear-gradient(center top , #FEFEFE, #DDDDDD) repeat scroll 0 0 #DDDDDD;
+ border-color: #BBBBBB #BBBBBB #999999; border-image: none; border-radius: 3px; border-style: solid; border-width: 1px; color: #333333; cursor: pointer;
+ display: block; height: auto; line-height: 13px; margin: 0; min-width: 60px; outline-style: none; padding: 8px 8px 10px; text-align: center; text-decoration: none; text-shadow: 0 1px 1px #FFFFFF; }
+.lbtn { width:50px; float:right; }
+.rbtn { width:50px; }
+.popupBoxLBtn{ float:left; width:48%; }
+.popupBoxRBtn{ margin-left:50%; }
+
+#popupBoxContent { width:500px; height:350px; text-align:center;}
+#popupBoxContent h1 { padding:20px 10px 10px 10px; }
+#popupBoxContent h5 { padding:0px 20px; font-size:13px; text-align:justify; color:#333333; line-height:21px}
+#popupBoxContent h3 { padding:0px 20px; font-size:17px; text-align:justify; color:#000000; font-weight:bold;}
+#closeButton{
+    background-image: url("img/close.png");
+    width: 16px;
+    height: 16px;
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    cursor: pointer;
+}
+@-webkit-keyframes fadeIn {
+    0% { opacity: 0; }
+    20% { opacity: 0; }
+    40% { opacity: 0.3; }
+    60% { opacity: 0.5; }
+    80% { opacity: 0.9; }
+    100% { opacity: 1; }
+}
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    20% { opacity: 0; }
+    40% { opacity: 0.3; }
+    60% { opacity: 0.5; }
+    80% { opacity: 0.9; }
+    100% { opacity: 1; }
+}
+@-webkit-keyframes fadeOut {
+    0% { opacity: 1; }
+    20% { opacity: 0.9; }
+    40% { opacity: 0.5; }
+    60% { opacity: 0.3; }
+    80% { opacity: 0; }
+    100% { opacity: 0; }
+}
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    20% { opacity: 0.9; }
+    40% { opacity: 0.5; }
+    60% { opacity: 0.3; }
+    80% { opacity: 0; }
+    100% { opacity: 0; }
+}

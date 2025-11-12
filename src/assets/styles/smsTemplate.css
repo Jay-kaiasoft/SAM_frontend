@@ -1,0 +1,99 @@
+.sms-main-box,.sms-main-box2 {
+    background: url("/src/images/smartphone.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 320px;
+    width: 180px;
+    position: relative;
+    margin: 20px;
+    overflow: hidden;
+    display: inline-flex;
+}
+.sms-main-box2 {
+    height: 322px;
+    width: 184px;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+.sms-main-box2.active-tmpt {
+    border: 2px solid #016ca2 !important;
+    box-shadow: 8px 12px 31px -10px #ab98ab !important;
+    border-radius: 17px;
+}
+
+.sms-main-box2:hover {
+    box-shadow: 8px 12px 31px -10px #ab98ab;
+    border: 2px solid #e5ad2a;
+    border-radius: 17px;
+}
+
+.sms-text {
+    font-size: 10px;
+    background-color: #E7EBF3;
+    border-radius: 5px;
+    width: 145px;
+    height: max-content;
+    max-height: 160px;
+    padding: 5px;
+    margin: 70px 0px 0px 10px;
+    overflow: hidden;
+    white-space: break-spaces;
+    word-wrap: anywhere;
+}
+
+.sms-bg {
+    text-align: left;
+    height: 271px;
+    width: 167px;
+    overflow: hidden;
+    margin-left: 7px;
+    margin-top: 23px;
+    background-repeat: no-repeat;
+    background-position: center 28px;
+    background: url("/src/images/sms-bg.png");
+}
+
+.card-sms-body,.card-sms-body2 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25px;
+    transition: 1.5s ease;
+    color: #ffffff;
+    background-color: #000000;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+
+.card-title {
+    transition: 1.5s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-content {
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    transition: 1.5s ease;
+    text-align: center;
+}
+
+.sms-main-box:hover .card-sms-body{
+    height: 60px;
+}
+
+.card-sms-body i{
+    margin: 0 5px;
+    cursor: pointer;
+}

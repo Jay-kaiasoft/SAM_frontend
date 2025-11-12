@@ -1,0 +1,97 @@
+.full-name{
+    margin-top: 20px;
+}
+.appointment-card-header{
+    max-width: 320px;
+    margin: 0 auto 20px;
+    text-align: center;
+}
+.appointment-card-detail{
+    font-size: 12px;
+}
+.event-card{
+    margin: 10px 25px;
+    padding: 5px 10px;
+    border: 3px solid #eaeaf0;
+    width: 100%;
+}
+.event-card:hover{
+    border: 3px solid #fbbc12;
+    cursor: pointer;
+}
+.active-appointment{
+    border: 3px solid #4285f4 !important;
+}
+.event-card-header{
+    font-size: 18px;
+    font-weight: bold;
+}
+.item-enter {
+    opacity: 0;
+}
+.item-enter-active {
+    opacity: 1;
+    transition: opacity 1000ms ease-in;
+}
+.item-exit {
+    opacity: 1;
+}
+.item-exit-active {
+    opacity: 0;
+    transition: opacity 1000ms ease-in;
+}
+.MuiAutocomplete-hasClearIcon .MuiAutocomplete-inputRoot{
+    display: flex;
+    align-items: flex-start;
+}
+.slots{
+    border: 3px solid rgba(20, 20, 20,0.3);
+    color: black;
+    border-radius: 0px;
+    width: 100px;
+    padding: 5px 10px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 700;
+}
+.slots:hover{
+    border: 3px solid #fbbc12;
+}
+.slots-active{
+    border: 3px solid #4285f4 !important;
+}
+.confirm-slots{
+    background-color: var(--website-color);
+    color: white;
+    border-radius: 5px;
+    width: 80px;
+    padding: 5px 10px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 700;
+    margin-left: 10px;
+}
+.contact-box{
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-size: 0.8125rem;
+    height: 32px;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    white-space: nowrap;
+    padding: 0 8px 0 12px;
+    margin-right: 6px;
+}
+.contact-box i.fa-times-circle{
+    color: rgba(0, 0, 0, 0.26);
+    font-size: 18px;
+}

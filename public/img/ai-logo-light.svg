@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" xmlns="http://www.w3.org/2000/svg" width="32" height="36.59" viewBox="0 0 32 36.59">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+        stroke-width: .23px;
+      }
+    </style>
+  </defs>
+  <g id="Layer_3">
+    <g>
+      <g>
+        <line class="cls-2" x1="8.57" y1="5.43" x2="16" y2="1.14"/>
+        <line class="cls-2" x1="8.57" y1="14.01" x2="16" y2="9.72"/>
+        <line class="cls-2" x1="1.14" y1="9.72" x2="8.57" y2="5.43"/>
+        <line class="cls-2" x1="1.14" y1="9.72" x2="8.57" y2="14.01"/>
+        <line class="cls-2" x1="8.57" y1="5.43" x2="16" y2="9.72"/>
+        <line class="cls-2" x1="16" y1="1.14" x2="16" y2="9.72"/>
+        <line class="cls-2" x1="8.57" y1="5.43" x2="8.57" y2="13.88"/>
+        <line class="cls-2" x1="1.15" y1="18.3" x2="1.15" y2="9.72"/>
+        <line class="cls-2" x1="8.57" y1="22.58" x2="8.57" y2="14.01"/>
+        <line class="cls-2" x1="1.14" y1="26.87" x2="1.15" y2="18.3"/>
+        <line class="cls-2" x1="1.14" y1="26.87" x2="8.57" y2="22.58"/>
+        <line class="cls-2" x1="1.15" y1="18.3" x2="8.57" y2="14.01"/>
+        <line class="cls-2" x1="1.15" y1="18.3" x2="8.46" y2="22.52"/>
+        <line class="cls-2" x1="8.57" y1="31.16" x2="1.15" y2="26.87"/>
+        <line class="cls-2" x1="16" y1="26.87" x2="8.57" y2="22.58"/>
+        <line class="cls-2" x1="16" y1="35.45" x2="8.57" y2="31.16"/>
+        <line class="cls-2" x1="16" y1="35.45" x2="16" y2="26.87"/>
+        <line class="cls-2" x1="8.57" y1="31.16" x2="8.57" y2="22.58"/>
+        <line class="cls-2" x1="8.57" y1="31.16" x2="15.89" y2="26.94"/>
+        <line class="cls-2" x1="23.43" y1="31.16" x2="16" y2="35.45"/>
+        <line class="cls-2" x1="23.43" y1="22.58" x2="16" y2="26.87"/>
+        <line class="cls-2" x1="30.86" y1="26.87" x2="23.43" y2="31.16"/>
+        <line class="cls-2" x1="30.86" y1="26.87" x2="23.43" y2="22.58"/>
+        <line class="cls-2" x1="23.43" y1="31.16" x2="16" y2="26.87"/>
+        <line class="cls-2" x1="23.43" y1="31.16" x2="23.43" y2="22.72"/>
+        <line class="cls-2" x1="30.85" y1="18.3" x2="30.85" y2="26.87"/>
+        <line class="cls-2" x1="23.43" y1="14.01" x2="23.43" y2="22.58"/>
+        <line class="cls-2" x1="30.86" y1="9.72" x2="30.85" y2="18.3"/>
+        <line class="cls-2" x1="30.86" y1="9.72" x2="23.43" y2="14.01"/>
+        <line class="cls-2" x1="30.85" y1="18.3" x2="23.43" y2="22.58"/>
+        <line class="cls-2" x1="30.85" y1="18.3" x2="23.54" y2="14.07"/>
+        <line class="cls-2" x1="23.43" y1="5.43" x2="30.85" y2="9.72"/>
+        <line class="cls-2" x1="16" y1="9.72" x2="23.43" y2="14.01"/>
+        <line class="cls-2" x1="16" y1="1.14" x2="23.43" y2="5.43"/>
+        <line class="cls-2" x1="23.43" y1="5.43" x2="23.43" y2="14.01"/>
+        <line id="L1-1" class="cls-2" x1="16" y1="9.63" x2="16" y2="18.21"/>
+        <line id="L1-2" class="cls-2" x1="16" y1="18.3" x2="23.43" y2="14.01"/>
+        <line id="L1-3" class="cls-2" x1="16" y1="18.3" x2="16" y2="26.87"/>
+        <line id="L1-4" class="cls-2" x1="16" y1="18.3" x2="23.43" y2="22.58"/>
+        <line id="L1-5" class="cls-2" x1="16" y1="18.3" x2="8.57" y2="22.58"/>
+        <line id="L1-6" class="cls-2" x1="16" y1="18.3" x2="8.57" y2="14.01"/>
+        <line class="cls-2" x1="23.43" y1="5.43" x2="16.11" y2="9.65"/>
+      </g>
+      <g>
+        <circle id="_x31_-1" class="cls-1" cx="16" cy="18.3" r="2.29"/>
+        <circle id="_x32_-1" class="cls-1" cx="16" cy="9.72" r="1.72"/>
+        <circle id="_x32_-2" class="cls-1" cx="23.43" cy="14.01" r="1.72"/>
+        <circle id="_x32_-3" class="cls-1" cx="23.43" cy="22.58" r="1.72"/>
+        <circle id="_x32_-4" class="cls-1" cx="16" cy="26.87" r="1.72"/>
+        <circle id="_x32_-5" class="cls-1" cx="8.84" cy="22.58" r="1.72"/>
+        <circle id="_x32_-6" class="cls-1" cx="8.57" cy="14.01" r="1.72"/>
+        <circle id="_x33_-1" class="cls-1" cx="16" cy="1.14" r="1.14"/>
+        <circle id="_x33_-2" class="cls-1" cx="23.43" cy="5.43" r="1.14"/>
+        <circle id="_x33_-3" class="cls-1" cx="30.86" cy="9.72" r="1.14"/>
+        <circle id="_x33_-4" class="cls-1" cx="30.86" cy="18.3" r="1.14"/>
+        <circle id="_x33_-5" class="cls-1" cx="30.86" cy="26.87" r="1.14"/>
+        <circle id="_x33_-6" class="cls-1" cx="23.43" cy="31.16" r="1.14"/>
+        <circle id="_x33_-7" class="cls-1" cx="16" cy="35.45" r="1.14"/>
+        <circle id="_x33_-8" class="cls-1" cx="8.57" cy="31.16" r="1.14"/>
+        <circle id="_x33_-9" class="cls-1" cx="1.14" cy="26.87" r="1.14"/>
+        <circle id="_x33_-10" class="cls-1" cx="1.14" cy="18.3" r="1.14"/>
+        <circle id="_x33_-11" class="cls-1" cx="1.14" cy="9.72" r="1.14"/>
+        <circle id="_x33_-12" class="cls-1" cx="8.57" cy="5.43" r="1.14"/>
+      </g>
+    </g>
+  </g>
+</svg>

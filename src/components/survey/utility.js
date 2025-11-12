@@ -1,0 +1,1283 @@
+import $ from "jquery";
+import {siteURL} from "../../config/api";
+
+export function generateJSON(){
+    const getWidth = ()=> ( `calc(100% - ${parseInt($('#preview-template')?.find('#stgHid')?.css("margin-left")?.split("px")[0]) + parseInt($('#preview-template')?.find('#stgHid')?.css("margin-right")?.split("px")[0])}px)`)
+    let pageSettings = {
+        backgroundColor:$('#preview-template').find('#cntr').css("background-color"),
+        backgroundImage:$('#preview-template').find('#cntr').css("background-image"),
+        backgroundSize:$('#preview-template').find('#cntr').css("background-size"),
+        backgroundPosition:$('#preview-template').find('#cntr').css("background-position"),
+        backgroundBlendMode:$('#preview-template').find('#cntr').css("background-blend-mode"),
+        backgroundRepeat:$('#preview-template').find('#cntr').css("background-repeat"),
+        borderWidth:$('#preview-template').find('#cntr').css("border-width"),
+        borderColor:$('#preview-template').find('#cntr').css("border-color"),
+        borderStyle:$('#preview-template').find('#cntr').css("border-style"),
+        padding:$('#preview-template').find('#stgHid').css("padding"),
+        margin:$('#preview-template').find('#stgHid').css("margin"),
+        fontFamily:$('#preview-template').find('#cntr').css("font-family"),
+        fontSize:$('#preview-template').find('#stgHid').css("font-size"),
+        lineHeight:$('#preview-template').find('#stgHid').css("line-height"),
+        fontWeight:$('#preview-template').find('#stgHid').css("font-weight"),
+        fontStyle:$('#preview-template').find('#stgHid').css("font-style"),
+        textDecoration:$('#preview-template').find('#stgHid').css("text-decoration"),
+        color:$('#preview-template').find('#stgHid').css("color"),
+        width: getWidth(),
+    };
+    let surveysPages = [];
+    let pageTemp = [];
+    $('.pagethumb').each(function(){
+        if($(this).find("span").html().charAt(0) !== "C"){
+            pageTemp = [
+                ...pageTemp, 
+                {spgType: "Question Page", spgNumber: parseInt($(this).find("span").html()), spgId:0}
+            ];
+        }
+        else{
+            pageTemp = [
+                ...pageTemp, 
+                {spgType: "Landing Page", spgNumber: parseInt($(this).find("span").html().replaceAll("C","")), spgId:0}
+            ];
+        }
+    });
+    let queNumber = 1;
+    pageTemp.forEach(function(e){
+        let pageTrans = $('#preview-template').contents().find("#templateBody"+e.spgNumber).attr("item-transition");
+        let questionStyle = $('#preview-template').contents().find("#templateBody"+e.spgNumber).attr("question-style");
+        if(e.spgType === "Question Page") {
+            let questionsList = [];
+            let questionDisplayOrder = 0;
+            let radioTypes = ["gender", "marital_status", "education", "employment_status", "employer_type", "housing", "household_income", "race"];
+            let label = "";
+            $('#preview-template').contents().find("#templateBody" + e.spgNumber).find('.mojoMcBlock.frm-block').unbind("each").each(function () {
+                let question = "";
+                if ($(this).attr("rolefor") === "open_ended" || $(this).attr("rolefor") === "age") {
+                    question = {
+                        longAnswer: $(this).find(".blockanswer").hasClass("longanswer") ? true : false,
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        labellessAnswer: $(this).find(".blockanswer").hasClass("labellessanswer") ? true : false
+                    }
+                } else if ($(this).attr("rolefor") === "single_answer" || $(this).attr("rolefor") === "single_answer_checkbox" || radioTypes.includes($(this).attr("rolefor"))) {
+                    let i = 0;
+                    let tanswer = [];
+                    $(this).find(".blockanswer .blockoption span.singleAnswer").each(function () {
+                        tanswer.push({soptDisplayOrder: i, soptValue: $(this).text() === ""?`option-${(i+1)}`:$(this).text(), soptComment: $(this).parent("div").attr("addcomment"), soptUniqueId: $(this).parent("div").attr("unique-id")});
+                        i++;
+                    })
+                    question = {
+                        multipleAnswer: $(this).find(".blockanswer").hasClass("multipleanswer") ? true : false,
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        surveysOptions: tanswer
+                    }
+                } else if ($(this).attr("rolefor") === "single_answer_button") {
+                    let i = 0;
+                    let tanswer = [];
+                    $(this).find(".blockanswer .blockoption div input[type=\"button\"]").each(function () {
+                        tanswer.push({soptDisplayOrder: i, soptValue: $(this).val() === ""?`Option - ${i+1}`:$(this).val(), soptUniqueId: $(this).parent("div").attr("unique-id")});
+                        i++;
+                    })
+                    question = {
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        surveysOptions: tanswer
+                    }
+                } else if ($(this).attr("rolefor") === "single_answer_combo") {
+                    let i = 0;
+                    let tanswer = [];
+                    $(this).find(".blockanswer .blockoption select option").not(":first").each(function () {
+                        tanswer.push({soptDisplayOrder: i, soptValue: $(this).text() === ""?`Option - ${i+1}`:$(this).text(), soptUniqueId: $(this).parent("div").attr("unique-id")});
+                        i++;
+                    })
+                    question = {
+                        multipleAnswer: $(this).find(".blockanswer").hasClass("multipleanswer") ? true : false,
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        surveysOptions: tanswer
+                    }
+                } else if ($(this).attr("rolefor") === "date_control") {
+                    let start = null;
+                    let end = null;
+                    if ($(this).find(".blockanswer").hasClass("range")) {
+                        start = $(this).find('span.startDate').html();
+                        end = $(this).find('span.endDate').html();
+                    }
+                    question = {
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        startDate: start,
+                        endDate: end,
+                        labellessAnswer: $(this).find(".blockanswer").hasClass("labellessanswer") ? true : false
+                    }
+                } else if ($(this).attr("rolefor") === "time_control") {
+                    let start = null;
+                    let end = null;
+                    if ($(this).find(".blockanswer").hasClass("range")) {
+                        start = $(this).find('span.startTime').html();
+                        end = $(this).find('span.endTime').html();
+                    }
+                    question = {
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        startTime: start,
+                        endTime: end,
+                        labellessAnswer: $(this).find(".blockanswer").hasClass("labellessanswer") ? true : false
+                    }
+                } else if ($(this).attr("rolefor") === "rating_box") {
+                    question = {
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        aText: $(this).find("span.rating-text-a").text(),
+                        bText: $(this).find("span.rating-text-b").text(),
+                        formLinks: Array.from({ length: 10 }, (_, i) =>(i+1)).map((_, i)=>({formLink: ""})),
+                        formNames: Array.from({ length: 10 }, (_, i) =>(i+1)).map((_, i)=>({formName: ""})),
+                    }
+                } else if ($(this).attr("rolefor") === "rating_symbol") {
+                    question = {
+                        surveysOptions: [{soptDisplayOrder:0, soptValue:$(this).find(".top-control #level").val()}],
+                        symbol:$(this).find(".top-control #symbol").val().replaceAll("far ", "").replaceAll("p-2", "py-2 pr-2"),
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        formLinks: Array.from({ length: parseInt($(this).find(".top-control #level").val()) }, (_, i) =>("")).map((_, i)=>({formLink: ""})),
+                        formNames: Array.from({ length: parseInt($(this).find(".top-control #level").val()) }, (_, i) =>("")).map((_, i)=>({formName: ""})),
+                    }
+                } else if ($(this).attr("rolefor") === "rating_radio") {
+                    question = {
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        formLinks: Array.from({ length: 10 }, (_, i) =>(i+1)).map((_, i)=>({formLink: ""})),
+                        formNames: Array.from({ length: 10 }, (_, i) =>(i+1)).map((_, i)=>({formName: ""})),
+                    }
+                } else if ($(this).attr("rolefor") === "yes_no") {
+                    question = {
+                        label: $(this).find(".top-control #labels").val(),
+                        symbol: $(this).find(".top-control #yesNoSymbols").val(),
+                        label1:$(this).find(".label-1").text(),
+                        label2:$(this).find(".label-2").text(),
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        surveysOptions: [
+                            {
+                                soptDisplayOrder: 0, 
+                                soptValue: $(this).find(".label-1").text(), 
+                                soptDescription: $(this).find(".top-control #yesNoSymbols").val().split("/")[0].replaceAll("far fa-", ""), 
+                                soptUniqueId: $(this).find(".label-1").parent("div").attr("unique-id")
+                            },
+                            {
+                                soptDisplayOrder: 1, 
+                                soptValue: $(this).find(".label-2").text(), 
+                                soptDescription: $(this).find(".top-control #yesNoSymbols").val().split("/")[1].replaceAll("far fa-", ""), 
+                                soptUniqueId: $(this).find(".label-2").parent("div").attr("unique-id")
+                            },
+                        ]
+                    }
+                } else if ($(this).attr("rolefor") === "matrix"){
+                    let columns = [];
+                    let rows = [];
+                    let i = 0;
+                    let j = 0;
+                    $(this).find(".blockanswer table tr th span.answerTableSpan").each(function(){
+                        columns.push({soptDisplayOrder:i++, soptValue: $(this).text()});
+                    });
+                    $(this).find(".blockanswer table tr td span.answerTableSpan").each(function(){
+                        rows.push({soptDisplayOrder:j++, soptValue: $(this).text()});
+                    });
+                    question = {
+                        answerType: $(this).find("#answerType").val(),
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        comments: $(this).find(".blockanswer").hasClass("comments") ? true : false,
+                        commentsText: $(this).find(".matrixCommentTextArea").text(),
+                        rows: rows,
+                        columns: columns
+                    }
+                } else if ($(this).attr("rolefor") === "email" || $(this).attr("rolefor") === "phone"){
+                    question={
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        labellessAnswer: $(this).find(".blockanswer").hasClass("labellessanswer") ? true : false
+                    }
+                } else if ($(this).attr("rolefor") === "rank"){
+                    let rankList = [];
+                    let i = 0;
+                    $(this).find("div.d-flex.w-95-p.mt-2 div.rankTxt").each(function(){
+                        rankList.push({soptDisplayOrder:i++, soptValue:$(this).text()===""?`Rank-${i}`:$(this).text()});
+                    });
+                    question={
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        surveysOptions: rankList
+                    }
+                } else if ($(this).attr("rolefor") === "image_form"){
+                    let imageList = [];
+                    let i = 0;
+                    $(this).find("div.mojoImageUploader div img.w-100").each(function(){
+                        imageList.push({soptDisplayOrder: i++,soptValue:$(this).attr("src"),soptUniqueId: $(this).closest("div.mojoImageUploader").attr("unique-id")});
+                    });
+                    question={
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        multipleAnswer: $(this).find(".blockanswer").hasClass("multipleanswer") ? true : false,
+                        surveysOptions: imageList
+                    }
+                } else if ($(this).attr("rolefor") === "image_with_text_form"){
+                    let imageList = [];
+                    let labelList = [];
+                    let i = 0;
+
+                    $(this).find("div.mojoImageUploader div img.w-100").each(function(){
+                        imageList.push({soptDisplayOrder: i++,soptValue:$(this).attr("src"),soptUniqueId: $(this).closest("div.mojoImageUploader").attr("unique-id")});
+                    });
+                    $(this).find("div span.textArea").each(function(){
+                        labelList.push($(this).text());
+                    });
+                    labelList.forEach((v, i)=>{
+                        imageList[i] = {...imageList[i], soptDescription: v};
+                    });
+                    question={
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        multipleAnswer: $(this).find(".blockanswer").hasClass("multipleanswer") ? true : false,
+                        surveysOptions: imageList,
+                    }
+                } else if ($(this).attr("rolefor") === "contact_form"){
+                    let labelList = [];
+                    let surveysOptions = [];
+                    let i = 0;
+                    $(this).find(`.blockanswer input[type="text"]`).each(function(){
+                        labelList.push({
+                            name: $(this).attr("placeholder"),
+                            icon: $(this).parent().find('label.far').attr("class").replace(" editor-icon-p", "").replace(" editor-icon", ""),
+                            requireStatus: (typeof $(this).parent().siblings(`input[type="checkbox"]`).prop("checked") !== "undefined")? $(this).parent().siblings(`input[type="checkbox"]`).prop("checked"):null
+                    });
+                        surveysOptions.push({soptDisplayOrder: i++, soptValue: $(this).attr("placeholder")});
+                        });
+                    question={
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        vertically: $(this).find(".blockanswer").hasClass("vertically") ? true : false,
+                        icons: $(this).find(".blockanswer").hasClass("showicon") ? true : false,
+                        labelList: labelList,
+                        surveysOptions: surveysOptions
+                    }
+                } else if ($(this).attr("rolefor") === "consent_agreement"){
+                    question = {
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        terms: $(this).find(".blockanswer").find("div.w-95-p span.terms").text(),
+                        agreement: $(this).find(".blockanswer").find("div.w-95-p span.agreement").text()     
+                    }
+                } else if ($(this).attr("rolefor") === "constant_sum"){ 
+                    let labelList = [];
+                    let i = 0;
+                    let tableClass = $(this).find("#inputType").val()+"Table";
+                    $(this).find("."+tableClass).find("span.sumQuestion").each(function(){
+                        labelList.push($(this).text()===""?`Question - ${i+1}`:$(this).text());
+                        i++;
+                    });
+                    question = {
+                        required: $(this).find(".blockanswer").hasClass("required") ? true : false,
+                        type: $(this).find("#inputType").val(),
+                        showTotal: $(this).find(".blockanswer").hasClass("total") ? true : false,
+                        description: $(this).find("span.descriptionText").text(),
+                        labelList: labelList,
+                        mustTotalTo: $(this).find("input.mTotal").val(),
+                        lowerRange: $(this).find("input.lower").val(),
+                        upperRange: $(this).find("input.upper").val(),
+                        decimals: $(this).find("input.decimals").val(),
+                        segments: $(this).find("input.segments").val()
+                    }
+                } else if ($(this).attr("rolefor") === "label"){
+                    label = $(this).find(".ckeditableLabel").html();
+                    return true;
+                }
+                let tempSqueQuestion = "";
+                if($(this).attr("rolefor") === "consent_agreement"){
+                    tempSqueQuestion = "Consent Agreement";
+                } else if($(this).find(".blockquestion input[type=\"text\"]").val() === ""){
+                    tempSqueQuestion = `Question-${questionDisplayOrder} Page-${e.spgNumber}`;
+                } else if($(this).find(".blockquestion input[type=\"text\"]").val() !== ""){
+                    tempSqueQuestion = $(this).find(".blockquestion input[type=\"text\"]").val();
+                }
+                question = {
+                    ...question, 
+                    squeId: 0, 
+                    squeDisplayOrder: questionDisplayOrder++,
+                    squeNumber:queNumber++,
+                    squeType: $(this).attr("rolefor"),
+                    squeQuestion: tempSqueQuestion,
+                    queTransition: $(this).attr("question-transition"),
+                    uniqueId: $(this).attr("data-unique-id"),
+                    next: [],
+                    prev: [],
+                    squeCatId:$('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category-id"),
+                    squeCatName:$('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category"),
+                    squeCatColor:$('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category-color"),
+                    squeCatDisplay:$('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category-display"),
+                    squeCatStyle:$('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category-style"),
+                    label:label
+                }
+                label="";
+                questionsList.push(question);
+            });
+            let imageBlockPageLayoutSetting={};
+            if($('#preview-template').contents().find("#templateBody" + e.spgNumber).find('.imageBlock').length === 0){
+                if($('#preview-template').contents().find("#templateBody" + e.spgNumber).css("background-image") === "none"){
+                    imageBlockPageLayoutSetting={
+                        layoutType:"imageBlockPageLayout1",
+                        layoutImage:"",
+                    }
+                } else {
+                    imageBlockPageLayoutSetting={
+                        layoutType:"imageBlockPageLayout6",
+                        layoutImage:$('#preview-template').contents().find("#templateBody" + e.spgNumber).css("background-image"),
+                    }
+                }
+            } else {
+                imageBlockPageLayoutSetting={
+                    layoutType:$('#preview-template').contents().find("#templateBody" + e.spgNumber).find('.imageBlock').attr("class").split(" ")[1],
+                    layoutImage:$('#preview-template').contents().find("#templateBody" + e.spgNumber + " .imageBlock .mojoImageUploader div").css("background-image"),
+                }
+            }
+            let catId = $('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category-id");
+            let catName = $('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category");
+            let catColor =  $('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category-color");
+            let catDisplay =  $('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category-display");
+            let catStyle =  $('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-category-style");
+            let uniqueId =  $('#preview-template').contents().find("#templateBody" + e.spgNumber).attr("page-unique-id");
+            surveysPages = [...surveysPages, {...e, spgTransition: pageTrans, questionStyle: questionStyle, "surveysQuestions": questionsList, imageBlockPageLayoutSetting: imageBlockPageLayoutSetting, squeCatId: catId, squeCatName: catName, squeCatColor: catColor, squeCatDisplay: catDisplay, squeCatStyle: catStyle, uniqueId: uniqueId}];
+        } else if(e.spgType === "Landing Page"){
+            let blockList = $('#preview-template').contents().find("#templateBody" + e.spgNumber).find('.landingBlock').html().replaceAll('contenteditable="true"','').replaceAll('class="mojoMcBlock tpl-block dojoDndItem focus ui-sortable-handle"','');
+            surveysPages = [...surveysPages, {...e, spgTransition: pageTrans, "blockList": blockList}];
+        }
+    });
+    let header = "";
+    let headerSettings = {};
+    let c = "";
+    if(typeof $("#pageheader").find("div.row").find("#headerdimg").html() !== "undefined" && $("#pageheader").find("div.row").find("#headerdimg").html() !== `<img src="${siteURL}/img/browse_image_text.png">`){
+        c += $("#pageheader").find("div.row").find("#headerdimg").prop('outerHTML');
+    }
+    if(typeof $("#pageheader").find("div.row").find("#headerdtitle").html() !== "undefined" && $("#pageheader").find("div.row").find("#headerdtitle").html() !== "Enter Title Here"){
+        c += $("#pageheader").find("div.row").find("#headerdtitle").prop('outerHTML');
+    }
+    if(typeof $("#pageheader").find("div.row").find("#headerddesc").html() !== "undefined" && $("#pageheader").find("div.row").find("#headerddesc").html() !== "Enter Tagline Here"){
+        c += $("#pageheader").find("div.row").find("#headerddesc").prop('outerHTML');
+    }
+    if(c !== ""){
+        header = `<div class="${$("#pageheader").find("div.row").attr("class")}">${c}</div>`;
+        header = header.replaceAll('contenteditable="true"','');
+        headerSettings={
+            backgroundColor:$("#pageheader").find("div.row").css("background-color"),
+            backgroundClip:$("#pageheader").find("div.row").css("background-clip"),
+            border:$("#pageheader").find("div.row").css("border"),
+            padding:$("#pageheader").find("div.row").css("padding")
+        }
+    }
+    let footer = $("#pagefooter").find("div.row");
+    let footerSettings = {};
+    if(footer.length > 0){
+        footer=footer[0].outerHTML.replaceAll('contenteditable="true"','');
+        footer=footer.replaceAll($("#pagefooter").find("div.row").attr("style"),'');
+        footer=footer.replaceAll(">Enter Footer Content Here<", "><");
+        footerSettings={
+            backgroundColor:$("#pagefooter").find("div.row").css("background-color"),
+            backgroundClip:$("#pagefooter").find("div.row").css("background-clip"),
+            border:$("#pagefooter").find("div.row").css("border"),
+            padding:$("#pagefooter").find("div.row").css("padding")
+        }
+    } else {
+        footer="";
+    }
+    let radioTypes = ["single_answer", "single_answer_button", "single_answer_checkbox", "single_answer_combo", "gender", "marital_status", "education", "employment_status", "employer_type", "housing", "household_income", "race", "yes_no", "image_form", "image_with_text_form"];
+    let ratingTypes = ["rating_symbol", "rating_radio", "rating_box"];
+    
+    let temp = pageTemp.filter((v)=>(v.spgType === "Question Page"));
+    temp.forEach((page)=>{
+        let currentPageIndex = page.spgNumber - 1;
+        //For Next
+        if(currentPageIndex === surveysPages.length - 1){
+            surveysPages[currentPageIndex].surveysQuestions = surveysPages[currentPageIndex].surveysQuestions.map((question, j)=>{
+                if(j === surveysPages[currentPageIndex].surveysQuestions.length - 1){
+                    question.next = {default: null};
+                    if(radioTypes.includes(question.squeType)){
+                        question.surveysOptions.forEach((option)=>{
+                            question.next = {...question.next, [option.soptValue]: null};
+                        })
+                    }
+                    if(ratingTypes.includes(question.squeType)){
+                        let ratings = question.squeType === "rating_symbol"?parseInt(question.surveysOptions[0].soptValue):10;
+                        Array.from({ length: ratings }, (_, k) =>(k+1)).forEach((_, l)=>{
+                            question.next = {...question.next, [l+1]: null};
+                        });
+                    }
+                } else {
+                    question.next = {default: {pageIndex: currentPageIndex, questionIndex: j + 1}};
+                    if(radioTypes.includes(question.squeType)){
+                        question.surveysOptions.forEach((option)=>{
+                            question.next = {...question.next, [option.soptValue]: {pageIndex: currentPageIndex, questionIndex: j + 1,soptUniqueId:option.soptUniqueId}};
+                        })
+                    }
+                    if(ratingTypes.includes(question.squeType)){
+                        let ratings = question.squeType === "rating_symbol"?parseInt(question.surveysOptions[0].soptValue):10;
+                        Array.from({ length: ratings }, (_, k) =>(k+1)).forEach((_, l)=>{
+                            question.next = {...question.next, [l+1]: {pageIndex: currentPageIndex, questionIndex: j + 1}};
+                        });
+                    }
+                }
+                return question;
+            });
+        } else if(surveysPages[currentPageIndex + 1].spgType !== "Question Page") {
+            surveysPages[currentPageIndex].surveysQuestions = surveysPages[currentPageIndex].surveysQuestions.map((question, j)=>{
+                if(j === surveysPages[currentPageIndex].surveysQuestions.length - 1){
+                    question.next = {default: {pageIndex: currentPageIndex + 1}};
+                    if(radioTypes.includes(question.squeType)){
+                        question.surveysOptions.forEach((option)=>{
+                            question.next = {...question.next, [option.soptValue]: {pageIndex: currentPageIndex + 1,soptUniqueId:option.soptUniqueId}};
+                        })
+                    }
+                    if(ratingTypes.includes(question.squeType)){
+                        let ratings = question.squeType === "rating_symbol"?parseInt(question.surveysOptions[0].soptValue):10;
+                        Array.from({ length: ratings }, (_, k) =>(k+1)).forEach((_, l)=>{
+                            question.next = {...question.next, [l+1]: {pageIndex: currentPageIndex + 1}};
+                        });
+                    }
+                } else {
+                    question.next = {default: {pageIndex: currentPageIndex, questionIndex: j + 1}};
+                    if(radioTypes.includes(question.squeType)){
+                        question.surveysOptions.forEach((option)=>{
+                            question.next = {...question.next, [option.soptValue]: {pageIndex: currentPageIndex, questionIndex: j + 1,soptUniqueId:option.soptUniqueId}};
+                        })
+                    }
+                    if(ratingTypes.includes(question.squeType)){
+                        let ratings = question.squeType === "rating_symbol"?parseInt(question.surveysOptions[0].soptValue):10;
+                        Array.from({ length: ratings }, (_, k) =>(k+1)).forEach((_, l)=>{
+                            question.next = {...question.next, [l+1]: {pageIndex: currentPageIndex, questionIndex: j + 1}};
+                        });
+                    }
+                }
+                return question;
+            });
+        } else {
+            surveysPages[currentPageIndex].surveysQuestions = surveysPages[currentPageIndex].surveysQuestions.map((question, j)=>{
+                if(j === surveysPages[currentPageIndex].surveysQuestions.length - 1){
+                    if(surveysPages[currentPageIndex + 1].surveysQuestions.length > 0){
+                        question.next = {default: {pageIndex: currentPageIndex + 1, questionIndex: 0}};
+                        if(radioTypes.includes(question.squeType)){
+                            question.surveysOptions.forEach((option)=>{
+                                question.next = {...question.next, [option.soptValue]: {pageIndex: currentPageIndex + 1, questionIndex: 0,soptUniqueId:option.soptUniqueId}};
+                            })
+                        }
+                        if(ratingTypes.includes(question.squeType)){
+                            let ratings = question.squeType === "rating_symbol"?parseInt(question.surveysOptions[0].soptValue):10;
+                            Array.from({ length: ratings }, (_, k) =>(k+1)).forEach((_, l)=>{
+                                question.next = {...question.next, [l+1]: {pageIndex: currentPageIndex + 1, questionIndex: 0}};
+                            });
+                        }
+                    } else {
+                        question.next = {default: {pageIndex: currentPageIndex + 1}};
+                        if(radioTypes.includes(question.squeType)){
+                            question.surveysOptions.forEach((option)=>{
+                                question.next = {...question.next, [option.soptValue]: {pageIndex: currentPageIndex + 1,soptUniqueId:option.soptUniqueId}};
+                            })
+                        }
+                        if(ratingTypes.includes(question.squeType)){
+                            let ratings = question.squeType === "rating_symbol"?parseInt(question.surveysOptions[0].soptValue):10;
+                            Array.from({ length: ratings }, (_, k) =>(k+1)).forEach((_, l)=>{
+                                question.next = {...question.next, [l+1]: {pageIndex: currentPageIndex + 1}};
+                            });
+                        }
+                    }
+                } else {
+                    question.next = {default: {pageIndex: currentPageIndex, questionIndex: j + 1}};
+                    if(radioTypes.includes(question.squeType)){
+                        question.surveysOptions.forEach((option)=>{
+                            question.next = {...question.next, [option.soptValue]: {pageIndex: currentPageIndex, questionIndex: j + 1,soptUniqueId:option.soptUniqueId}};
+                        })
+                    }
+                    if(ratingTypes.includes(question.squeType)){
+                        let ratings = question.squeType === "rating_symbol"?parseInt(question.surveysOptions[0].soptValue):10;
+                        Array.from({ length: ratings }, (_, k) =>(k+1)).forEach((_, l)=>{
+                            question.next = {...question.next, [l+1]: {pageIndex: currentPageIndex, questionIndex: j + 1}};
+                        });
+                    }
+                }
+                return question;
+            });
+        }
+        //For Previous
+        if(currentPageIndex === 0){
+            surveysPages[currentPageIndex].surveysQuestions = surveysPages[currentPageIndex].surveysQuestions.map((question, j)=>{
+                if(j === 0) {
+                    question.prev = null;
+                } else {
+                    question.prev = {pageIndex: currentPageIndex, questionIndex: j - 1};
+                }
+                return question;
+            });
+        } else if(surveysPages[currentPageIndex - 1].spgType !== "Question Page") {
+            surveysPages[currentPageIndex].surveysQuestions = surveysPages[currentPageIndex].surveysQuestions.map((question, j)=>{
+                if(j === 0) {
+                    question.prev = {pageIndex: currentPageIndex - 1};
+                } else {
+                    question.prev = {pageIndex: currentPageIndex, questionIndex: j - 1};
+                }
+                return question;
+            });
+        } else {
+            surveysPages[currentPageIndex].surveysQuestions = surveysPages[currentPageIndex].surveysQuestions.map((question, j)=>{
+                if(j === 0){
+                    if(surveysPages[currentPageIndex - 1].surveysQuestions.length > 0) {
+                        question.prev = {pageIndex: currentPageIndex - 1, questionIndex: surveysPages[currentPageIndex - 1].surveysQuestions.length - 1};
+                    } else {
+                        question.prev = {pageIndex: currentPageIndex - 1};
+                    }
+                } else {
+                    question.prev = {pageIndex: currentPageIndex, questionIndex: j - 1};
+                }
+                return question;
+            });
+        }
+    });
+    temp = pageTemp.filter((v)=>(v.spgType !== "Question Page"));
+    temp.forEach((page)=>{
+        let currentPageIndex = page.spgNumber - 1;
+        //For Next
+        if(currentPageIndex === surveysPages.length - 1) {
+            surveysPages[currentPageIndex].next = null;
+        } else if(surveysPages[currentPageIndex + 1].spgType !== "Question Page") {
+            surveysPages[currentPageIndex].next = {pageIndex: currentPageIndex + 1}
+        } else {
+            if(surveysPages[currentPageIndex + 1].surveysQuestions.length > 0) { 
+                surveysPages[currentPageIndex].next = {pageIndex: currentPageIndex + 1, questionIndex: 0}
+            } else {
+                surveysPages[currentPageIndex].next = {pageIndex: currentPageIndex + 1}
+            }
+        }
+        //For Previous
+        if(currentPageIndex === 0){
+            surveysPages[currentPageIndex].prev = null;
+        } else if(surveysPages[currentPageIndex - 1].spgType !== "Question Page"){
+            surveysPages[currentPageIndex].prev = {pageIndex: currentPageIndex - 1}
+        } else {
+            if(surveysPages[currentPageIndex - 1].surveysQuestions.length > 0) { 
+                surveysPages[currentPageIndex].prev = {pageIndex: currentPageIndex - 1, questionIndex: surveysPages[currentPageIndex - 1].surveysQuestions.length - 1}
+            } else {
+                surveysPages[currentPageIndex].prev = {pageIndex: currentPageIndex - 1}
+            }
+        }
+    });
+    return {
+        "settings":{
+            "pageSettings":pageSettings,
+            "headerSettings":headerSettings,
+            "footerSettings":footerSettings,
+            "footerButtonSettings": typeof $("#pagefooter").attr("item-button-align") === "undefined" ? "text-right" : $("#pagefooter").attr("item-button-align")
+        },
+        "surveysPages":surveysPages,
+        "pageCounter":$("#addpagethumb").html(),
+        "header":header,
+        "footer":footer,
+        "thankYou":$('#preview-template')?.contents()?.find("#templateBodyEND")?.find('.landingBlock')?.html()?.replaceAll('contenteditable="true"','')?.replaceAll('class="mojoMcBlock tpl-block dojoDndItem focus ui-sortable-handle"','')?.replaceAll('class="mojoMcBlock tpl-block dojoDndItem focus ui-sortable-handle active"','') || ""
+    };
+}
+export function checkRequire(dataListJson, currentPageIndex, currentQuestionIndex){
+    let questionNumber = "";
+    let singleValueControl = ["open_ended", "single_answer_button", "date_control", "time_control", "rating_box", "rating_symbol", "rating_radio", "yes_no", "email", "phone", "consent_agreement", "age"];
+    let singleMultipleValueControl = ["single_answer", "image_form", "image_with_text_form", "single_answer_checkbox", "single_answer_combo", "rank", "gender", "marital_status", "education", "employment_status", "employer_type", "housing", "household_income", "race"];
+    if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle") &&  dataListJson.surveysPages[currentPageIndex].questionStyle === "all") {
+        let qArray = dataListJson.surveysPages[currentPageIndex].surveysQuestions;
+        for(let i = 0; i < qArray.length; i++){
+            if(qArray[i].required){
+                if(singleValueControl.includes(qArray[i].squeType) && (qArray[i].value === "" || !qArray[i].hasOwnProperty('value'))){
+                    questionNumber = qArray[i].squeQuestion;
+                    break;
+                } else if(singleMultipleValueControl.includes(qArray[i].squeType)) {
+                    if((qArray[i].multipleAnswer && (!qArray[i].hasOwnProperty('value') || qArray[i].value.length === 0)) || (!qArray[i].multipleAnswer && (!qArray[i].hasOwnProperty('value') || qArray[i].value === ""))){
+                        questionNumber = qArray[i].squeQuestion;
+                        break;
+                    }
+                } else if(qArray[i].squeType === "rank"){
+                    if(!qArray[i].hasOwnProperty('value')){
+                        questionNumber = qArray[i].squeQuestion;
+                        break;
+                    }
+                } else if(qArray[i].squeType === "constant_sum"){
+
+                    let f = false;
+                    if(!qArray[i].hasOwnProperty('value')){
+                        questionNumber = qArray[i].squeQuestion;
+                        break;
+                    }
+                    for(let j = 0; j < qArray[i].labelList.length; j++){
+                        if(qArray[i].value.questions[qArray[i].labelList[j]] === ""){
+                            f = true;
+                            questionNumber = qArray[i].squeQuestion;
+                            break;
+                        }
+                    }
+                    if(f){
+                        break;
+                    }
+                } else if(qArray[i].squeType === "matrix"){
+                    if(!qArray[i].hasOwnProperty('value')){
+                        questionNumber = qArray[i].squeQuestion;
+                        break;
+                    } else {
+                        let rows = qArray[i].rows.map((v, i)=>{
+                            return v.soptValue;
+                        });
+                        if(rows.length !== Object.keys(qArray[i].value).length) {
+                            questionNumber = qArray[i].squeQuestion;
+                            break;
+                        } else {
+                            let f = false;
+                            for(let j=0; j<rows.length; j++){
+                                if(qArray[i].value[rows[j]].length === 0){
+                                    questionNumber = qArray[i].squeQuestion;
+                                    f = true;
+                                    break;    
+                                }
+                            }
+                            if(f){
+                                break;
+                            }
+                        }
+                    }
+                } else if(qArray[i].squeType === "contact_form"){
+                    let f = false;
+                    if(!qArray[i].hasOwnProperty('value')){
+                        questionNumber = qArray[i].squeQuestion;
+                        break;
+                    } else {
+                        for(let j = 0; j < qArray[i].labelList.length; j++){
+                            if(qArray[i].labelList[j].requireStatus && qArray[i].value[qArray[i].labelList[j].name] === ""){
+                                f = true;
+                                questionNumber = qArray[i].squeQuestion;
+                                break;
+                            }
+                        }
+                        if(f){
+                            break;
+                        }
+                    } 
+                } 
+            }
+        }
+    } else if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle")){
+        let element = dataListJson.surveysPages[currentPageIndex].surveysQuestions[currentQuestionIndex];
+        if(element.required){
+            if(singleValueControl.includes(element.squeType) && (element.value === "" || !element.hasOwnProperty('value'))){
+                questionNumber = element.squeQuestion;
+            } else if(singleMultipleValueControl.includes(element.squeType)){
+                if((element.multipleAnswer && (!element.hasOwnProperty('value') || element.value.length === 0)) || (!element.multipleAnswer && (!element.hasOwnProperty('value') || element.value === ""))){
+                    questionNumber = element.squeQuestion;
+                }
+            } else if(element.squeType === "rank"){
+                if(element.hasOwnProperty('value'))
+                    questionNumber = element.squeQuestion;
+            } else if(element.squeType === "constant_sum"){
+                if(!element.hasOwnProperty('value')){
+                    questionNumber = element.squeQuestion;
+                }
+                for(let j = 0; j < element.labelList.length; j++){
+                    if(element.labelList[j].requireStatus && element.value[element.labelList[j]] === ""){
+                        questionNumber = element.squeQuestion;
+                        break;
+                    }
+                }
+            } else if(element.squeType === "matrix"){
+                if(!element.hasOwnProperty('value')){
+                    questionNumber = element.squeQuestion;
+                } else {
+                    let rows = element.rows.map((v, i)=>{
+                        return v.soptValue;
+                    });
+                    if(rows.length !== Object.keys(element.value).length) {
+                        questionNumber = element.squeQuestion;
+                    } else {
+                        for(let j=0; j<rows.length; j++){
+                            if(element.value[rows[j]].length === 0){
+                                questionNumber = element.squeQuestion;
+                                break;    
+                            }
+                        }
+                    }
+                }
+            } else if(element.squeType === "contact_form"){
+                if(!element.hasOwnProperty('value')){
+                    questionNumber = element.squeQuestion;
+                } else {
+                    for(let j = 0; j < element.labelList.length; j++){
+                        if(element.labelList[j].requireStatus && element.value[element.labelList[j].name] === ""){
+                            questionNumber = element.squeQuestion;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return questionNumber;
+}
+export function checkDateRange(dataListJson, currentPageIndex, currentQuestionIndex){
+    let questionNumber = "";
+    function parseTime(str){
+        let ampm = str.split(" ")[1];
+        let hours = parseInt(str.split(" ")[0].split(":")[0]);
+        let minutes = str.split(" ")[0].split(":")[1];
+        if(ampm === "AM" || ampm === "am"){
+            if(hours === 12){
+                hours = 0
+            }
+        } else {
+            if(hours !== 12){
+                hours += 12;
+            }
+        }
+        return parseInt(""+hours+""+minutes);
+    }
+    if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle") &&  dataListJson.surveysPages[currentPageIndex].questionStyle === "all") {
+        let qArray = dataListJson.surveysPages[currentPageIndex].surveysQuestions;
+        for(let i = 0; i < qArray.length; i++){
+            if(qArray[i].squeType === "time_control"){
+                if(!qArray[i].hasOwnProperty("value") && (qArray[i].startTime !== null || qArray[i].endTime !== null)){
+                    questionNumber = [qArray[i].squeQuestion, qArray[i].squeType, qArray[i].startTime, qArray[i].endTime];
+                    break;
+                }
+                if(((qArray[i].startTime !== null || qArray[i].endTime !== null) && (parseTime(qArray[i].value) < parseTime(qArray[i].startTime) || parseTime(qArray[i].value) > parseTime(qArray[i].endTime)))){
+                    questionNumber = [qArray[i].squeQuestion, qArray[i].squeType, qArray[i].startTime, qArray[i].endTime];
+                    break;
+                }
+            } else if(qArray[i].squeType === "date_control"){
+                if(!qArray[i].hasOwnProperty("value") ||  ((qArray[i].startDate !== null || qArray[i].endDate !== null) && (new Date(qArray[i].value) < new Date(qArray[i].startDate) || new Date(qArray[i].value) > new Date(qArray[i].endDate)))){
+                    questionNumber = [qArray[i].squeQuestion, qArray[i].squeType, qArray[i].startDate, qArray[i].endDate];
+                    break;
+                }
+            }
+        }
+    } else if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle")){
+        let element = dataListJson.surveysPages[currentPageIndex].surveysQuestions[currentQuestionIndex];
+        if(element.squeType === "time_control"){
+            if(!element.hasOwnProperty("value") && (element.startTime !== null || element.endTime !== null)){
+                questionNumber = [element.squeQuestion, element.squeType, element.startTime, element.endTime];
+            }
+            
+            if(((element.startTime !== null || element.endTime !== null) && (parseTime(element.value) < parseTime(element.startTime) || parseTime(element.value) > parseTime(element.endTime)))){
+                questionNumber = [element.squeQuestion, element.squeType, element.startTime, element.endTime];
+            }
+            
+        } else if(element.squeType === "date_control"){
+            if(!element.hasOwnProperty("value") ||  ((element.startDate !== null || element.endDate !== null) && (new Date(element.value) < new Date(element.startDate) || new Date(element.value) > new Date(element.endDate)))){
+                questionNumber = [element.squeQuestion, element.squeType, element.startDate, element.endDate];
+            }
+        }
+    }
+    return questionNumber;
+}
+export function checkMustTotalTo(dataListJson, currentPageIndex, currentQuestionIndex){
+    let questionNumber = "";
+    if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle") &&  dataListJson.surveysPages[currentPageIndex].questionStyle === "all") {
+        let qArray = dataListJson.surveysPages[currentPageIndex].surveysQuestions;
+        for(let i = 0; i < qArray.length; i++){
+            if(qArray[i].squeType === "constant_sum"){
+                if(parseInt(qArray[i].mustTotalTo) > 0 && parseInt(qArray[i].mustTotalTo) < parseInt(qArray[i].value.total)){
+                    questionNumber = [qArray[i].squeQuestion, qArray[i].mustTotalTo];
+                    break;
+                }
+            }
+        }
+    } else if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle")){
+        let element = dataListJson.surveysPages[currentPageIndex].surveysQuestions[currentQuestionIndex];
+        if(element.squeType === "constant_sum"){
+            if(parseInt(element.mustTotalTo) > 0 && parseInt(element.mustTotalTo) < parseInt(element.value.total)){
+                questionNumber = [element.squeQuestion, element.mustTotalTo];
+            }
+        }
+    }
+    return questionNumber;
+}
+export  function checkPhone(dataListJson, currentPageIndex, currentQuestionIndex){
+    let questionNumber = {id:"", phoneNumber: "", questionNumber: ""};
+    if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle")){
+        let element = dataListJson.surveysPages[currentPageIndex].surveysQuestions[currentQuestionIndex];
+        if(element.hasOwnProperty("value") && element.squeType === "phone") {
+            questionNumber = {id: element.value.countryId, phoneNumber: element.value.PhoneNo, questionNumber: element.squeQuestion};
+        }
+    }
+    return questionNumber;
+}
+export function checkEmail(dataListJson, currentPageIndex, currentQuestionIndex){
+    let questionNumber = "";
+    const validateEmail = (email) => {
+        return String(email)
+          .toLowerCase()
+          .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          );
+    };
+    if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle") &&  dataListJson.surveysPages[currentPageIndex].questionStyle === "all") {
+        let qArray = dataListJson.surveysPages[currentPageIndex].surveysQuestions;
+        for(let i = 0; i < qArray.length; i++){
+            if(qArray[i].hasOwnProperty("value") && qArray[i].squeType === "email" && !validateEmail(qArray[i].value) && qArray[i].value !== ""){
+                questionNumber = qArray[i].squeQuestion;
+                break;
+            } else if(qArray[i].hasOwnProperty("value") && qArray[i].squeType === "contact_form" && qArray[i].labelList.map((v)=>(v.name)).includes("Email") && !validateEmail(qArray[i].value.Email) && qArray[i].value.Email !== ""){
+                questionNumber = qArray[i].squeQuestion;
+                break;
+            }
+        }
+    } else if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle")) {
+        let element = dataListJson.surveysPages[currentPageIndex].surveysQuestions[currentQuestionIndex];
+        if(element.hasOwnProperty("value") && element.squeType === "email" && !validateEmail(element.value) && element.value !== ""){
+            questionNumber = element.squeQuestion;
+        } else if (element.hasOwnProperty("value") && element.squeType === "contact_form" && element.labelList.map((v) => (v.name)).includes("Email") && !validateEmail(element.value.Email) && element.value.Email !== "" && JSON.stringify(element.value) !== `{}`) {
+            questionNumber = element.squeQuestion;
+        }
+    }
+    return questionNumber;
+}
+export function setAnswersToJson(dataListJson, ansJson){
+    let temp = null;
+    if(ansJson.hasOwnProperty("surveyAnswers")){
+        temp = ansJson.surveyAnswers; 
+    } else {
+        temp = ansJson;
+    }
+    temp.forEach(e1 => {
+        dataListJson.surveysPages.forEach((e2, i)=>{
+            if(e2.hasOwnProperty("spgId") && e2.spgId === e1.sansSpgId){
+                e2.surveysQuestions.forEach((e3, j)=>{
+                    if(e3.hasOwnProperty("squeId") && e3.squeId === e1.sansSqueId){
+                        dataListJson.surveysPages[i].surveysQuestions[j].value = JSON.parse(e1.sansAnswers).value;
+                        dataListJson.surveysPages[i].surveysQuestions[j].sansId = e1.sansId;
+                        dataListJson.surveysPages[i].surveysQuestions[j].ansStId = e1.ansStId;
+                    }
+                })
+            }
+        })
+    });
+    dataListJson.ssId = ansJson.ssId;
+    dataListJson.ssIsComplete = ansJson.ssIsComplete;
+    return dataListJson;
+}
+export function generateSaveAnswerJson(sryId, dataListJson, currentPageIndex, currentQuestionIndex, ssSessionId, hostData, isSubmit = false, reset) {
+    let ansJson = {
+        ssId: dataListJson.hasOwnProperty("ssId")?dataListJson.ssId:0,
+        ssSryId: sryId,
+        ssIsComplete: isSubmit?1:0,
+        ssSessionId: ssSessionId,
+        ssIpAddress: hostData.ip,
+        ssCity: hostData.address.city,
+        ssState: hostData.address.state,
+        ssCountry: hostData.address.country,
+        surveyAnswers: []
+    };
+    let temp = [];
+    if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle") &&  dataListJson.surveysPages[currentPageIndex].questionStyle === "all") {
+        for(let i=0; i < dataListJson.surveysPages[currentPageIndex].surveysQuestions.length; i++){
+            let element = dataListJson.surveysPages[currentPageIndex].surveysQuestions[i];
+
+            let baseTemp = {
+                sansId: element.sansId || 0,
+                ansStId: element.ansStId || 0,
+                sansSpgId: dataListJson.surveysPages[currentPageIndex].spgId,
+                sansSqueId: element.squeId,
+                resetQuestion: reset.reset
+            };
+
+            if (!element.value || (typeof element.value === 'object' && Object.keys(element.value).length === 0)) {
+                if (element.squeType === "consent_agreement" && element.value === false && reset.reset === "Yes") {
+                    temp.push({ ...baseTemp, sansAnswers: JSON.stringify({ value: false }) });
+                }
+            } else {
+                if (element.squeType === "contact_form") {
+                    temp.push({
+                        ...baseTemp,
+                        sansAnswers: JSON.stringify(
+                            {
+                                value: {
+                                    "Name": element.value.Name || '',
+                                    "Email": element.value.Email || '',
+                                    "Phone": element.value.Phone || '',
+                                    "Address": element.value.Address || '',
+                                    "Address 2": element.value["Address 2"] || '',
+                                    "City": element.value.City || '',
+                                    "State": element.value.State || '',
+                                    "Country": element.value.Country || '',
+                                    "zip": element.value.zip || '',
+                                    "Company": element.value.Company || '',
+                                },
+                            }
+                        )
+                    });
+                    ansJson.surveyAnswers = temp;
+                    return ansJson;
+                }
+                if (element.type === "range" && element.value?.total === 0 && reset.reset === "Yes") {
+                    temp.push({ sansId: baseTemp.sansId, resetQuestion: baseTemp.resetQuestion });
+                    ansJson.surveyAnswers = temp;
+                    return ansJson;
+                }
+                if (element.type === "range" && element.value?.total === 0 && reset.reset === "No") {
+                    ansJson.surveyAnswers = [];
+                    return ansJson;
+                }
+                if (element.type === "phone" && !element.value?.PhoneNo && !element.value?.countryCode) {
+                    temp.push({ sansId: baseTemp.sansId, sansSqueId: baseTemp.sansSqueId });
+                } else {
+                    temp.push({ ...baseTemp, sansAnswers: JSON.stringify({ value: element.value }) });
+                }
+            }
+            if (element.hasOwnProperty("comment") && (element.value !== "" || (typeof element.value === 'object' && Object.keys(element.value).length > 0))) {
+                temp[0] = { ...temp[0], sansComments: JSON.stringify(element.comment) };
+            }
+
+            if (reset.reset === "Yes" && (!element.value || (typeof element.value === 'object' && Object.keys(element.value).length === 0))) {
+                temp[0] = { ...temp[0], sansId: baseTemp.sansId, resetQuestion: baseTemp.resetQuestion };
+            }
+        }
+    } else if(dataListJson.surveysPages[currentPageIndex].hasOwnProperty("questionStyle")){
+        let element = dataListJson.surveysPages[currentPageIndex].surveysQuestions[currentQuestionIndex];
+
+        let baseTemp = {
+            sansId: element.sansId || 0,
+            ansStId: element.ansStId || 0,
+            sansSpgId: dataListJson.surveysPages[currentPageIndex].spgId,
+            sansSqueId: element.squeId,
+            resetQuestion: reset.reset
+        };
+
+        if (!element.value || (typeof element.value === 'object' && Object.keys(element.value).length === 0)) {
+            if (element.squeType === "consent_agreement" && element.value === false && reset.reset === "Yes") {
+                temp.push({ ...baseTemp, sansAnswers: JSON.stringify({ value: false }) });
+            }
+        } else {
+            if (element.squeType === "contact_form") {
+                temp.push({
+                    ...baseTemp,
+                    sansAnswers: JSON.stringify(
+                        {
+                            value: {
+                                "Name": element.value.Name || '',
+                                "Email": element.value.Email || '',
+                                "Phone": element.value.Phone || '',
+                                "Address": element.value.Address || '',
+                                "Address 2": element.value["Address 2"] || '',
+                                "City": element.value.City || '',
+                                "State": element.value.State || '',
+                                "Country": element.value.Country || '',
+                                "zip": element.value.zip || '',
+                                "Company": element.value.Company || '',
+                            },
+                        }
+                    )
+                });
+                ansJson.surveyAnswers = temp;
+                return ansJson;
+            }
+            if (element.type === "range" && element.value?.total === 0 && reset.reset === "Yes") {
+                temp.push({ sansId: baseTemp.sansId, resetQuestion: baseTemp.resetQuestion });
+                ansJson.surveyAnswers = temp;
+                return ansJson;
+            }
+            if (element.type === "range" && element.value?.total === 0 && reset.reset === "No") {
+                ansJson.surveyAnswers = [];
+                return ansJson;
+            }
+            if (element.type === "phone" && !element.value?.PhoneNo && !element.value?.countryCode) {
+                temp.push({ sansId: baseTemp.sansId, sansSqueId: baseTemp.sansSqueId });
+            } else {
+                temp.push({ ...baseTemp, sansAnswers: JSON.stringify({ value: element.value }) });
+            }
+        }
+        if (element.hasOwnProperty("comment") && (element.value !== "" || (typeof element.value === 'object' && Object.keys(element.value).length > 0))) {
+            temp[0] = { ...temp[0], sansComments: JSON.stringify(element.comment) };
+        }
+
+        if (reset.reset === "Yes" && (!element.value || (typeof element.value === 'object' && Object.keys(element.value).length === 0))) {
+            temp[0] = { ...temp[0], sansId: baseTemp.sansId, resetQuestion: baseTemp.resetQuestion };
+        }
+    }
+    ansJson.surveyAnswers = temp;
+    return ansJson;
+}
+export function extractQuestionsFromJson(dataListJson){
+    let questionPageJson = dataListJson.surveysPages.filter((val)=>{
+        return val.spgType === "Question Page"; 
+    });
+    let temp = [];
+    questionPageJson.forEach((val1,index)=>{
+        val1.surveysQuestions.forEach((val2)=>{
+            temp = [...temp, {...val2, spgNumber: val1.spgNumber, index:index}];
+        })
+    });
+    return temp;
+}
+export function generateJSONForNode(questions, setLinkInSetData, categoryPageList){
+    let xPos = 50;
+    let yPos = 100;
+    let total = 50;
+    let temp = questions.map((v, i)=>{
+        let nodeId = `dndnode_${v.spgNumber}${v.squeDisplayOrder}`;
+        let radioTypes = ["single_answer", "single_answer_button", "single_answer_checkbox", "single_answer_combo", "gender", "marital_status", "education", "employment_status", "employer_type", "housing", "household_income", "race", "yes_no"];
+        let imageTypes = ["image_form", "image_with_text_form"];
+        let ratingTypes = ["rating_symbol", "rating_radio", "rating_box"];
+        if(typeof v.surveysOptions === "undefined" && !ratingTypes.includes(v.squeType)){
+            total+=(yPos)+(30);
+        } else if(ratingTypes.includes(v.squeType)) {
+            total+=(yPos)+(40*(v.squeType === "rating_symbol"?parseInt(v.surveysOptions[0].soptValue):10));
+        } else if(imageTypes.includes(v.squeType)) {
+            total+=(yPos)+(60*v.surveysOptions.length);
+        } else {
+            total+=(yPos)+(40*v.surveysOptions.length);
+        }
+        if(radioTypes.includes(v.squeType)){
+            return {
+                id: nodeId,
+                type: 'Radio',
+                data:{
+                    question: `${i+1} ${v.squeQuestion}`,
+                    options: v.surveysOptions.map((val)=>val.soptValue),
+                    id: nodeId,
+                    isFirst: i === 0,
+                    pageIndex: v.spgNumber-1,
+                    questionIndex: v.squeDisplayOrder,
+                    setLinkInSetData: setLinkInSetData,
+                    formLinks:  v.surveysOptions.map((val)=>{
+                        if(val.hasOwnProperty("formLink") && val?.formLink !== ""){
+                            return val?.formLink;
+                        } else {
+                            return "";
+                        }
+                    }),
+                    formNames:  v.surveysOptions.map((val)=>{
+                        if(val.hasOwnProperty("formName") && val?.formName !== ""){
+                            return val?.formName;
+                        } else {
+                            return "";
+                        }
+                    }),
+                    type: v.squeType,
+                    borderColor: categoryPageList[v.index].color,
+                    categoryPageList:v.squeCatName
+                },
+                position:{x: xPos, y: (total-((yPos)+(40*v.surveysOptions.length)))}
+            }
+        } else if(imageTypes.includes(v.squeType)){
+            return {
+                id: nodeId,
+                type: 'Image',
+                data:{
+                    question: `${i+1} ${v.squeQuestion}`,
+                    images: v.surveysOptions.map((val)=>val.soptValue),
+                    id: nodeId,
+                    isFirst: i === 0,
+                    pageIndex: v.spgNumber-1,
+                    questionIndex: v.squeDisplayOrder,
+                    setLinkInSetData: setLinkInSetData,
+                    type: v.squeType,
+                    formLinks:  v.surveysOptions.map((val)=>{
+                        if(val.hasOwnProperty("formLink") && val?.formLink !== ""){
+                            return val?.formLink;
+                        } else {
+                            return "";
+                        }
+                    }),
+                    formNames:  v.surveysOptions.map((val)=>{
+                        if(val.hasOwnProperty("formName") && val?.formName !== ""){
+                            return val?.formName;
+                        } else {
+                            return "";
+                        }
+                    }),
+                    borderColor: categoryPageList[v.index].color,
+                    categoryPageList:v.squeCatName
+                },
+                position:{x: xPos, y: (total-((yPos)+(60*v.surveysOptions.length)))}
+            }
+        } else if(ratingTypes.includes(v.squeType)){
+            return {
+                id: nodeId,
+                type: 'Rating',
+                data:{
+                    question: `${i+1} ${v.squeQuestion}`,
+                    ratings: v.squeType === "rating_symbol"?v.surveysOptions[0].soptValue:10,
+                    id: nodeId,
+                    type: v.squeType,
+                    isFirst: i === 0,
+                    pageIndex: v.spgNumber-1,
+                    questionIndex: v.squeDisplayOrder,
+                    setLinkInSetData: setLinkInSetData,
+                    formLinks:  v.formLinks.map((val)=>{
+                        return val.formLink;
+                    }),
+                    formNames:  v.formNames.map((val)=>{
+                        return val.formName;
+                    }),
+                borderColor: categoryPageList[v.index].color,
+                categoryPageList:v.squeCatName
+                },
+                position:{x: xPos, y: (total-((yPos)+(40*(v.squeType === "rating_symbol"?parseInt(v.surveysOptions[0].soptValue):10))))}
+            }
+        } else{
+            return {
+                id: nodeId,
+                type: 'Other',
+                data: {
+                    question: `${i+1} ${v.squeQuestion}`,
+                    id: nodeId,
+                    isFirst: i === 0,
+                    pageIndex: v.spgNumber-1,
+                    questionIndex: v.squeDisplayOrder,
+                    borderColor: categoryPageList[v.index].color,
+                    categoryPageList:v.squeCatName
+                },
+                position:{x: xPos, y: (total-((yPos)+(30)))}
+            }
+        }
+    });
+    total+=(yPos)+(30);
+    temp = temp.map((e)=>{
+        e.data.setLinkInSetData = setLinkInSetData;
+        return e;
+    });
+    temp = [
+        ...temp,
+        {
+            id: "dnd_node_end",
+            type: "End",
+            data: {
+                id: "dnd_node_end"
+            },
+            position:{x: xPos, y: (total-((yPos)+(30)))}
+        }
+    ];
+    return temp;
+}
+export function generateJSONForEdges(nodeJson){
+    let temp = [];
+    nodeJson.forEach((v, i, a) => {
+        if(i < (a.length - 1)){
+            if(v.type === "Radio"){
+                v.data.options.forEach((val, j)=>{
+                    temp = [...temp, {id: `${v.id}_src_${j}`, source: v.id, target: a[i+1].id, sourceHandle: `${v.id}_src_${j}`, targetHandle: `${a[i+1].id}_target`, type: 'step', option: val}];
+                });
+            } else if(v.type === "Image"){
+                v.data.images.forEach((val, j)=>{
+                    temp = [...temp, {id: `${v.id}_src_${j}`, source: v.id, target: a[i+1].id, sourceHandle: `${v.id}_src_${j}`, targetHandle: `${a[i+1].id}_target`, type: 'step', option: val}];
+                });
+            } else if(v.type === "Rating"){
+                Array.from({ length: parseInt(v.data.ratings) }, (_, i1) =>(i1+1)).forEach((_, j)=>{
+                    temp = [...temp, {id: `${v.id}_src_${j}`, source: v.id, target: a[i+1].id, sourceHandle: `${v.id}_src_${j}`, targetHandle: `${a[i+1].id}_target`, type: 'step', option: j+1}];
+                });
+            } else if(v.type === "Matrix"){
+                v.data.rows.forEach((_, j)=>{
+                    temp = [...temp, {id: `${v.id}_src_${j}`, source: v.id, target: a[i+1].id, sourceHandle: `${v.id}_src_${j}`, targetHandle: `${a[i+1].id}_target`, type: 'step'}];
+                });
+            } else {
+                temp = [...temp, {id: `${v.id}_src_0`, source: v.id, target: a[i+1].id, sourceHandle: `${v.id}_src_0`, targetHandle: `${a[i+1].id}_target`, type: 'step'}];
+            }
+        }
+    });
+    return temp;
+}
+export function removePropertiesFromJson(arr){
+    let temp = arr.filter((x)=>x.spgType === "Question Page");
+    return temp;
+}
+export function objectEquals(x, y) {
+    let result = "yes";
+    if(x.length === y.length){
+        x.forEach((xValue1,xIndex1)=>{
+            if(xValue1.uniqueId === y[xIndex1].uniqueId){
+                if(xValue1.surveysQuestions.length === y[xIndex1].surveysQuestions.length){
+                    xValue1.surveysQuestions.forEach((xValue2,xIndex2)=>{
+                        if(xValue2.uniqueId === y[xIndex1].surveysQuestions[xIndex2].uniqueId) {
+                            if(xValue2.hasOwnProperty("surveysOptions")) {
+                                if(xValue2.surveysOptions.length === y[xIndex1].surveysQuestions[xIndex2].surveysOptions.length){
+                                    xValue2.surveysOptions.forEach((xValue3,xIndex3)=>{
+                                        if(xValue3.soptUniqueId !== y[xIndex1].surveysQuestions[xIndex2].surveysOptions[xIndex3].soptUniqueId){
+                                            result="no";
+                                        }
+                                    })
+                                } else {
+                                    result="no";
+                                }
+                            }
+                        } else {
+                            result="no";
+                        }
+                    });
+                } else {
+                    result="no";
+                }
+            } else {
+                result="no";
+            }
+        });
+    } else {
+        result="no";
+    }
+    if(result === "no"){
+        return false;
+    } else {
+        return true;
+    }
+}
+export const isPageHasContent = (type)=> {
+    let msg = "";
+    if(type === "next"){
+        msg = "Sorry you can not move next because you forgot to put the content in one or more pages";
+    } else {
+        msg = "Sorry your survey is not shown preview because you forgot to put the content in one or more pages";
+    }
+    let pages = $('#preview-template').contents().find('.templateBody').length;
+    for(let i = 1; i < pages; i++){
+        if($('#templateBody'+i).find(".questionBlock").length > 0 && $('#templateBody'+i).find(".questionBlock .frm-block").length === 0){
+            $("#clickError").attr("data-type","Error");
+            $("#clickError").val(msg);
+            $("#clickError").trigger("click");
+            return false;
+        } else if($('#templateBody'+i).find(".landingBlock").length > 0 && $('#templateBody'+i).find(".landingBlock .mojoMcBlock").length === 0){
+            $("#clickError").attr("data-type","Error");
+            $("#clickError").val(msg);
+            $("#clickError").trigger("click");
+            return false;
+        }
+    }
+    if($('#templateBodyEND').find(".landingBlock .mojoMcBlock").length === 0){
+        $("#clickError").attr("data-type","Error");
+        $("#clickError").val(msg);
+        $("#clickError").trigger("click");
+        return false;
+    }
+    if(type === "next"){
+        msg = "Content only blocks must be on a Content or Landing Page";
+    } else {
+        msg = "Sorry your survey is not shown preview because content only blocks must be on a Content or Landing Page";
+    }
+    for(let i = 1; i < pages; i++){
+        if($('#templateBody'+i).find(".questionBlock .frm-block:last-of-type").attr("rolefor") === "label"){
+            $("#clickError").attr("data-type","Error");
+            $("#clickError").val(msg);
+            $("#clickError").trigger("click");
+            return false;
+        }
+    }
+    return true;
+}
+export function setOldNextPrev(oldArr, newArr){
+    let temp = newArr.map((val1,index1) => {
+        if(val1.spgType === "Question Page") {
+            val1.surveysQuestions = val1.surveysQuestions.map((val2,index2) => {
+                let tempNext = {};
+                Object.keys(oldArr[index1].surveysQuestions[index2].next).forEach(key => {
+                    if (oldArr[index1].surveysQuestions[index2].next.hasOwnProperty(key)) {
+                        if(key === "default"){
+                            tempNext = {...tempNext, "default": oldArr[index1].surveysQuestions[index2].next[key]};
+                        } else if(typeof oldArr[index1].surveysQuestions[index2].next[key]?.soptUniqueId !== "undefined") {
+                            let tempValue = val2?.surveysOptions?.filter((x) => {return x.soptUniqueId === oldArr[index1].surveysQuestions[index2].next[key].soptUniqueId});
+                            tempNext = {...tempNext, [tempValue[0].soptValue]: oldArr[index1].surveysQuestions[index2].next[key]};
+                        }
+                    }
+                });
+                val2?.surveysOptions?.forEach((soValue)=>{
+                    if(!Object.keys(tempNext).includes(soValue.soptValue)){
+                        tempNext[soValue.soptValue] = null;
+                    }
+                });
+                val2.next = tempNext;
+                val2.prev = oldArr[index1].surveysQuestions[index2].prev;
+                return val2;
+            });
+            return val1;
+        } else {
+            return val1;
+        }
+    });
+    return temp;
+}

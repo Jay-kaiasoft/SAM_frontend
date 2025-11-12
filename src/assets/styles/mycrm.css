@@ -1,0 +1,25 @@
+.sidebar-wrapper {
+    border-width: 0 1px 0 0;
+    border-color: #8A8B8D;
+    border-style: solid;
+    width: 50px;
+    display: flex;
+    flex-direction: column;
+}
+.sideabr-icon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+}
+.wrapper-class {
+    padding: 1rem;
+    border: 1px solid #ccc;
+}
+.editor-class {
+    padding: 1rem;
+    border: 1px solid #ccc;
+}
+.toolbar-class {
+    border: 1px solid #ccc;
+}

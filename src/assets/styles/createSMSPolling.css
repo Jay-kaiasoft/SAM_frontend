@@ -1,0 +1,49 @@
+@media (min-width: 768px) {
+    .table-left-margin {
+        margin-left: 150px;
+    }
+}
+.side-nav {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    width: 30px;
+}
+.side-nav li{
+    text-align: center;
+    font-size: 12px;
+}
+.tab-inactive {
+    border-right: 1px solid #ddd;
+    padding: 4px;
+    width: 25px;
+}
+.tab-active {
+    border-left: 2px solid blue;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 4px;
+    width: 25px;
+}
+.icon-style {
+    transition: opacity 1s;
+    font-size: 24px;
+    color: #242424;
+}
+.group-table-style{
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.table-content-wrapper .table-layout-fixed{
+    table-layout: fixed;
+}
+.table-layout-fixed .group-name-div{
+    width: 100% !important;
+}
+.location-checkbox{
+    margin-right: 10px !important;
+    position: relative !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+}

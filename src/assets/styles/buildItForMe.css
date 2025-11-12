@@ -1,0 +1,86 @@
+.build-for-me-types {
+    min-height: 175px;
+    border: 2px solid #3b589c;
+    color: #333333;
+    font-size: 16px;
+    text-align: center;
+    padding: 15px;
+    margin: 20px 20px 0px 0px;
+}
+.build-for-me-types:hover, .buld-for-me-packs.checked {
+    background-color: #3b589c;
+    color: #ffffff;
+}
+.build-for-me-types img {
+    margin: 0px 0px 10px 0px;
+}
+
+.dropzone-init{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 88px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+.order-details td{
+    white-space: pre-wrap !important;
+    vertical-align: middle;
+}
+.order-details td:first-of-type{
+    border-right: 1px solid #bfbfbf;
+}
+.thumbsContainer{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+.thumbsContainer .thumb{
+    display: inline-flex;
+    border-radius: 2px;
+    border: 1px solid #b2b2b2;
+    margin-bottom: 8px;
+    margin-right: 8px;
+    width: 100px;
+    height: 100px;
+    padding: 4px;
+    box-sizing: border-box;
+    position: relative;
+}
+.thumbsContainer .thumb .thumbInner{
+    display: flex;
+    min-width: 0;
+    overflow: hidden;
+}
+.thumbsContainer .thumb .thumbInner img{
+    display: block;
+    width: auto;
+    height: 100%;
+    margin: auto;
+}
+.thumbsContainer .thumb .closeButton{
+    position: absolute;
+    right: -6px;
+    top: -9px;
+}
+.waiting {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 9;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.waiting i
+{
+    font-size: 50px;
+    color: #ffffff;
+}

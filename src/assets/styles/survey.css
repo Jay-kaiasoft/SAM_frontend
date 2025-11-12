@@ -1,0 +1,47 @@
+div.col-3 input[type="checkbox"], div.col-4 div.d-flex input[type="checkbox"]{
+    position: unset !important;
+    margin: 0;
+}
+.fs-16{
+    font-size: 16px;
+}
+.list-style-disc{
+    list-style-type: disc;
+}
+.survey-flow-wrapper{
+    width: 100%;
+    height: calc(100vh - 230px);
+    position: relative;
+}
+.survey-node-wrapper{
+    border: 2px var(--website-color) solid;
+    border-radius: 0.5em;
+    background-color: rgb(255, 255, 255);
+}
+.node-handle{
+    height: 15px !important;
+    width: 15px !important;
+    border: none !important;
+}
+.node-handle.react-flow__handle-right {
+    background: #fbbc12 !important;
+}
+.node-handle.react-flow__handle-top {
+    background: #4285f4 !important;
+}
+.node-handle-target{
+    right: -15px !important;
+}
+.react-flow__edge-path {
+    stroke: #555555 !important;
+    stroke-width: 1 !important;
+}
+.react-flow__handle-top{
+    top: -7px !important;
+}
+.react-flow__controls{
+    bottom: 25vh !important;
+}
+.react-flow__panel.react-flow__attribution.bottom.right {
+    display: none;
+}

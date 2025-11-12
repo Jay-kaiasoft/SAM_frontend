@@ -1,0 +1,36 @@
+.upload-title {
+    margin-bottom: 8px;
+    color: #333333;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: left;
+}
+
+.upload-container {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    border: 3px dashed #EEEEEE;
+    background-color: #FAFAFA;
+}
+
+.upload-label {
+    font-size: 13px;
+    line-height: 24px;
+    color: #BDBDBD;
+    font-weight: 700;
+    text-align: center;
+}
+
+.file-main-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.file-label {
+    font-size: 12px;
+    line-height: 16px;
+}
