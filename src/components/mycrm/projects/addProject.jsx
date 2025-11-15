@@ -9,6 +9,8 @@ import {
   Typography,
   Box,
   Link,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { Row, Col, Table } from "reactstrap";
@@ -74,6 +76,7 @@ const AddProject = () => {
   ];
 
   const {
+    watch,
     handleSubmit,
     control,
     formState: { errors },
@@ -90,6 +93,7 @@ const AddProject = () => {
       projectStatus: null,
       projectBudget: "",
       note: "",
+      hasDate: true,
     },
   });
 
@@ -171,93 +175,6 @@ const AddProject = () => {
                       />
                     )}
                   />
-
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <Controller
-                      control={control}
-                      name="startDate"
-                      rules={{ required: true }}
-                      render={({ field }) => (
-                        <DatePicker
-                          {...field}
-                          inputFormat="MM/dd/yyyy hh:mm a"
-                          label="Start Date"
-                          slotProps={{ textField: { variant: "standard", fullWidth: true, margin: "normal", error: Boolean(errors.startDate) } }}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-
-                  <Controller
-                    control={control}
-                    name="assignMember"
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <Autocomplete
-                        multiple
-                        options={members}
-                        getOptionLabel={(o) => o.name}
-                        value={members.filter((m) => field.value?.includes(m.id))}
-                        onChange={(_, v) => field.onChange(v.map((x) => x.id))}
-                        renderInput={(params) => (
-                          <TextField {...params} variant="standard" label="Assign Member" margin="normal" error={Boolean(errors.clientCompany)} />
-                        )}
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="projectType"
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <Autocomplete
-                        options={projectType}
-                        getOptionLabel={(o) => o.value}
-                        value={projectType.find((o) => o.key === field.value) || null}
-                        onChange={(_, v) => field.onChange(v?.key ?? null)}
-                        renderInput={(params) => (
-                          <TextField {...params} variant="standard" label="Project Type" margin="normal" error={Boolean(errors.projectType)} />
-                        )}
-                        isOptionEqualToValue={(o, v) => o.key === v.key}
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="projectStatus"
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <Autocomplete
-                        options={projectStatus}
-                        getOptionLabel={(o) => o.value}
-                        value={projectStatus.find((o) => o.key === field.value) || null}
-                        onChange={(_, v) => field.onChange(v?.key ?? null)}
-                        renderInput={(params) => (
-                          <TextField {...params} variant="standard" label="Project Status" margin="normal" error={Boolean(errors.projectStatus)} />
-                        )}
-                        isOptionEqualToValue={(o, v) => o.key === v.key}
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    control={control}
-                    name="projectBudget"
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field}
-                        variant="standard"
-                        label="Project Budget"
-                        fullWidth
-                        margin="normal"
-                        inputMode="decimal"
-                        error={Boolean(errors.projectBudget)}
-                      />
-                    )}
-                  />
                 </Col>
 
                 <Col xs={12} md={6}>
@@ -279,24 +196,103 @@ const AddProject = () => {
                       />
                     )}
                   />
+                </Col>
 
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <Controller
-                      control={control}
-                      name="endDate"
-                      rules={{ required: true }}
-                      render={({ field }) => (
-                        <DatePicker
-                          {...field}
-                          label="End Date"
-                          inputFormat="MM/dd/yyyy hh:mm a"
-                          slotProps={{ textField: { variant: "standard", fullWidth: true, margin: "none", error: Boolean(errors.endDate) } }}
-                          sx={{ marginTop: 3 }}
+                <Col xs={12} md={6}>
+                  <Controller
+                    control={control}
+                    name="hasDate"
+                    render={({ field }) => (
+                      <Box mt={1}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={!!field.value}
+                              onChange={(e) => field.onChange(e.target.checked)}
+                            // sx={{ p: 0, m: 1 }}
+                            />
+                          }
+                          label="Project has start and end date"
+                          sx={{
+                            "& .MuiFormControlLabel-label": {
+                              fontSize: 14,
+                              color: "text.secondary",
+                            },
+                            marginBottom: 0
+                          }}
                         />
-                      )}
-                    />
-                  </LocalizationProvider>
+                      </Box>
+                    )}
+                  />
+                </Col>
 
+                <Col xs={12} md={6}></Col>
+
+                {
+                  watch("hasDate") && (
+                    <>
+                      <Col xs={12} md={6}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <Controller
+                            control={control}
+                            name="startDate"
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                              <DatePicker
+                                {...field}
+                                inputFormat="MM/dd/yyyy hh:mm a"
+                                label="Start Date"
+                                slotProps={{ textField: { variant: "standard", fullWidth: true, margin: "normal", error: Boolean(errors.startDate) } }}
+                              />
+                            )}
+                          />
+                        </LocalizationProvider>
+
+                      </Col>
+
+                      <Col xs={12} md={6}>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <Controller
+                            control={control}
+                            name="endDate"
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                              <DatePicker
+                                {...field}
+                                label="End Date"
+                                inputFormat="MM/dd/yyyy hh:mm a"
+                                slotProps={{ textField: { variant: "standard", fullWidth: true, margin: "none", error: Boolean(errors.endDate) } }}
+                                sx={{ marginTop: 2 }}
+                              />
+                            )}
+                          />
+                        </LocalizationProvider>
+                      </Col>
+                    </>
+                  )
+                }
+
+                <Col xs={12} md={6}>
+                  <Controller
+                    control={control}
+                    name="assignMember"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Autocomplete
+                        multiple
+                        options={members}
+                        getOptionLabel={(o) => o.name}
+                        value={members.filter((m) => field.value?.includes(m.id))}
+                        onChange={(_, v) => field.onChange(v.map((x) => x.id))}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="standard" label="Assign Member" margin="normal" error={Boolean(errors.clientCompany)} />
+                        )}
+                      />
+                    )}
+                  />
+                </Col>
+
+                <Col xs={12} md={6} style={{ display: "flex", alignItems: "end" }}>
                   <Controller
                     control={control}
                     name="projectPriority"
@@ -312,14 +308,55 @@ const AddProject = () => {
                             variant="standard"
                             label="Project Priority"
                             margin="none"
-                            sx={{ marginTop: 3 }}
+                            sx={{ marginTop: 2 }}
                             error={Boolean(errors.projectPriority)} />
+                        )}
+                        isOptionEqualToValue={(o, v) => o.key === v.key}
+                        sx={{ width: "100%", marginBottom: "8px" }}
+                      />
+                    )}
+                  />
+
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Controller
+                    control={control}
+                    name="projectType"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Autocomplete
+                        options={projectType}
+                        getOptionLabel={(o) => o.value}
+                        value={projectType.find((o) => o.key === field.value) || null}
+                        onChange={(_, v) => field.onChange(v?.key ?? null)}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="standard" label="Project Type" margin="normal" error={Boolean(errors.projectType)} />
                         )}
                         isOptionEqualToValue={(o, v) => o.key === v.key}
                       />
                     )}
                   />
+                  <Controller
+                    control={control}
+                    name="projectStatus"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Autocomplete
+                        options={projectStatus}
+                        getOptionLabel={(o) => o.value}
+                        value={projectStatus.find((o) => o.key === field.value) || null}
+                        onChange={(_, v) => field.onChange(v?.key ?? null)}
+                        renderInput={(params) => (
+                          <TextField {...params} variant="standard" label="Project Status" margin="normal" error={Boolean(errors.projectStatus)} />
+                        )}
+                        isOptionEqualToValue={(o, v) => o.key === v.key}
+                      />
+                    )}
+                  />
+                </Col>
 
+                <Col xs={12} md={6}>
                   <Controller
                     control={control}
                     name="note"
@@ -332,7 +369,26 @@ const AddProject = () => {
                         rows={4}
                         fullWidth
                         margin="none"
-                        sx={{ marginTop: 3.7 }}
+                        sx={{ marginTop: 2.7 }}
+                      />
+                    )}
+                  />
+                </Col>
+
+                <Col xs={12} md={6}>
+                  <Controller
+                    control={control}
+                    name="projectBudget"
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        variant="standard"
+                        label="Project Budget"
+                        fullWidth
+                        margin="normal"
+                        inputMode="decimal"
+                        error={Boolean(errors.projectBudget)}
                       />
                     )}
                   />
@@ -410,7 +466,6 @@ const AddProject = () => {
                   />
                 </label>
 
-                {/* Small file list (optional) */}
                 {projectDocs.length > 0 && (
                   <Box>
                     <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5 }}>
@@ -436,6 +491,7 @@ const AddProject = () => {
                   </Typography>
                 </Col>
               </Row>
+
               <Row>
                 <Col xs={12}>
                   <div className="icon-wrapper w-100 my-2 pt-3">
@@ -503,3 +559,234 @@ const AddProject = () => {
 };
 
 export default AddProject;
+
+{/* <Row>
+  <Col xs={12} md={6}>
+    <Controller
+      control={control}
+      name="projectName"
+      rules={{ required: true }}
+      render={({ field }) => (
+        <TextField
+          {...field}
+          variant="standard"
+          label="Project Name"
+          fullWidth
+          margin="normal"
+          error={Boolean(errors.projectName)}
+        />
+      )}
+    />
+
+    <Controller
+      control={control}
+      name="clientCompany"
+      rules={{ required: true }}
+      render={({ field }) => (
+        <Autocomplete
+          options={clientCompany}
+          getOptionLabel={(o) => o?.value ?? ""}
+          value={clientCompany.find((o) => o.key === field.value) || null}
+          onChange={(_, v) => field.onChange(v?.key ?? null)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="standard"
+              label="Client Company"
+              error={Boolean(errors.clientCompany)}
+              margin="normal"
+            />
+          )}
+          isOptionEqualToValue={(o, v) => o.key === v.key}
+        />
+      )}
+    />
+    <Controller
+      control={control}
+      name="hasDate"
+      render={({ field }) => (
+        <Box mt={2}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={!!field.value}
+                onChange={(e) => field.onChange(e.target.checked)}
+              // sx={{ p: 0, m: 1 }}
+              />
+            }
+            label="Has Date"
+            sx={{
+              "& .MuiFormControlLabel-label": {
+                fontSize: 14,
+                color: "text.secondary",
+              },
+            }}
+          />
+        </Box>
+      )}
+    />
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Controller
+        control={control}
+        name="startDate"
+        rules={{ required: true }}
+        render={({ field }) => (
+          <DatePicker
+            {...field}
+            inputFormat="MM/dd/yyyy hh:mm a"
+            label="Start Date"
+            slotProps={{ textField: { variant: "standard", fullWidth: true, margin: "normal", error: Boolean(errors.startDate) } }}
+          />
+        )}
+      />
+    </LocalizationProvider>
+
+    <Controller
+      control={control}
+      name="assignMember"
+      rules={{ required: true }}
+      render={({ field }) => (
+        <Autocomplete
+          multiple
+          options={members}
+          getOptionLabel={(o) => o.name}
+          value={members.filter((m) => field.value?.includes(m.id))}
+          onChange={(_, v) => field.onChange(v.map((x) => x.id))}
+          renderInput={(params) => (
+            <TextField {...params} variant="standard" label="Assign Member" margin="normal" error={Boolean(errors.clientCompany)} />
+          )}
+        />
+      )}
+    />
+
+    <Controller
+      control={control}
+      name="projectType"
+      rules={{ required: true }}
+      render={({ field }) => (
+        <Autocomplete
+          options={projectType}
+          getOptionLabel={(o) => o.value}
+          value={projectType.find((o) => o.key === field.value) || null}
+          onChange={(_, v) => field.onChange(v?.key ?? null)}
+          renderInput={(params) => (
+            <TextField {...params} variant="standard" label="Project Type" margin="normal" error={Boolean(errors.projectType)} />
+          )}
+          isOptionEqualToValue={(o, v) => o.key === v.key}
+        />
+      )}
+    />
+
+    <Controller
+      control={control}
+      name="projectStatus"
+      rules={{ required: true }}
+      render={({ field }) => (
+        <Autocomplete
+          options={projectStatus}
+          getOptionLabel={(o) => o.value}
+          value={projectStatus.find((o) => o.key === field.value) || null}
+          onChange={(_, v) => field.onChange(v?.key ?? null)}
+          renderInput={(params) => (
+            <TextField {...params} variant="standard" label="Project Status" margin="normal" error={Boolean(errors.projectStatus)} />
+          )}
+          isOptionEqualToValue={(o, v) => o.key === v.key}
+        />
+      )}
+    />
+
+    <Controller
+      control={control}
+      name="projectBudget"
+      rules={{ required: true }}
+      render={({ field }) => (
+        <TextField
+          {...field}
+          variant="standard"
+          label="Project Budget"
+          fullWidth
+          margin="normal"
+          inputMode="decimal"
+          error={Boolean(errors.projectBudget)}
+        />
+      )}
+    />
+  </Col>
+
+  <Col xs={12} md={6}>
+    <Controller
+      control={control}
+      name="projectDiscription"
+      rules={{ required: true }}
+      render={({ field }) => (
+        <TextField
+          {...field}
+          variant="standard"
+          label="Project Discription"
+          multiline
+          rows={5}
+          fullWidth
+          margin="none"
+          sx={{ marginTop: 0.2 }}
+          error={Boolean(errors.projectDiscription)}
+        />
+      )}
+    />
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Controller
+        control={control}
+        name="endDate"
+        rules={{ required: true }}
+        render={({ field }) => (
+          <DatePicker
+            {...field}
+            label="End Date"
+            inputFormat="MM/dd/yyyy hh:mm a"
+            slotProps={{ textField: { variant: "standard", fullWidth: true, margin: "none", error: Boolean(errors.endDate) } }}
+            sx={{ marginTop: 3 }}
+          />
+        )}
+      />
+    </LocalizationProvider>
+
+    <Controller
+      control={control}
+      name="projectPriority"
+      rules={{ required: true }}
+      render={({ field }) => (
+        <Autocomplete
+          options={projectPriority}
+          getOptionLabel={(o) => o.value}
+          value={projectPriority.find((o) => o.key === field.value) || null}
+          onChange={(_, v) => field.onChange(v?.key ?? null)}
+          renderInput={(params) => (
+            <TextField {...params}
+              variant="standard"
+              label="Project Priority"
+              margin="none"
+              sx={{ marginTop: 3 }}
+              error={Boolean(errors.projectPriority)} />
+          )}
+          isOptionEqualToValue={(o, v) => o.key === v.key}
+        />
+      )}
+    />
+
+    <Controller
+      control={control}
+      name="note"
+      render={({ field }) => (
+        <TextField
+          {...field}
+          variant="standard"
+          label="Notes or Comments"
+          multiline
+          rows={4}
+          fullWidth
+          margin="none"
+          sx={{ marginTop: 3.7 }}
+        />
+      )}
+    />
+  </Col>
+</Row> */}
