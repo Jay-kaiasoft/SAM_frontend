@@ -10,32 +10,36 @@ import { setGlobalAlertAction } from '../../actions/globalAlertActions';
 import { connect } from 'react-redux';
 
 const ClientContact = lazy(() => import("./clientContact"))
-const SMSInbox = lazy(() => import("./smsInbox"))
 const Projects = lazy(() => import("./projects/projects"))
+const Crm = lazy(() => import("./crm/crm"))
 
 const Mycrm = (props) => {
-    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "managesmsinbox" };
-    // const tabNameToIndex = { 0: "clientContact", 1: "mycalendar", 2: "mypipeline", 3: "mytasks", 4: "managesmsinbox" };
+    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm" };
     const [value, setValue] = useState(0);
     const [replyCount, setReplyCount] = useState({});
     let tabRef = useRef([createRef(), createRef(), createRef()]);
     const [showPopper, setShowPopper] = useState(false);
     const [arrowRef, setArrowRef] = useState(null);
     const tabList = [
-        {            
+        {
             tabTo: "/clientContact",
-            tabIcon: <i className="far fa-address-book" data-toggle="tooltip" title="Client Contact" style={{width:22, textAlign:"center"}}></i>,
+            tabIcon: <i className="far fa-address-book" data-toggle="tooltip" title="Client Contact" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Client Contact"
         },
         {
             tabTo: "/projects",
-            tabIcon: <i className="far fa-layer-group" data-toggle="tooltip" title="Projects" style={{width:22, textAlign:"center"}}></i>,
+            tabIcon: <i className="far fa-layer-group" data-toggle="tooltip" title="Projects" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Projects"
-        },    
+        },
+        {
+            tabTo: "/crm",
+            tabIcon: <i className="far fa-address-book" data-toggle="tooltip" title="CRM" style={{ width: 22, textAlign: "center" }}></i>,
+            tabTitle: "CRM"
+        },
     ];
 
     const handleChange = (event, newValue) => {
-        if(props.user.planModuleList.includes(tabList[newValue]?.tabTitle)) {
+        if (props.user.planModuleList.includes(tabList[newValue]?.tabTitle)) {
             History.push(`/${tabNameToIndex[newValue]}`);
             setValue(newValue);
         } else {
@@ -63,7 +67,7 @@ const Mycrm = (props) => {
     useEffect(() => {
         const pathname = props.history.location.pathname;
         let tempTabTitle = tabList.find(v => v.tabTo === pathname)?.tabTitle;
-        if(props.user.planModuleList.includes(tempTabTitle)) {
+        if (props.user.planModuleList.includes(tempTabTitle)) {
             switch (pathname) {
                 default:
                     setValue(0);
@@ -73,6 +77,9 @@ const Mycrm = (props) => {
                     break;
                 case "/projects":
                     setValue(1);
+                    break;
+                case "/crm":
+                    setValue(2);
                     break;
                 // case "/mypipeline":
                 //     setValue(2);
@@ -113,7 +120,7 @@ const Mycrm = (props) => {
                         >
                             {
                                 tabList.map((v, i) => (
-                                    <Tab 
+                                    <Tab
                                         key={i}
                                         ref={tabRef.current[i]}
                                         component={Link}
@@ -127,9 +134,9 @@ const Mycrm = (props) => {
                             {/*<Tab component={Link} to="/mypipeline" icon={<i className="far fa-layer-group" data-toggle="tooltip" title="My Pipeline"></i>} {...a11yProps(2)} />*/}
                             {/*<Tab component={Link} to="/mytasks" icon={<i className="far fa-calendar-check" data-toggle="tooltip" title="My Tasks"></i>} {...a11yProps(3)} />*/}
                         </Tabs>
-                        {tabRef.current.length > 0 && 
+                        {tabRef.current.length > 0 &&
                             tabList.map((v, i) => (
-                                <PopoverTooltip key={i} tabRef={tabRef} showPopper={showPopper} arrowRef={arrowRef} setArrowRef={setArrowRef} i={i} showText={v.tabTitle}/>
+                                <PopoverTooltip key={i} tabRef={tabRef} showPopper={showPopper} arrowRef={arrowRef} setArrowRef={setArrowRef} i={i} showText={v.tabTitle} />
                             ))
                         }
                     </div>
@@ -146,17 +153,22 @@ const Mycrm = (props) => {
                         <Projects />
                     </Suspense>
                 </TabPanel>
+                <TabPanel value={value} index={2}>
+                    <Suspense fallback={<Loader />}>
+                        <Crm />
+                    </Suspense>
+                </TabPanel>
                 {/*<TabPanel value={value} index={2}>*/}
                 {/*    <TempComponent compName="My Pipeline" />*/}
                 {/*</TabPanel>*/}
                 {/*<TabPanel value={value} index={3}>*/}
                 {/*    <TempComponent compName="My Tasks" />*/}
                 {/*</TabPanel>*/}
-                <TabPanel value={value} index={2}>
+                {/* <TabPanel value={value} index={2}>
                     <Suspense fallback={<Loader />}>
                         <SMSInbox replyCount={replyCount} setReplyCount={setReplyCount} />
                     </Suspense>
-                </TabPanel>
+                </TabPanel> */}
             </Col>
         </Row>
     );
@@ -169,4 +181,4 @@ const mapDispatchToProps = dispatch => {
         }
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(withRouter(Mycrm));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Mycrm));
