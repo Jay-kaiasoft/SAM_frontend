@@ -107,7 +107,7 @@ const Mycrm = (props) => {
 
     return (
         <Row className="midleMain p-0">
-            <Col md={1} className="leftTabs">
+            <Col sm={0} md={1} className="leftTabs">
                 <ClickAwayListener onClickAway={handleClickAway}>
                     <div style={{ position: "relative", height: "100%" }}>
                         <Tabs
