@@ -1,21 +1,16 @@
-// src/pages/crm/crm.jsx
-
 import React, { useState } from "react";
 import {
-  Drawer,
   IconButton,
   InputAdornment,
   TextField,
   Button,
-  Link,
   useMediaQuery,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
-  Checkbox,
 } from "@mui/material";
-import { Col, Input, Row } from "reactstrap";
+import { Input } from "reactstrap";
+import './crm.css'
 
 const searchTypes = [
   { id: 1, name: "All" },
@@ -28,249 +23,287 @@ const groups = [
   { id: 1, name: "Group 1" },
   { id: 2, name: "Group 2" },
   { id: 3, name: "Group 3" },
+  { id: 4, name: "Group 4", segment: [{ id: 1, name: "Segment 1" }, { id: 2, name: "Segment 2" }] },
+  { id: 5, name: "Group 5" },
+  { id: 6, name: "Group 6" },
+  { id: 7, name: "Group 7", segment: [{ id: 1, name: "Segment 1" }, { id: 2, name: "Segment 2" }, { id: 3, name: "Segment 3" }, { id: 4, name: "Segment 4" }] },
+  { id: 8, name: "Group 8" },
+  { id: 9, name: "Group 9", segment: [{ id: 1, name: "Segment 1" }, { id: 2, name: "Segment 2" }] },
 ];
 
 const contacts = [
   {
     id: 1,
     name: "Becht Raph",
-    company: "Metz Inc",
     email: "becht_raph@sample.com",
     phone: "727-702-9986",
-    status: "Lead",
-    score: 60,
+    company: "Metz Inc",
+    avatarType: "image",
+    avatarUrl: "https://via.placeholder.com/40"
   },
   {
     id: 2,
     name: "Bogisich Marcos",
+    email: "",
+    phone: "7045088762",
     company: "Gottlieb Group",
-    email: "bogisich@sample.com",
-    phone: "704-508-8762",
-    status: "Prospect",
-    score: 48,
+    avatarType: "initials",
+    initials: "BM"
   },
   {
     id: 3,
     name: "Christian Sen",
+    email: "Christian_sen@hotmail.com",
+    phone: "8287071112",
     company: "Metz Inc",
-    email: "christian_sen@hotmail.com",
-    phone: "828-701-1112",
-    status: "Customer",
-    score: 92,
+    avatarType: "image",
+    avatarUrl: "https://via.placeholder.com/40"
   },
-  // Add more contacts to better illustrate the scrollable list
-  { id: 4, name: "Hankeen Gerhard", company: "Moen and Sons", email: "hankeen_gerhard@sample.com", phone: "8430921690", status: "Lead", score: 55, },
-  { id: 5, name: "Jacobs Steve", company: "Jacobs Inc", email: "jacobs_steve@hotmail.com", phone: "1234567890", status: "Customer", score: 99, },
+  {
+    id: 4,
+    name: "Hankeen Gerhard",
+    email: "hankeen_gerhard@sample.com",
+    phone: "8430921690",
+    company: "Moen and Sons",
+    avatarType: "initials",
+    initials: "KG"
+  },
 ];
 
 
 const Crm = () => {
-  const [searchType, setSearchType] = useState(searchTypes[0].id); // Default to 'All'
+  const [searchType, setSearchType] = useState(searchTypes[0].id);
   const handleChange = (event) => {
     setSearchType(event.target.value);
   };
 
   const [selectedGroupId, setSelectedGroupId] = useState(groups[0].id);
-  const [selectedContactId, setSelectedContactId] = useState(contacts[0].id);
   const [searchText, setSearchText] = useState("");
-  const [perPage, setPerPage] = useState(25);
 
-  // Persistent / Collapsible Sidebars state (Desktop View)
-  const [isGroupsOpen, setIsGroupsOpen] = useState(true);
-  const [isContactsOpen, setIsContactsOpen] = useState(true);
+  const [isGroupsOpen, setIsGroupsOpen] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState({});
 
-  // Custom Accordion state
+  const [isContactSectionOpen, setIsContactSectionOpen] = useState(true);
+  const [selectedContactId, setSelectedContactId] = useState(contacts[0]?.id || null);
+
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
 
-  // Sidebar width states for slow motion effect
-  const [firstBoxWidth, setFirstBoxWidth] = useState(200);
-  const [secondBoxWidth, setSecondBoxWidth] = useState(200);
-
-  // Mobile Drawer state
-  const [groupDrawerOpen, setGroupDrawerOpen] = useState(false);
-  const [contactDrawerOpen, setContactDrawerOpen] = useState(false);
-
-  // Use a higher breakpoint for the sidebars to be persistent
   const isDesktop = useMediaQuery("(min-width: 992px)");
 
-  // ... (Your existing handleChangePerPage, filteredContacts, activeContact logic) ...
+  const toggleGroupExpand = (groupId) => {
+    setExpandedGroups((prev) => {
+      const isCurrentlyOpen = !!prev[groupId];
 
-  const filteredContacts = contacts.filter((c) =>
-    c.name.toLowerCase().includes(searchText.toLowerCase())
-  );
-  const activeContact =
-    filteredContacts.find((c) => c.id === selectedContactId) ||
-    filteredContacts[0];
+      // if same group clicked again → close all
+      if (isCurrentlyOpen) {
+        return {};
+      }
 
+      // only keep this group open
+      return { [groupId]: true };
+    });
+  };
 
-  // Reusable sidebar content (Groups)
   const renderGroupsContent = () => (
     <div className="h-100 d-flex flex-column">
-      <div className="group-styling py-2" style={{ backgroundColor: "white !important" }}>
-        <div className="group-aligment-heading">
-          <Input className="group-name" type="checkbox" />
-          <span>Select</span>
-        </div>
-      </div>
-
-      <div className="flex-grow-1 overflow-auto">
-        <div className="custom-accordion">
-          <div
-            className="custom-accordion-summary"
-            onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-            style={{ cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px", backgroundColor: "#f8f9fa", border: "1px solid #dee2e6" }}
-          >
-            <p style={{ margin: 0 }}>Group</p>
-            <i
-              className={`fas fa-chevron-down transition-transform ${isAccordionOpen ? 'rotate-180' : ''}`}
-              style={{ transition: 'transform 0.3s ease' }}
-            ></i>
-          </div>
-          <div
-            className="custom-accordion-details"
-            style={{
-              maxHeight: isAccordionOpen ? '500px' : '0',
-              overflow: 'hidden',
-              transition: 'max-height 0.3s ease, opacity 0.3s ease',
-              opacity: isAccordionOpen ? 1 : 0,
-            }}
-          >
-            <div className="group-name-list" style={{ padding: '16px' }}>
-              {groups.map((g, index) => (
-                <div key={index}>
-                  <div
-                    key={g.id}
-                    className={`group-aligment  ${selectedGroupId === g.id ? "bg-light fw-semibold" : ""}`}
-                    onClick={() => setSelectedGroupId(g.id)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <Input className="group-name" type="checkbox" checked={selectedGroupId === g.id} />
-                    <div className="group-name-div">
-                      {g.name}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div className="border-top px-3 py-2 small text-muted">
-        Total Groups : {groups.length}
-      </div>
-    </div>
-  );
-
-  // Reusable sidebar content (Contacts list) - Now with a top action bar for image matching
-  const renderContactsContent = () => (
-    <div className="h-100 d-flex flex-column">
-
-      {/* Top Action Bar (Add Contact, Delete, Close) */}
-      <div className="d-flex align-items-center justify-content-between px-2 py-2 border-bottom flex-shrink-0">
-        <IconButton size="small">
-          <i className="far fa-user-plus me-1" />
-          <span className="small text-muted text-nowrap ms-1">Add Contact</span>
-        </IconButton>
-        <div className="d-flex align-items-center" style={{ gap: 5 }}>
-          <IconButton size="small">
-            <i className="far fa-trash-alt" />
-          </IconButton>
-          {isDesktop && (
-            <IconButton size="small" onClick={() => setIsContactsOpen(false)}>
-              <i className="far fa-chevron-right" />
-            </IconButton>
-          )}
-        </div>
-      </div>
-
-      {/* Contact List Filter/Sort Header */}
-      <div className="d-flex align-items-center px-3 py-2 border-bottom flex-shrink-0">
-        <Input type="checkbox" className="me-3" />
-        <FormControl variant="standard" sx={{ minWidth: 120, flexGrow: 1 }}>
-          <Select
-            disableUnderline
-            value={"Company"}
-            sx={{
-              '& .MuiSelect-select': { paddingRight: '24px !important' },
-              fontSize: '0.9rem',
-              fontWeight: '600'
-            }}
-          >
-            <MenuItem value="Company">Company</MenuItem>
-            <MenuItem value="Name">Name</MenuItem>
-          </Select>
-        </FormControl>
-        <i className="far fa-sort-alt ms-2 text-muted" style={{ cursor: 'pointer' }} />
-      </div>
-
-
-      {/* Scrollable Contacts List */}
-      <div className="flex-grow-1 overflow-auto">
-        {filteredContacts.map((c) => {
-          const initials = c.name
-            .split(" ")
-            .map((n) => n[0])
-            .join("");
-          const isActive = c.id === activeContact?.id;
-          return (
-            <div
-              key={c.id}
-              className={`d-flex align-items-start px-2 py-2 contact-row ${isActive ? "bg-primary bg-opacity-10" : ""
-                }`}
-              style={{ cursor: "pointer", borderBottom: "1px solid #f1f1f1" }}
-              onClick={() => setSelectedContactId(c.id)}
+      <div className="border-bottom py-2 d-flex align-items-center px-3 bg-white">
+        {!isGroupsOpen && (
+          <div className="d-flex align-items-center" style={{ flexGrow: 1, gap: 15 }}>
+            <Button
+              variant="text"
+              size="small"
+              startIcon={<i className="far fa-plus-square" />}
+              sx={{ textTransform: "none", color: "#000" }}
             >
-              <div className="d-flex flex-column align-items-center me-3 flex-shrink-0 pt-1">
-                <Input type="checkbox" className="mb-2" />
-                <div
-                  className={`rounded-circle d-flex align-items-center justify-content-center ${isActive ? "bg-primary text-white" : "bg-secondary text-white"
+              Add
+            </Button>
+            <Button
+              variant="text"
+              size="small"
+              startIcon={<i className="far fa-pencil-alt" />}
+              sx={{ textTransform: "none", color: "#000"}}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="text"
+              size="small"
+              startIcon={<i className="far fa-trash-alt" />}
+              sx={{ textTransform: "none", color: "#000" }}
+            >
+              Delete
+            </Button>
+          </div>
+        )}
+        <div>
+          <IconButton
+            id="firstBox"
+            onClick={() => setIsGroupsOpen(!isGroupsOpen)}
+          >
+            {isGroupsOpen ? (
+              <i className="fas fa-bars text-blue" />
+            ) : (
+              <i className="fas fa-chevron-left" />
+            )}
+          </IconButton>
+        </div>
+      </div>
+
+      {!isGroupsOpen && (
+        <>
+          <div className="group-styling py-2">
+            <div className="group-aligment-heading">
+              <Input className="group-name" type="checkbox" />
+              <span>Select</span>
+            </div>
+          </div>
+
+          <div className="flex-grow-1 overflow-auto">
+            <div className="custom-accordion">
+              <div
+                className="custom-accordion-summary"
+                onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+                style={{
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "8px",
+                  backgroundColor: "#E1E1E1",
+                  border: "1px solid #E1E1E1",
+                }}
+              >
+                <p style={{ margin: 0 }}>Group</p>
+                <i
+                  className={`fas fa-chevron-down transition-transform ${isAccordionOpen ? "rotate-180" : ""
                     }`}
-                  style={{
-                    width: 40, height: 40,
-                    // Use Image Tag for contact profile images
-                    backgroundImage: c.id === 1 ? 'url()' : (c.id === 3 ? 'url()' : 'none'),
-                    backgroundSize: 'cover',
-                  }}
-                >
-                  {/* Only show initials if no image is present */}
-                  {!(c.id === 1 || c.id === 3) && <span className="small fw-bold">{initials}</span>}
-                </div>
+                  style={{ transition: "transform 0.3s ease" }}
+                />
               </div>
 
-              <div className="flex-grow-1">
-                <div className="fw-semibold text-truncate">{c.name}</div>
-                <div className="small text-muted text-truncate">
-                  <i className="far fa-envelope me-1" />
-                  {c.email}
-                </div>
-                <div className="small text-muted text-truncate">
-                  <i className="far fa-phone me-1" />
-                  {c.phone}
-                </div>
-                <div className="small text-muted text-truncate">
-                  <i className="far fa-building me-1" />
-                  {c.company}
+              <div
+                className="custom-accordion-details"
+                style={{
+                  maxHeight: isAccordionOpen ? "500px" : "",
+                  overflow: "hidden",
+                  transition: "max-height 0.3s ease, opacity 0.3s ease",
+                  opacity: isAccordionOpen ? 1 : 0,
+                }}
+              >
+                <div className="group-name-list" style={{ padding: 0 }}>
+                  {groups.map((g) => {
+                    const hasSegments =
+                      Array.isArray(g.segment) && g.segment.length > 0;
+                    const isExpanded = !!expandedGroups[g.id];
+
+                    return (
+                      <div key={g.id}>
+                        {/* GROUP ROW */}
+                        <div
+                          className={`group-aligment d-flex align-items-center justify-content-between fw-semibold`}
+                          style={{
+                            cursor: "pointer",
+                            backgroundColor:
+                              selectedGroupId === g.id ? "#E1E1E1" : "",
+                            padding: "6px 8px",
+                          }}
+                          onClick={() => setSelectedGroupId(g.id)}
+                        >
+                          <div className="d-flex align-items-center">
+                            <Input
+                              className="group-name me-2"
+                              type="checkbox"
+                              checked={selectedGroupId === g.id}
+                            />
+                            <div className="group-name-div">{g.name}</div>
+                          </div>
+
+                          <div className="d-flex align-items-center" style={{ gap: 8 }}>
+                            {hasSegments && (
+                              <IconButton
+                                size="small"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleGroupExpand(g.id);
+                                }}
+                              >
+                                <i
+                                  className={`fas ${isExpanded ? "fa-chevron-up" : "fa-chevron-down"
+                                    }`}
+                                />
+                              </IconButton>
+                            )}
+                            {/* {
+                              selectedGroupId === g.id ? (
+                                <IconButton
+                                  size="small"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <i className="fas fa-ellipsis-v" />
+                                </IconButton>
+                              ) : null
+                            } */}
+                          </div>
+                        </div>
+
+                        {/* SEGMENTS LIST */}
+                        {hasSegments && isExpanded && (
+                          <div
+                            className="segment-list"
+                            style={{
+                              paddingLeft: "32px",
+                              paddingTop: "4px",
+                              paddingBottom: "6px",
+                              backgroundColor: "#fafafa",
+                              borderLeft: "2px solid #ddd",
+                            }}
+                          >
+                            {g.segment.map((seg) => (
+                              <div
+                                key={seg.id}
+                                className="d-flex align-items-center justify-content-between py-1 segment-row"
+                                style={{ paddingRight: "8px" }}
+                              >
+                                <div className="d-flex align-items-center">
+                                  <Input
+                                    type="checkbox"
+                                    className="me-2"
+                                  />
+                                  <span>{seg.name}</span>
+                                </div>
+
+                                <div
+                                  className="d-flex align-items-center"
+                                  style={{ gap: 8 }}
+                                >
+                                  <i className="far fa-copy cursor-pointer" />
+                                  <i className="far fa-pencil-alt cursor-pointer" />
+                                  <i className="far fa-trash-alt cursor-pointer" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
-          );
-        })}
+          </div>
 
-        {filteredContacts.length === 0 && (
-          <div className="p-3 text-muted small">No contacts found.</div>
-        )}
-      </div>
+          <div className="border-top px-3 py-2 small text-muted">
+            Total Groups : {groups.length}
+          </div>
+        </>
+      )}
     </div>
   );
 
-
-
-  // --- MAIN COMPONENT RETURN ---
   return (
-    <>      
-      <div className="border-bottom">
+    <>
+      <div>
         <div className="d-flex align-items-center justify-content-between px-3 py-2">
           <div className="d-flex align-items-center w-25" style={{ flexGrow: 1 }}>
             <h3 className="mb-0 fw-bold ms-2 me-4">CRM</h3>
@@ -321,53 +354,27 @@ const Crm = () => {
             <div className="d-flex align-items-center ms-4" style={{ gap: 10 }}>
               <Button variant="outlined" size="small" startIcon={<i className="far fa-upload" />} sx={{ color: "#000", textTransform: "none", borderRadius: "6px", border: 0, '&:hover': { background: "none", border: 0 } }}> Import </Button>
               <Button variant="outlined" size="small" startIcon={<i className="far fa-download" />} sx={{ color: "#000", textTransform: "none", borderRadius: "6px", border: 0, '&:hover': { background: "none", border: 0 } }}> Export </Button>
-
-              {/* Toggles for Sidebars (Desktop: collapse/expand, Mobile: open drawers) */}
-              <div className="d-flex align-items-center gap-1 ms-2">
-                <IconButton size="small" onClick={() => isDesktop ? setIsGroupsOpen(!isGroupsOpen) : setGroupDrawerOpen(true)} sx={{ color: "#6c757d" }}><i className="far fa-bars" /></IconButton>
-                <IconButton size="small" onClick={() => isDesktop ? setIsContactsOpen(!isContactsOpen) : setContactDrawerOpen(true)} sx={{ color: "#6c757d" }}><i className="far fa-address-book" /></IconButton>
-              </div>
             </div>
           </div>
         </div>
       </div>
-      
-      <div className="container-fluid d-flex p-0 border flex-grow-1 overflow-auto">
-        <div className="border px-4 py-4 d-flex justify-content-end align-items-start" style={{ width: `${firstBoxWidth}px`, transition: 'width 0.3s ease' }}>
-          <IconButton id="firstBox" onClick={() => setFirstBoxWidth(firstBoxWidth === 200 ? 100 : 200)}>
-            <i class="fas fa-bars text-blue"></i>
-          </IconButton>
+
+      <div className="container-fluid d-flex p-0  flex-grow-1 overflow-auto crm-layout">
+        <div className={`crm-sidebar border ${isGroupsOpen ? "crm-sidebar--collapsed" : "crm-sidebar--expanded"}`}>
+          {renderGroupsContent()}
         </div>
-        <div className="border px-4 py-4 d-flex justify-content-end align-items-start" style={{ width: `${secondBoxWidth}px`, transition: 'width 0.3s ease' }}>
-          <IconButton id="secondBox" onClick={() => setSecondBoxWidth(secondBoxWidth === 200 ? 100 : 200)}>
-            <i class="fas fa-bars text-blue"></i>
-          </IconButton>
-        </div>
-        <div id="mainBox" className="border p-4 w-100 h-100 overflow-auto">
+
+        <div
+          id="mainBox"
+          className={`crm-main p-4 w-100 h-100 overflow-auto ${isGroupsOpen ? "crm-main--wide" : "crm-main--narrow"
+            }`}
+        >
           <div className="d-flex justify-content-end align-items-start">
-            <p className="">OK1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK2 OK3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK4 OK5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK6 OK7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK8OK1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK2 OK3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK4 OK5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK6 OK7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK8OK1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK2 OK3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK4 OK5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK6 OK7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK8</p>
+            <p >OK1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK2 OK3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK4 OK5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK6 OK7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK8OK1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK2 OK3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK4 OK5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK6 OK7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK8OK1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK2 OK3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK4 OK5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK6 OK7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OK8</p>
           </div>
         </div>
       </div>
 
-      {/* ----------------------------------------------------------------------------------
-      3. Mobile Drawers (Hidden on Desktop)
-      ---------------------------------------------------------------------------------- */}
-      <Drawer
-        anchor="left"
-        open={groupDrawerOpen}
-        onClose={() => setGroupDrawerOpen(false)}
-      >
-        <div style={{ width: 260 }}>{renderGroupsContent()}</div>
-      </Drawer>
-
-      <Drawer
-        anchor="left"
-        open={contactDrawerOpen}
-        onClose={() => setContactDrawerOpen(false)}
-      >
-        <div style={{ width: 300 }}>{renderContactsContent()}</div>
-      </Drawer>
     </>
   );
 };

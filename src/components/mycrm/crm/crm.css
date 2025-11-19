@@ -1,0 +1,114 @@
+/* Wrapping layout */
+.crm-layout {
+    height: calc(100vh - 80px);
+    border: 1px solid #E1E1E1;
+    /* adjust if needed */
+}
+
+/* SIDEBAR BASE */
+.crm-sidebar {
+    position: relative;
+    overflow: hidden;
+    background: #ffffff;
+    transition: width 0.3s ease;
+}
+
+/* Expanded & collapsed widths */
+.crm-sidebar--expanded {
+    width: 400px;
+}
+
+.crm-sidebar--collapsed {
+    width: 70px;
+}
+
+/* Inner wrapper so we can animate opacity/slide if needed */
+.crm-sidebar-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Content area that holds groups */
+.crm-sidebar-content {
+    flex: 1;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Visible state */
+.crm-sidebar-content--visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Hidden (when collapsed) – small slide and fade */
+.crm-sidebar-content--hidden {
+    opacity: 0;
+    transform: translateX(-10px);
+    pointer-events: none;
+}
+
+/* MAIN CONTENT ANIMATION */
+.crm-main {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    border-left: none !important;
+}
+
+/* When drawer is wide (groups open) */
+.crm-main--wide {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* When drawer is collapsed: a subtle shift */
+.crm-main--narrow {
+    transform: translateX(-8px);
+    opacity: 0.98;
+}
+
+/* Optional: smooth hover/press on toggle icon */
+#firstBox .MuiIconButton-root {
+    transition: transform 0.2s ease;
+}
+
+#firstBox .MuiIconButton-root:hover {
+    transform: scale(1.05);
+}
+
+.segment-row:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+
+.contact-row {
+    cursor: pointer;
+    background-color: #ffffff;
+    transition: background-color 0.15s ease;
+}
+
+.contact-row:hover {
+    background-color: #f5f7fb;
+}
+
+.contact-row--active {
+    background-color: #e6f0ff;
+}
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
+.contact-avatar--initials {
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+}
