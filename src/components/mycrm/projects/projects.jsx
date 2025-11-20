@@ -73,11 +73,11 @@ const Projects = () => {
     setSelectedTabl(0);
     // TODO: replace with API call
     const mock = [
-      { id: 38, name: "Digital Marketing", members: 10150, health: "Good", endDate: "30/08/2023", status: "Active" },
-      { id: 21, name: "Social Media Marketing", members: 8500, health: "Need Attention", endDate: "15/09/2023", status: "Inactive" },
-      { id: 38, name: "Digital Marketing", members: 10150, health: "Good", endDate: "30/08/2023", status: "Active" },
-      { id: 38, name: "Digital Marketing", members: 10150, health: "At Risk", endDate: "30/08/2023", status: "Active" },
-      { id: 38, name: "Digital Marketing", members: 10150, health: "Good", endDate: "30/08/2023", status: "Active" },
+      { id: 1, name: "Digital Marketing", members: 10150, health: "Good", endDate: "30/08/2023", status: "Active" },
+      { id: 2, name: "Social Media Marketing", members: 8500, health: "Need Attention", endDate: "15/09/2023", status: "Inactive" },
+      { id: 3, name: "Digital Marketing", members: 10150, health: "Good", endDate: "30/08/2023", status: "Active" },
+      { id: 4, name: "Digital Marketing", members: 10150, health: "At Risk", endDate: "30/08/2023", status: "Active" },
+      { id: 5, name: "Digital Marketing", members: 10150, health: "Good", endDate: "30/08/2023", status: "Active" },
     ];
     setProjects(mock);
     setPage(0);
@@ -116,9 +116,9 @@ const Projects = () => {
       <Col xs={12} sm={12} md={12} lg={12} xl={12} className="p-0">
         <h3>Projects</h3>
         <Row>
-          <Col xs={3}></Col>
-          <Col xs={9}>
-            <div className='d-flex items-center'>
+          <Col xs={12} sm={12} md={12} lg={3} xl={3}></Col>
+          <Col xs={12} sm={12} md={12} lg={9} xl={9}>
+            <div className='d-md-flex items-center'>
               <div className="icon-wrapper w-100">
                 <Link href='/addProject' component="a" className="btn-circle" data-toggle="tooltip" title="Add">
                   <i className="far fa-plus-square"></i>
@@ -157,7 +157,7 @@ const Projects = () => {
         </Row>
 
         <Row>
-          <Col xs={12} lg={3}>
+          <Col xs={12} md={12} lg={3}>
             <div className="group-styling py-3">
               <div className="group-aligment-heading">
                 <Input className="group-name" type="checkbox" />
@@ -183,7 +183,7 @@ const Projects = () => {
             </div>
           </Col>
 
-          <Col xs={12} lg={9}>
+          <Col xs={12} md={12} lg={9}>
             <div className="group-styling py-2 px-3 d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center">
                 <h5 className="mb-0">
@@ -252,12 +252,12 @@ const Projects = () => {
               </div>
 
               <Row className="mt-2">
-                <Col xs={6}>
+                <Col xs={12}>
                   <span className="align-middle" style={{ fontWeight: "bold" }}>
                     {`Total Projects : ${projects.length} | Selected : ${selectedProjectIds.length}`}
                   </span>
                 </Col>
-                <Col xs={6} className="text-right">
+                <Col xs={12} className="text-right">
                   <Pagination
                     className="float-right"
                     count={Math.max(1, Math.ceil(total / perPage))}

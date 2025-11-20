@@ -150,7 +150,7 @@ const MyDesktop = (props) => {
                             ))
                         }
                     </div>
-                </ClickAwayListener>
+                </ClickAwayListener>                
             </Col>
             <Col className="rightTabs">
                 <TabPanel value={value} index={0}>

@@ -2,7 +2,6 @@
 .crm-layout {
     height: calc(100vh - 80px);
     border: 1px solid #E1E1E1;
-    /* adjust if needed */
 }
 
 /* SIDEBAR BASE */
@@ -15,7 +14,7 @@
 
 /* Expanded & collapsed widths */
 .crm-sidebar--expanded {
-    width: 400px;
+    width: 500px;
 }
 
 .crm-sidebar--collapsed {
@@ -66,6 +65,39 @@
     opacity: 0.98;
 }
 
+
+/* skinny bar content when drawer is collapsed */
+.crm-sidebar-collapsed-inner {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* icon near the top, text in the middle */
+}
+
+/* black hamburger icon */
+.crm-collapsed-icon {
+    font-size: 18px;
+    color: #000000;
+    /* black */
+}
+
+/* vertical label: Groups / Contacts */
+.crm-vertical-text {
+    margin-top: 32px;
+    /* pushes label toward the middle */
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: #0478DC;
+    /* your blue */
+}
+
+
 /* Optional: smooth hover/press on toggle icon */
 #firstBox .MuiIconButton-root {
     transition: transform 0.2s ease;
@@ -80,11 +112,32 @@
     border-radius: 4px;
 }
 
+/* scrollable contact list area (same idea as groups) */
+.crm-contact-list {
+    flex: 1;
+    overflow-y: auto;
+    background: #ffffff;
+}
 
+/* header (Add Contact / Delete) stays fixed, list scrolls under it */
+.crm-contact-header {
+    border-bottom: 1px solid #E1E1E1;
+    background: #ffffff;
+}
+
+/* filter row (checkbox + dropdown + sort icon) */
+.crm-contact-filter {
+    border-bottom: 1px solid #E1E1E1;
+    background: #ffffff;
+    padding: 6px 8px;
+}
+
+/* contact row look & spacing */
 .contact-row {
     cursor: pointer;
     background-color: #ffffff;
     transition: background-color 0.15s ease;
+    border-bottom: 1px solid #f1f1f1;
 }
 
 .contact-row:hover {
@@ -92,23 +145,25 @@
 }
 
 .contact-row--active {
-    background-color: #e6f0ff;
+    background-color: #f1f5ff;
 }
 
-.contact-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    display: block;
-}
-
-.contact-avatar--initials {
-    background-color: #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.contact-row .contact-main-text {
     font-weight: 600;
     font-size: 14px;
-    color: #333;
+}
+
+.contact-row .contact-sub-text {
+    font-size: 12px;
+    color: #6b7280;
+    /* muted gray */
+}
+
+/* Allow wrapping in contact text */
+.contact-main-text,
+.contact-sub-text {    
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: break-word;
 }
