@@ -16,6 +16,7 @@ import {
 import { Col, Input, Row } from "reactstrap";
 import "./crm.css";
 import DropDownControls from "../../shared/commonControlls/dropdownControl";
+import AddTask from "./addTask";
 
 const searchTypes = [
   { id: 1, name: "All" },
@@ -139,6 +140,8 @@ const Crm = () => {
     setSearchType(event.target.value);
   };
 
+  const [openAddTaks, setOpenAddTaks] = useState(false)
+
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -164,6 +167,9 @@ const Crm = () => {
     interestedInOptions[0],
     interestedInOptions[3],
   ]);
+
+  // NEW: right-side Task panel open/close
+  const [isTaskPanelOpen, setIsTaskPanelOpen] = useState(false);
 
   const handleChangeFilter = (event, value) => {
     setSelectedFilter(value);
@@ -214,7 +220,12 @@ const Crm = () => {
                   variant="text"
                   size="small"
                   startIcon={<i className="far fa-plus-square" />}
-                  sx={{ textTransform: "none", color: "#000", fontSize: '14px', fontWeight: 500 }}
+                  sx={{
+                    textTransform: "none",
+                    color: "#000",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                  }}
                 >
                   Add
                 </Button>
@@ -222,7 +233,12 @@ const Crm = () => {
                   variant="text"
                   size="small"
                   startIcon={<i className="far fa-pencil-alt" />}
-                  sx={{ textTransform: "none", color: "#000", fontSize: '14px', fontWeight: 500 }}
+                  sx={{
+                    textTransform: "none",
+                    color: "#000",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                  }}
                 >
                   Edit
                 </Button>
@@ -230,19 +246,28 @@ const Crm = () => {
                   variant="text"
                   size="small"
                   startIcon={<i className="far fa-trash-alt" />}
-                  sx={{ textTransform: "none", color: "#000", fontSize: '14px', fontWeight: 500 }}
+                  sx={{
+                    textTransform: "none",
+                    color: "#000",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                  }}
                 >
                   Delete
                 </Button>
               </div>
-              <IconButton
-                id="firstBox"
-                size="small"
-                onClick={() => setIsGroupsOpen(true)}
-                sx={{ padding: '4px' }}
-              >
-                <i className="fas fa-chevron-left" style={{ fontSize: '16px' }} />
-              </IconButton>
+              <div className="icon-wrapper">
+                <span
+                  className="btn-circle"
+                  data-toggle="tooltip"
+                  title="Collapse Grid"
+                  onClick={() => setIsGroupsOpen(true)}
+                  style={{ zIndex: 1 }}
+                >
+                  <i className="fas fa-chevron-left" />
+                  <div className="bg-blue"></div>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -271,7 +296,7 @@ const Crm = () => {
                 <i
                   className={`fas fa-chevron-down transition-transform ${isAccordionOpen ? "rotate-180" : ""
                     }`}
-                  style={{ transition: "transform 0.3s ease", fontSize: '12px' }}
+                  style={{ transition: "transform 0.3s ease", fontSize: "12px" }}
                 />
               </div>
 
@@ -315,7 +340,10 @@ const Crm = () => {
                             <div className="group-name-div">{g.name}</div>
                           </div>
 
-                          <div className="d-flex align-items-center" style={{ gap: 8 }}>
+                          <div
+                            className="d-flex align-items-center"
+                            style={{ gap: 8 }}
+                          >
                             {hasSegments && (
                               <IconButton
                                 size="small"
@@ -323,14 +351,12 @@ const Crm = () => {
                                   e.stopPropagation();
                                   toggleGroupExpand(g.id);
                                 }}
-                                sx={{ padding: '4px' }}
+                                sx={{ padding: "4px" }}
                               >
                                 <i
-                                  className={`fas ${isExpanded
-                                    ? "fa-chevron-up"
-                                    : "fa-chevron-down"
+                                  className={`fas ${isExpanded ? "fa-chevron-up" : "fa-chevron-down"
                                     }`}
-                                  style={{ fontSize: '12px' }}
+                                  style={{ fontSize: "12px" }}
                                 />
                               </IconButton>
                             )}
@@ -354,13 +380,44 @@ const Crm = () => {
                                       color: "#6b7280 !important",
                                     }}
                                   />
-                                  <span style={{ fontSize: '14px', color: '#374151' }}>{seg.name}</span>
+                                  <span
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "#374151",
+                                    }}
+                                  >
+                                    {seg.name}
+                                  </span>
                                 </div>
 
-                                <div className="d-flex align-items-center" style={{ gap: 8 }}>
-                                  <i className="far fa-copy" style={{ fontSize: '14px', color: '#6b7280', cursor: 'pointer' }} />
-                                  <i className="far fa-pencil-alt" style={{ fontSize: '14px', color: '#6b7280', cursor: 'pointer' }} />
-                                  <i className="far fa-trash-alt" style={{ fontSize: '14px', color: '#6b7280', cursor: 'pointer' }} />
+                                <div
+                                  className="d-flex align-items-center"
+                                  style={{ gap: 8 }}
+                                >
+                                  <i
+                                    className="far fa-copy"
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "#6b7280",
+                                      cursor: "pointer",
+                                    }}
+                                  />
+                                  <i
+                                    className="far fa-pencil-alt"
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "#6b7280",
+                                      cursor: "pointer",
+                                    }}
+                                  />
+                                  <i
+                                    className="far fa-trash-alt"
+                                    style={{
+                                      fontSize: "14px",
+                                      color: "#6b7280",
+                                      cursor: "pointer",
+                                    }}
+                                  />
                                 </div>
                               </div>
                             ))}
@@ -408,7 +465,12 @@ const Crm = () => {
                   variant="text"
                   size="small"
                   startIcon={<i className="far fa-user" />}
-                  sx={{ textTransform: "none", color: "#000", fontSize: '14px', fontWeight: 500 }}
+                  sx={{
+                    textTransform: "none",
+                    color: "#000",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                  }}
                 >
                   Add Contact
                 </Button>
@@ -416,19 +478,28 @@ const Crm = () => {
                   variant="text"
                   size="small"
                   startIcon={<i className="far fa-trash-alt" />}
-                  sx={{ textTransform: "none", color: "#000", fontSize: '14px', fontWeight: 500 }}
+                  sx={{
+                    textTransform: "none",
+                    color: "#000",
+                    fontSize: "14px",
+                    fontWeight: 500,
+                  }}
                 >
                   Delete
                 </Button>
               </div>
-              <IconButton
-                id="secondBox"
-                size="small"
-                onClick={() => setIsContactSectionOpen(true)}
-                sx={{ padding: '4px' }}
-              >
-                <i className="fas fa-chevron-left" style={{ fontSize: '16px' }} />
-              </IconButton>
+              <div className="icon-wrapper">
+                <span
+                  className="btn-circle"
+                  data-toggle="tooltip"
+                  title="Collapse Grid"
+                  onClick={() => setIsContactSectionOpen(true)}
+                  style={{ zIndex: 1 }}
+                >
+                  <i className="fas fa-chevron-left" style={{ fontSize: "16px" }} />
+                  <div className="bg-blue"></div>
+                </span>
+              </div>
             </div>
           </div>
 
@@ -456,9 +527,12 @@ const Crm = () => {
               component="button"
               className="btn-circle"
               title="Filter"
-              sx={{ minWidth: 'auto', padding: 0 }}
+              sx={{ minWidth: "auto", padding: 0 }}
             >
-              <i className="far fa-sort-alt" style={{ color: '#6b7280', fontSize: '16px' }} />
+              <i
+                className="far fa-sort-alt"
+                style={{ color: "#6b7280", fontSize: "16px" }}
+              />
             </Link>
           </div>
 
@@ -473,7 +547,8 @@ const Crm = () => {
               return (
                 <div
                   key={c.id}
-                  className={`contact-row ${isActive ? "contact-row--active" : ""}`}
+                  className={`contact-row ${isActive ? "contact-row--active" : ""
+                    }`}
                   onClick={() => setSelectedContactId(c.id)}
                 >
                   <div className="d-flex align-items-center">
@@ -484,16 +559,14 @@ const Crm = () => {
                         mr: 2,
                         bgcolor: isActive ? "#0478DC" : "#6b7280",
                         fontSize: 14,
-                        fontWeight: "bold"
+                        fontWeight: "bold",
                       }}
                     >
                       {initials}
                     </Avatar>
 
                     <div className="flex-grow-1">
-                      <div className="contact-main-text">
-                        {c.name}
-                      </div>
+                      <div className="contact-main-text">{c.name}</div>
 
                       {c.email && (
                         <div className="contact-info-row">
@@ -528,7 +601,6 @@ const Crm = () => {
 
   const renderMainContent = () => (
     <div className="crm-main">
-      {/* Header with full screen and help */}
       <div className="d-flex p-3 justify-content-between align-items-center border-bottom">
         <div></div>
         <div className="utility-buttons">
@@ -543,11 +615,9 @@ const Crm = () => {
         </div>
       </div>
 
-      {/* Contact Header Section - UPDATED TO MATCH IMAGE 2 */}
-      {/* ===================== HEADER (MATCHES IMAGE 2 EXACTLY) ===================== */}
+      {/* HEADER */}
       <div className="px-4 py-3 d-flex justify-content-between align-items-start">
-
-        {/* ---------------- LEFT SIDE ---------------- */}
+        {/* LEFT SIDE */}
         <div className="d-flex align-items-start">
           <Avatar
             sx={{
@@ -556,266 +626,504 @@ const Crm = () => {
               bgcolor: "#0A74DA",
               mr: 2,
               fontSize: 20,
-              fontWeight: "bold"
+              fontWeight: "bold",
             }}
           >
             BR
           </Avatar>
 
           <div>
-            <h5 className="fw-bold mb-1" style={{ marginTop: 4 }}>Becht Raph</h5>
+            <h5 className="fw-bold ml-2">Becht Raph</h5>
 
-            <div className="d-flex align-items-center mb-2">
+            <div className="d-flex align-items-center my-2 ml-2">
               <i className="far fa-building"></i>
-              <span className="ms-2 text-muted">Metz Inc</span>
+              <span className="text-muted ml-2">Metz Inc</span>
             </div>
 
-            <div className="icon-wrapper w-100">
-              <Link component="a" className="btn-circle" data-toggle="tooltip" title="Send Mail">
+            <div className="icon-wrapper">
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Send Mail"
+                style={{ zIndex: 1 }}
+              >
                 <i className="far fa-envelope"></i>
                 <div className="bg-blue"></div>
-              </Link>
-              <Link component="a" className="btn-circle" data-toggle="tooltip" title="Call">
+              </span>
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Call"
+                style={{ zIndex: 1 }}
+              >
                 <i className="far fa-phone-alt"></i>
                 <div className="bg-blue"></div>
-              </Link>
-              <Link component="a" className="btn-circle" data-toggle="tooltip" title="SMS" >
+              </span>
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="SMS"
+                style={{ zIndex: 1 }}
+              >
                 <i className="fal fa-sms"></i>
                 <div className="bg-blue"></div>
-              </Link>
-              <Link component="a" className="btn-circle" data-toggle="tooltip" title="Calender" >
+              </span>
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Calender"
+                style={{ zIndex: 1 }}
+              >
                 <i className="far fa-calendar-alt"></i>
                 <div className="bg-blue"></div>
-              </Link>
-            </div>
-            {/* <div className="d-flex align-items-center" style={{ gap: 15 }}>
-            </div> */}
-          </div>
-        </div>
-
-        {/* ---------------- RIGHT SIDE  ---------------- */}
-        <div style={{ width: "55%" }}>
-          <div className="d-flex align-items-center justify-content-between">
-
-            {/* ---- Contact Role ---- */}
-            <div className="mb-3 d-flex align-items-center">
-              <span className="fw-bold mr-2">Contact Role :</span>
-              <Autocomplete
-                size="small"
-                disablePortal
-                options={contactRoles}
-                value={contactRole}
-                onChange={(_, v) => setContactRole(v)}
-                sx={{ width: 170 }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="standard"
-                  />
-                )}
-                renderOption={(props, option) => (
-                  <li {...props}>{option.label}</li>
-                )}
-                getOptionLabel={(o) => o.label}
-              />
-            </div>
-
-            {/* ---- Contact Status ---- */}
-            <div className="mb-3 d-flex align-items-center">
-              <span className="fw-bold mr-2">Contact Status :</span>
-              <Autocomplete
-                size="small"
-                disablePortal
-                options={contactStatuses}
-                value={contactStatus}
-                onChange={(_, v) => setContactStatus(v)}
-                sx={{ width: 160 }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    variant="standard"
-                  />
-                )}
-                getOptionLabel={(o) => o.label}
-              />
-            </div>
-          </div>
-
-          <div>
-            {/* ---- Contact Score ---- */}
-            {/* <div className="col-6 d-flex align-items-center">
-              <span className="text-muted me-1">Contact Score :</span>
-              <span style={{ color: "green", fontWeight: 600, fontSize: 15 }}>
-                30
               </span>
-              <i className="far fa-chart-line ms-1 text-success" style={{ fontSize: 14 }}></i>
-            </div> */}
-
-            {/* ---- Interested In ---- */}
-            <div className="d-flex align-items-center">
-              <span className="fw-bold mr-2">Interested In :</span>
-              <div className="w-100">
-                <Autocomplete
-                  multiple
-                  fullWidth
-                  size="small"
-                  disablePortal
-                  options={interestedInOptions}
-                  value={interestedIn}
-                  onChange={(_, v) => setInterestedIn(v)}
-                  // sx={{ width: 220 }}
-                  renderTags={(selected) =>
-                    selected.map((op, i) => (
-                      <span
-                        key={i}
-                        style={{
-                          color: "#0A74DA",
-                          fontSize: 13,
-                          fontWeight: 600,
-                          marginRight: 4
-                        }}
-                      >
-                        {op.label}{i < selected.length - 1 ? "," : ""}
-                      </span>
-                    ))
-                  }
-                  renderInput={(params) => (
-                    <TextField {...params} variant="standard" />
-                  )}
-                  getOptionLabel={(o) => o.label}
-                />
-              </div>
             </div>
           </div>
         </div>
+
+        {/* RIGHT SIDE HEADER FORM */}
+        <div style={{ width: "55%" }}>
+          <Row>
+            <Col xs={12} md={6}>
+              <div className="mb-3 d-flex align-items-center">
+                <span className="fw-bold w-50">Contact Role :</span>
+                <div className="w-100 ml-3">
+                  <Autocomplete
+                    size="small"
+                    disablePortal
+                    options={contactRoles}
+                    value={contactRole}
+                    onChange={(_, v) => setContactRole(v)}
+                    renderInput={(params) => (
+                      <TextField {...params} variant="standard" />
+                    )}
+                    renderOption={(props, option) => <li {...props}>{option.label}</li>}
+                    getOptionLabel={(o) => o.label}
+                  />
+                </div>
+              </div>
+            </Col>
+            <Col xs={12} md={6}>
+              <div className="mb-3 d-flex align-items-center">
+                <span className="fw-bold w-75">Contact Status :</span>
+                <div className="w-100">
+                  <Autocomplete
+                    size="small"
+                    disablePortal
+                    options={contactStatuses}
+                    value={contactStatus}
+                    onChange={(_, v) => setContactStatus(v)}
+                    renderInput={(params) => (
+                      <TextField {...params} variant="standard" />
+                    )}
+                    getOptionLabel={(o) => o.label}
+                  />
+                </div>
+              </div>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col xs={12}>
+              <div className="mb-3 d-flex align-items-center">
+                <span className="fw-bold">Interested In :</span>
+                <div className="w-100">
+                  <Autocomplete
+                    multiple
+                    size="small"
+                    disablePortal
+                    options={interestedInOptions}
+                    value={interestedIn}
+                    onChange={(_, v) => setInterestedIn(v)}
+                    renderTags={(selected) =>
+                      selected.map((op, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            color: "#0A74DA",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            marginRight: 4,
+                          }}
+                        >
+                          {op.label}
+                          {i < selected.length - 1 ? "," : ""}
+                        </span>
+                      ))
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} variant="standard" />
+                    )}
+                    getOptionLabel={(o) => o.label}
+                  />
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
       </div>
 
-
-      {/* Lead Stage Timeline */}
-      {/* <div className="lead-stage-container">
-        <div className="lead-stage-header">
-          <div className="lead-stage-date">
-            <span>Lead Stage Changed:</span> Mon, 03 June 2024, 05:30 PM
+      {/* CONTACT INFO + RIGHT ICONS + TASK PANEL */}
+      <Row style={{ position: "relative" }}>
+        {/* MAIN CONTENT */}
+        <Col xs={11}>
+          <div className="contact-tabs-container">
+            <div className="contact-tabs">
+              {["Contact Info", "Communication", "Status", "Social"].map(
+                (tab) => (
+                  <div
+                    key={tab}
+                    className={`contact-tab ${activeTab === tab.toLowerCase().replace(" ", "-")
+                      ? "active"
+                      : ""
+                      }`}
+                    onClick={() =>
+                      setActiveTab(tab.toLowerCase().replace(" ", "-"))
+                    }
+                  >
+                    {tab}
+                  </div>
+                )
+              )}
+            </div>
           </div>
-          <div className="lead-stage-date">
-            <span>Last Connected:</span> Tue, 04 June 2024, 03:32 PM
-          </div>
-        </div>
 
-        <div className="lead-stage-wrapper">
-          {[
-            "New",
-            "Connected",
-            "Proposed",
-            "Interested",
-            "Negotiation",
-            "Under Review",
-            "Demo",
-            "More"
-          ].map((stage, index) => {
-            const activeIndex = 3; // up to Interested is blue
-            const isActive = index <= activeIndex;
-            const isLast = index === 7;
-
-            return (
-              <div
-                key={index}
-                className={`stage-item ${isActive ? "active" : "inactive"} ${index === 0 ? "first-item" : ""} ${isLast ? "last-item" : ""}`}
+          <div className="mt-3 px-4">
+            <div className="tab-actions border-bottom border-top mb-3">
+              <Button
+                variant="text"
+                size="small"
+                startIcon={<i className="far fa-pencil-alt" />}
+                sx={{
+                  textTransform: "none",
+                  color: "#000",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                }}
               >
-                <span className="stage-text">{stage}</span>
-                {index < 7 && (
-                  <div className={`stage-arrow ${isActive ? "arrow-active" : "arrow-inactive"}`} />
-                )}
-                {stage === "More" && (
-                  <i className="far fa-chevron-down more-icon"></i>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div> */}
-
-      {/* Tab Navigation */}
-      <div className="contact-tabs-container">
-        <div className="contact-tabs">
-          {["Contact Info", "Communication", "Status", "Social"].map((tab) => (
-            <div
-              key={tab}
-              className={`contact-tab ${activeTab === tab.toLowerCase().replace(' ', '-') ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.toLowerCase().replace(' ', '-'))}
-            >
-              {tab}
+                Edit
+              </Button>
+              <Button
+                variant="text"
+                size="small"
+                startIcon={<i className="far fa-plus" />}
+                sx={{
+                  textTransform: "none",
+                  color: "#000",
+                  fontSize: "14px",
+                  fontWeight: 500,
+                }}
+              >
+                Add Fields
+              </Button>
             </div>
-          ))}
-        </div>
-        <div className="tab-actions">
-          <Button
-            variant="text"
-            size="small"
-            startIcon={<i className="far fa-pencil-alt" />}
-            sx={{ textTransform: "none", color: "#6b7280", fontSize: '14px', fontWeight: 500 }}
-          >
-            Edit
-          </Button>
-          <Button
-            variant="text"
-            size="small"
-            startIcon={<i className="far fa-plus" />}
-            sx={{ textTransform: "none", color: "#6b7280", fontSize: '14px', fontWeight: 500 }}
-          >
-            Add Fields
-          </Button>
-        </div>
-      </div>
 
-      {/* Contact Info Content */}
-      <div className="contact-info-section">
-        <div className="contact-info-grid">
-          <div className="contact-info-item">
-            <span className="contact-info-label">First name</span>
-            <span className="contact-info-value">Becht</span>
+            <div className="border-bottom">
+              <h5 className="text-blue mb-3">Personal Information</h5>
+              <Row>
+                <Col sm={12} md={6} style={{ gap: 20 }}>
+                  <div className="info-item">
+                    <span className="info-label">First name:</span>
+                    <span className="info-value">Becht</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Full name:</span>
+                    <span className="info-value">Becht Raph</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Phone:</span>
+                    <span className="info-value">
+                      727-702-9986 (Work) <br />
+                      727-702-9986 (Personal)
+                    </span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Date of birth:</span>
+                    <span className="info-value">12/23/2001</span>
+                  </div>
+                </Col>
+                <Col sm={12} md={6}>
+                  <div className="info-item">
+                    <span className="info-label">Last name:</span>
+                    <span className="info-value">Raph</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Gender:</span>
+                    <span className="info-value">Male</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Email:</span>
+                    <p
+                      className="info-value"
+                      style={{ color: "#0A74DA !important" }}
+                    >
+                      becht_raph@sample.com (Work) <br />
+                      becht_raph@sample.com (Personal)
+                    </p>
+                  </div>
+                </Col>
+              </Row>
+            </div>
+
+            <div className="border-bottom">
+              <h5 className="text-blue my-3">Demographic Information</h5>
+              <Row>
+                <Col sm={12} md={6} style={{ gap: 20 }}>
+                  <div className="info-item">
+                    <span className="info-label">Country:</span>
+                    <span className="info-value">United States</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Street Address 1:</span>
+                    <span className="info-value">28067 Haag Skyway</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">City:</span>
+                    <span className="info-value">Auburn</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Language:</span>
+                    <p className="info-value">English</p>
+                  </div>
+                </Col>
+                <Col sm={12} md={6}>
+                  <div className="info-item">
+                    <span className="info-label">State/Prov/Region:</span>
+                    <span className="info-value">Alabama</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Street Address 2:</span>
+                    <span className="info-value">28067 Haag Skyway</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Zip / Post Code:</span>
+                    <span className="info-value">12509</span>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-label">Time Zone</span>
+                    <span className="info-value">-05.00 CDT</span>
+                  </div>
+                </Col>
+              </Row>
+            </div>
           </div>
-          <div className="contact-info-item">
-            <span className="contact-info-label">Last name</span>
-            <span className="contact-info-value">Raph</span>
+        </Col>
+
+        {/* RIGHT ICON STRIP */}
+        <Col xs={1}>
+          <div className="icon-wrapper left-icon-strip">
+            {/* FIRST ICON - OPEN TASK PANEL */}
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Add Task"
+              style={{ zIndex: 1 }}
+              onClick={() => setIsTaskPanelOpen(true)}
+            >
+              <i className="fas fa-list-ul"></i>
+              <div className="bg-blue"></div>
+            </span>
+
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Tags"
+              style={{ zIndex: 1 }}
+            >
+              <i className="far fa-tag"></i>
+              <div className="bg-blue"></div>
+            </span>
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Reminder"
+              style={{ zIndex: 1 }}
+            >
+              <i className="far fa-clock"></i>
+              <div className="bg-blue"></div>
+            </span>
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Notes"
+              style={{ zIndex: 1 }}
+            >
+              <i className="far fa-edit"></i>
+              <div className="bg-blue"></div>
+            </span>
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Invoice"
+              style={{ zIndex: 1 }}
+            >
+              <i className="far fa-file-alt"></i>
+              <div className="bg-blue"></div>
+            </span>
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Sign Contract"
+              style={{ zIndex: 1 }}
+            >
+              <i className="far fa-file"></i>
+              <div className="bg-blue"></div>
+            </span>
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Book & Schedule"
+              style={{ zIndex: 1 }}
+            >
+              <i className="far fa-calendar-alt"></i>
+              <div className="bg-blue"></div>
+            </span>
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Trake Inquiries"
+              style={{ zIndex: 1 }}
+            >
+              <i className="far fa-archive"></i>
+              <div className="bg-blue"></div>
+            </span>
+            <span
+              component="a"
+              className="btn-circle"
+              data-toggle="tooltip"
+              title="Manage Project"
+              style={{ zIndex: 1 }}
+            >
+              <i className="far fa-briefcase"></i>
+              <div className="bg-blue"></div>
+            </span>
           </div>
-          <div className="contact-info-item">
-            <span className="contact-info-label">Full name</span>
-            <span className="contact-info-value">Becht Raph</span>
+        </Col>
+
+        {/* TASK PANEL - BETWEEN MAIN CONTENT AND ICON STRIP */}
+        {isTaskPanelOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              right: isDesktop ? 90 : 0, // keep space for icon strip on desktop
+              width: isDesktop ? "28%" : "100%",
+              minWidth: 260,
+              backgroundColor: "#ffffff",
+              border: "1px solid #E1E1E1",
+              boxShadow: "-2px 0 8px rgba(0,0,0,0.06)",
+              display: "flex",
+              flexDirection: "column",
+              zIndex: 5,
+            }}
+          >
+            {/* Header */}
+            <div
+              style={{
+                padding: "10px 16px",
+                borderBottom: "1px solid #E1E1E1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}
+              >
+                <i className="fas fa-list-ul" style={{ fontSize: 16 }} />
+                <span style={{ fontSize: 16, paddingRight: 5 }}>Task</span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <div className="icon-wrapper">
+                  <span
+                    className="btn-circle"
+                    data-toggle="tooltip"
+                    title="Add Task"
+                    onClick={() => setOpenAddTaks(true)}
+                    style={{ zIndex: 1 }}
+                  >
+                    <i className="far fa-plus" style={{ fontSize: "16px" }} />
+                    <div className="bg-green"></div>
+                  </span>
+                </div>
+                <div className="icon-wrapper">
+                  <span
+                    className="btn-circle"
+                    data-toggle="tooltip"
+                    title="Close"
+                    onClick={() => setIsTaskPanelOpen(false)}
+                    style={{ zIndex: 1 }}
+                  >
+                    <i className="far fa-times" style={{ fontSize: "16px" }} />
+                    <div className="bg-red"></div>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                color: "#9ca3af",
+              }}
+            >
+              No Task found
+            </div>
           </div>
-          <div className="contact-info-item">
-            <span className="contact-info-label">Gender</span>
-            <span className="contact-info-value">Male</span>
-          </div>
-          <div className="contact-info-item">
-            <span className="contact-info-label">Phone</span>
-            <span className="contact-info-value">727-702-9986 (www)</span>
-          </div>
-          <div className="contact-info-item">
-            <span className="contact-info-label">Email</span>
-            <span className="contact-info-value">becht_raph@sample.com (www)</span>
-          </div>
-        </div>
-      </div>
+        )}
+      </Row>
     </div>
   );
-
 
   return (
     <>
       <Row>
         <Col xs={12} sm={12} md={12} lg={12} xl={12} className="p-0">
-          <Row style={{ gap: !isDesktop ? 10 : 0, alignItems: 'center', marginBottom: '16px' }}>
+          <Row
+            style={{
+              gap: !isDesktop ? 10 : 0,
+              alignItems: "center",
+              marginBottom: "16px",
+            }}
+          >
             <Col xs={12} sm={2} md={2} lg={2} xl={2}>
-              <h3 className="mb-0 fw-bold" style={{ color: '#1f2937' }}>CRM</h3>
+              <h3 className="mb-0 fw-bold" style={{ color: "#1f2937" }}>
+                CRM
+              </h3>
             </Col>
             <Col xs={12} sm={12} md={10} lg={10} xl={10}>
-              <Row style={{ alignItems: "center", gap: !isDesktop ? 10 : 0 }}>
+              <Row
+                style={{ alignItems: "center", gap: !isDesktop ? 10 : 0 }}
+              >
                 <Col xs={12} sm={12} md={8} lg={8} xl={8}>
                   <div
                     className="d-flex border rounded"
                     style={{
-                      backgroundColor: "#f8f9fa",
                       height: "40px",
                     }}
                   >
@@ -838,10 +1146,11 @@ const Crm = () => {
                         onChange={handleChange}
                         disableUnderline
                         sx={{
+                          backgroundColor: "#f8f9fa",
                           padding: 0,
                           "& .MuiSelect-select": {
                             minHeight: "auto",
-                            fontSize: '14px'
+                            fontSize: "14px",
                           },
                         }}
                       >
@@ -887,52 +1196,25 @@ const Crm = () => {
                         style: {
                           padding: "0px 0px 0px 10px",
                           height: "40px",
-                          fontSize: '14px'
+                          fontSize: "14px",
                         },
                       }}
                     />
                   </div>
                 </Col>
                 <Col xs={12} sm={12} md={4} lg={4} xl={4}>
-                  <div className="d-flex align-items-center" style={{ gap: 12 }}>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      startIcon={<i className="far fa-upload" />}
-                      sx={{
-                        color: "#6b7280",
-                        textTransform: "none",
-                        borderRadius: "6px",
-                        border: "1px solid #e5e7eb",
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        "&:hover": {
-                          background: "#f8f9fa",
-                          border: "1px solid #d1d5db"
-                        },
-                      }}
-                    >
-                      Import
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      size="small"
-                      startIcon={<i className="far fa-download" />}
-                      sx={{
-                        color: "#6b7280",
-                        textTransform: "none",
-                        borderRadius: "6px",
-                        border: "1px solid #e5e7eb",
-                        fontSize: '14px',
-                        fontWeight: 500,
-                        "&:hover": {
-                          background: "#f8f9fa",
-                          border: "1px solid #d1d5db"
-                        },
-                      }}
-                    >
-                      Export
-                    </Button>
+                  <div
+                    className="d-flex align-items-center"
+                    style={{ gap: 25 }}
+                  >
+                    <div style={{ cursor: "pointer" }}>
+                      <i className="far fa-upload" />
+                      <span className="ml-2">Import</span>
+                    </div>
+                    <div style={{ cursor: "pointer" }}>
+                      <i className="far fa-download" />
+                      <span className="ml-2">Export</span>
+                    </div>
                   </div>
                 </Col>
               </Row>
@@ -969,6 +1251,7 @@ const Crm = () => {
           </Row>
         </Col>
       </Row>
+      <AddTask open={openAddTaks} onClose={() => setOpenAddTaks(false)} />
     </>
   );
 };
