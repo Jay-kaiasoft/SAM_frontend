@@ -17,6 +17,8 @@ import { Col, Input, Row } from "reactstrap";
 import "./crm.css";
 import DropDownControls from "../../shared/commonControlls/dropdownControl";
 import AddTask from "./addTask";
+import AddTags from "./addTags";
+import AddNote from "./addNote";
 
 const searchTypes = [
   { id: 1, name: "All" },
@@ -134,6 +136,12 @@ const interestedInOptions = [
   { key: "4", label: "Service 2" },
 ];
 
+const members = [
+  { id: 1, name: "Ava Patel" },
+  { id: 2, name: "Noah Khan" },
+  { id: 3, name: "Zoe Smith" },
+];
+
 const Crm = () => {
   const [searchType, setSearchType] = useState(searchTypes[0].id);
   const handleChange = (event) => {
@@ -141,6 +149,8 @@ const Crm = () => {
   };
 
   const [openAddTaks, setOpenAddTaks] = useState(false)
+  const [openAddTags, setOpenAddTags] = useState(false)
+  const [openAddNotes, setOpenAddNotes] = useState(false)
 
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [searchText, setSearchText] = useState("");
@@ -170,6 +180,9 @@ const Crm = () => {
 
   // NEW: right-side Task panel open/close
   const [isTaskPanelOpen, setIsTaskPanelOpen] = useState(false);
+  const [isTagOpen, setIsTagOpen] = useState(false);
+  const [isReminderPannelOpen, setIsReminderPannelOpen] = useState(false);
+  const [isNotePannelOpen, setIsNotePannelOpen] = useState(false);
 
   const handleChangeFilter = (event, value) => {
     setSelectedFilter(value);
@@ -190,9 +203,40 @@ const Crm = () => {
   const filteredContacts = contacts.filter((c) =>
     c.name.toLowerCase().includes(searchText.toLowerCase())
   );
+
   const activeContact =
     filteredContacts.find((c) => c.id === selectedContactId) ||
     filteredContacts[0];
+
+  const closeAllPanels = () => {
+    setIsTaskPanelOpen(false);
+    setIsTagOpen(false);
+    setIsReminderPannelOpen(false);
+    setIsNotePannelOpen(false);
+  };
+
+  const handleOpenPanel = (panel) => {
+    // close any previously open panel
+    closeAllPanels();
+
+    // open the requested one
+    switch (panel) {
+      case "task":
+        setIsTaskPanelOpen(true);
+        break;
+      case "tag":
+        setIsTagOpen(true);
+        break;
+      case "reminder":
+        setIsReminderPannelOpen(true);
+        break;
+      case "note":
+        setIsNotePannelOpen(true);
+        break;
+      default:
+        break;
+    }
+  };
 
   const renderGroups = () => (
     <div className="h-100 d-flex flex-column">
@@ -651,6 +695,7 @@ const Crm = () => {
                 <i className="far fa-envelope"></i>
                 <div className="bg-blue"></div>
               </span>
+
               <span
                 component="a"
                 className="btn-circle"
@@ -661,6 +706,7 @@ const Crm = () => {
                 <i className="far fa-phone-alt"></i>
                 <div className="bg-blue"></div>
               </span>
+
               <span
                 component="a"
                 className="btn-circle"
@@ -671,6 +717,7 @@ const Crm = () => {
                 <i className="fal fa-sms"></i>
                 <div className="bg-blue"></div>
               </span>
+
               <span
                 component="a"
                 className="btn-circle"
@@ -686,7 +733,7 @@ const Crm = () => {
         </div>
 
         {/* RIGHT SIDE HEADER FORM */}
-        <div style={{ width: "55%" }}>
+        <div style={{ width: "60%" }}>
           <Row>
             <Col xs={12} md={6}>
               <div className="mb-3 d-flex align-items-center">
@@ -910,6 +957,46 @@ const Crm = () => {
                 </Col>
               </Row>
             </div>
+
+            {/* CORPORATE INFORMATION */}
+            <div className="border-bottom">
+              <h5 className="text-blue my-3">Corporate Information</h5>
+
+              <Row>
+                <Col sm={12} md={6} style={{ gap: 20 }}>
+                  <div className="info-item">
+                    <span className="info-label">Company :</span>
+                    <span className="info-value">Metz Inc</span>
+                  </div>
+                </Col>
+
+                <Col sm={12} md={6} style={{ gap: 20 }}>
+                  <span className="info-label ml-2">Group(s) :</span>
+                  <div className="info-item d-flex align-items-center flex-wrap">
+                    <div className="info-value d-flex flex-wrap">
+                      <span className="badge rounded-pill bg-primary text-white ml-2 mb-2 p-2">
+                        Sales <span className="mr-1">&times;</span>
+                      </span>
+                      <span className="badge rounded-pill bg-primary text-white ml-2 mb-2 p-2">
+                        Marketing <span className="mr-1">&times;</span>
+                      </span>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+
+              {/* Edit button */}
+              <div className="text-center my-3">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  // size="small"
+                >
+                  Edit Information
+                </Button>
+              </div>
+            </div>
+
           </div>
         </Col>
 
@@ -923,18 +1010,18 @@ const Crm = () => {
               data-toggle="tooltip"
               title="Add Task"
               style={{ zIndex: 1 }}
-              onClick={() => setIsTaskPanelOpen(true)}
+              onClick={() => handleOpenPanel("task")}
             >
               <i className="fas fa-list-ul"></i>
               <div className="bg-blue"></div>
             </span>
-
             <span
               component="a"
               className="btn-circle"
               data-toggle="tooltip"
               title="Tags"
               style={{ zIndex: 1 }}
+              onClick={() => handleOpenPanel("tag")}
             >
               <i className="far fa-tag"></i>
               <div className="bg-blue"></div>
@@ -945,6 +1032,7 @@ const Crm = () => {
               data-toggle="tooltip"
               title="Reminder"
               style={{ zIndex: 1 }}
+              onClick={() => handleOpenPanel("reminder")}
             >
               <i className="far fa-clock"></i>
               <div className="bg-blue"></div>
@@ -955,6 +1043,7 @@ const Crm = () => {
               data-toggle="tooltip"
               title="Notes"
               style={{ zIndex: 1 }}
+              onClick={() => handleOpenPanel("note")}
             >
               <i className="far fa-edit"></i>
               <div className="bg-blue"></div>
@@ -1093,6 +1182,249 @@ const Crm = () => {
               }}
             >
               No Task found
+            </div>
+          </div>
+        )}
+
+        {/* TAG PANEL - BETWEEN MAIN CONTENT AND ICON STRIP */}
+        {isTagOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              right: isDesktop ? 90 : 0, // keep space for icon strip on desktop
+              width: isDesktop ? "28%" : "100%",
+              minWidth: 260,
+              backgroundColor: "#ffffff",
+              border: "1px solid #E1E1E1",
+              boxShadow: "-2px 0 8px rgba(0,0,0,0.06)",
+              display: "flex",
+              flexDirection: "column",
+              zIndex: 5,
+            }}
+          >
+            {/* Header */}
+            <div
+              style={{
+                padding: "10px 16px",
+                borderBottom: "1px solid #E1E1E1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}
+              >
+                <i className="far fa-tag" style={{ fontSize: 16 }} ></i>
+                <span style={{ fontSize: 16, paddingRight: 5 }}>Tags</span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <div className="icon-wrapper">
+                  <span
+                    className="btn-circle"
+                    data-toggle="tooltip"
+                    title="Add Tags"
+                    onClick={() => setOpenAddTags(true)}
+                    style={{ zIndex: 1 }}
+                  >
+                    <i className="far fa-plus" style={{ fontSize: "16px" }} />
+                    <div className="bg-green"></div>
+                  </span>
+                </div>
+                <div className="icon-wrapper">
+                  <span
+                    className="btn-circle"
+                    data-toggle="tooltip"
+                    title="Close"
+                    onClick={() => setIsTagOpen(false)}
+                    style={{ zIndex: 1 }}
+                  >
+                    <i className="far fa-times" style={{ fontSize: "16px" }} />
+                    <div className="bg-red"></div>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                color: "#9ca3af",
+              }}
+            >
+              No tags found
+            </div>
+          </div>
+        )}
+
+        {/* REMINDER PANEL - BETWEEN MAIN CONTENT AND ICON STRIP */}
+        {isReminderPannelOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              right: isDesktop ? 90 : 0, // keep space for icon strip on desktop
+              width: isDesktop ? "28%" : "100%",
+              minWidth: 260,
+              backgroundColor: "#ffffff",
+              border: "1px solid #E1E1E1",
+              boxShadow: "-2px 0 8px rgba(0,0,0,0.06)",
+              display: "flex",
+              flexDirection: "column",
+              zIndex: 5,
+            }}
+          >
+            {/* Header */}
+            <div
+              style={{
+                padding: "10px 16px",
+                borderBottom: "1px solid #E1E1E1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}
+              >
+                <i className="far fa-clock" style={{ fontSize: 16 }}></i>
+                <span style={{ fontSize: 16, paddingRight: 5 }}>Reminder</span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <div className="icon-wrapper">
+                  <span
+                    className="btn-circle"
+                    data-toggle="tooltip"
+                    title="Close"
+                    onClick={() => setIsReminderPannelOpen(false)}
+                    style={{ zIndex: 1 }}
+                  >
+                    <i className="far fa-times" style={{ fontSize: "16px" }} />
+                    <div className="bg-red"></div>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                color: "#9ca3af",
+              }}
+            >
+              No reminder found
+            </div>
+          </div>
+        )}
+
+        {/* REMINDER PANEL - BETWEEN MAIN CONTENT AND ICON STRIP */}
+        {isNotePannelOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              right: isDesktop ? 90 : 0, // keep space for icon strip on desktop
+              width: isDesktop ? "28%" : "100%",
+              minWidth: 260,
+              backgroundColor: "#ffffff",
+              border: "1px solid #E1E1E1",
+              boxShadow: "-2px 0 8px rgba(0,0,0,0.06)",
+              display: "flex",
+              flexDirection: "column",
+              zIndex: 5,
+            }}
+          >
+            {/* Header */}
+            <div
+              style={{
+                padding: "10px 16px",
+                borderBottom: "1px solid #E1E1E1",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: 14,
+                  fontWeight: 600,
+                }}
+              >
+                <i className="far fa-edit" style={{ fontSize: 16 }}></i>
+                <span style={{ fontSize: 16, paddingRight: 5 }}>Notes</span>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                <div className="icon-wrapper">
+                  <span
+                    className="btn-circle"
+                    data-toggle="tooltip"
+                    title="Add Note"
+                    onClick={() => setOpenAddNotes(true)}
+                    style={{ zIndex: 1 }}
+                  >
+                    <i className="far fa-plus" style={{ fontSize: "16px" }} />
+                    <div className="bg-green"></div>
+                  </span>
+                </div>
+                <div className="icon-wrapper">
+                  <span
+                    className="btn-circle"
+                    data-toggle="tooltip"
+                    title="Close"
+                    onClick={() => setIsNotePannelOpen(false)}
+                    style={{ zIndex: 1 }}
+                  >
+                    <i className="far fa-times" style={{ fontSize: "16px" }} />
+                    <div className="bg-red"></div>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 14,
+                color: "#9ca3af",
+              }}
+            >
+              No notes found
             </div>
           </div>
         )}
@@ -1251,7 +1583,10 @@ const Crm = () => {
           </Row>
         </Col>
       </Row>
+
       <AddTask open={openAddTaks} onClose={() => setOpenAddTaks(false)} />
+      <AddTags open={openAddTags} onClose={() => setOpenAddTags(false)} />
+      <AddNote open={openAddNotes} onClose={() => setOpenAddNotes(false)} />
     </>
   );
 };
