@@ -12,6 +12,7 @@ import {
   Link,
   Avatar,
   Autocomplete,
+  Menu,
 } from "@mui/material";
 import { Col, Input, Row } from "reactstrap";
 import "./crm.css";
@@ -19,6 +20,7 @@ import DropDownControls from "../../shared/commonControlls/dropdownControl";
 import AddTask from "./addTask";
 import AddTags from "./addTags";
 import AddNote from "./addNote";
+import AddGroup from "./addGroup";
 
 const searchTypes = [
   { id: 1, name: "All" },
@@ -148,9 +150,18 @@ const Crm = () => {
     setSearchType(event.target.value);
   };
 
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const [openAddTaks, setOpenAddTaks] = useState(false)
   const [openAddTags, setOpenAddTags] = useState(false)
   const [openAddNotes, setOpenAddNotes] = useState(false)
+  const [openAddGroup, setOpenAddGroup] = useState(false)
 
   const [selectedGroupId, setSelectedGroupId] = useState(null);
   const [searchText, setSearchText] = useState("");
@@ -261,6 +272,7 @@ const Crm = () => {
             <div className="d-flex align-items-center justify-content-between">
               <div className="d-flex align-items-center" style={{ gap: 12 }}>
                 <Button
+                  onClick={(e) => handleClick(e)}
                   variant="text"
                   size="small"
                   startIcon={<i className="far fa-plus-square" />}
@@ -299,6 +311,32 @@ const Crm = () => {
                 >
                   Delete
                 </Button>
+
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  slotProps={{
+                    list: {
+                      'aria-labelledby': 'basic-button',
+                    },
+                  }}
+                  PaperProps={{
+                    sx: {
+                      width: 170
+                    }
+                  }}
+                >
+                  <MenuItem onClick={() => { setAnchorEl(null); setOpenAddGroup(true) }}>
+                    <i className="far fa-users mr-2" />
+                    Group
+                  </MenuItem>
+                  <MenuItem onClick={() => { setAnchorEl(null); setOpenAddTags(true) }}>
+                    <i className="far fa-tag mr-2"></i>
+                    Tag
+                  </MenuItem>
+                </Menu>
               </div>
               <div className="icon-wrapper">
                 <span
@@ -678,7 +716,6 @@ const Crm = () => {
 
           <div>
             <h5 className="fw-bold ml-2">Becht Raph</h5>
-
             <div className="d-flex align-items-center my-2 ml-2">
               <i className="far fa-building"></i>
               <span className="text-muted ml-2">Metz Inc</span>
@@ -990,7 +1027,7 @@ const Crm = () => {
                 <Button
                   variant="contained"
                   color="primary"
-                  // size="small"
+                // size="small"
                 >
                   Edit Information
                 </Button>
@@ -1003,7 +1040,6 @@ const Crm = () => {
         {/* RIGHT ICON STRIP */}
         <Col xs={1}>
           <div className="icon-wrapper left-icon-strip">
-            {/* FIRST ICON - OPEN TASK PANEL */}
             <span
               component="a"
               className="btn-circle"
@@ -1583,7 +1619,7 @@ const Crm = () => {
           </Row>
         </Col>
       </Row>
-
+      <AddGroup open={openAddGroup} onClose={() => setOpenAddGroup(false)} />
       <AddTask open={openAddTaks} onClose={() => setOpenAddTaks(false)} />
       <AddTags open={openAddTags} onClose={() => setOpenAddTags(false)} />
       <AddNote open={openAddNotes} onClose={() => setOpenAddNotes(false)} />
