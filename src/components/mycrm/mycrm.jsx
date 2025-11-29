@@ -12,12 +12,14 @@ import { connect } from 'react-redux';
 const ClientContact = lazy(() => import("./clientContact"))
 const Projects = lazy(() => import("./projects/projects"))
 const Crm = lazy(() => import("./crm/crm"))
+const Email = lazy(() => import("./email/email"))
+const Inventory = lazy(() => import("./inventory/inventory"))
 
 const Mycrm = (props) => {
-    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm" };
+    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mail" };
     const [value, setValue] = useState(0);
     const [replyCount, setReplyCount] = useState({});
-    let tabRef = useRef([createRef(), createRef(), createRef()]);
+    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef()]);
     const [showPopper, setShowPopper] = useState(false);
     const [arrowRef, setArrowRef] = useState(null);
     const tabList = [
@@ -35,6 +37,16 @@ const Mycrm = (props) => {
             tabTo: "/crm",
             tabIcon: <i className="far fa-address-book" data-toggle="tooltip" title="CRM" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "CRM"
+        },
+        {
+            tabTo: "/inventory",
+            tabIcon: <i className="fa-sharp far fa-box" data-toggle="tooltip" title="Inventory" style={{ width: 22, textAlign: "center" }}></i>,
+            tabTitle: "Inventory"
+        },
+        {
+            tabTo: "/mail",
+            tabIcon: <i className="far fa-envelope" data-toggle="tooltip" title="Mail" style={{ width: 22, textAlign: "center" }}></i>,
+            tabTitle: "Mail"
         },
     ];
 
@@ -80,6 +92,12 @@ const Mycrm = (props) => {
                     break;
                 case "/crm":
                     setValue(2);
+                    break;
+                case "/inventory":
+                    setValue(3);
+                    break;
+                case "/mail":
+                    setValue(4);
                     break;
                 // case "/mypipeline":
                 //     setValue(2);
@@ -156,6 +174,16 @@ const Mycrm = (props) => {
                 <TabPanel value={value} index={2}>
                     <Suspense fallback={<Loader />}>
                         <Crm />
+                    </Suspense>
+                </TabPanel>
+                <TabPanel value={value} index={3}>
+                    <Suspense fallback={<Loader />}>
+                        <Inventory />
+                    </Suspense>
+                </TabPanel>
+                <TabPanel value={value} index={4}>
+                    <Suspense fallback={<Loader />}>
+                        <Email />
                     </Suspense>
                 </TabPanel>
                 {/*<TabPanel value={value} index={2}>*/}

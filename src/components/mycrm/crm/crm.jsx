@@ -176,6 +176,7 @@ const Crm = () => {
 
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("contact-info");
+  const [headerActiveTab, setHeaderActiveTab] = useState(null);
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -270,12 +271,12 @@ const Crm = () => {
         <>
           <div className="crm-contact-header">
             <div className="d-flex align-items-center justify-content-between">
-              <div className="d-flex align-items-center" style={{ gap: 12 }}>
+              <div className="d-flex align-items-center" style={{ gap: 20 }}>
                 <Button
                   onClick={(e) => handleClick(e)}
                   variant="text"
                   size="small"
-                  startIcon={<i className="far fa-plus-square" />}
+                  startIcon={<i className="far fa-plus" />}
                   sx={{
                     textTransform: "none",
                     color: "#000",
@@ -338,7 +339,7 @@ const Crm = () => {
                   </MenuItem>
                 </Menu>
               </div>
-              <div className="icon-wrapper">
+              {/* <div className="icon-wrapper">
                 <span
                   className="btn-circle"
                   data-toggle="tooltip"
@@ -349,7 +350,7 @@ const Crm = () => {
                   <i className="fas fa-chevron-left" />
                   <div className="bg-blue"></div>
                 </span>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -542,7 +543,7 @@ const Crm = () => {
         <>
           <div className="crm-contact-header">
             <div className="d-flex align-items-center justify-content-between">
-              <div className="d-flex align-items-center" style={{ gap: 12 }}>
+              <div className="d-flex align-items-center" style={{ gap: 20 }}>
                 <Button
                   variant="text"
                   size="small"
@@ -570,7 +571,7 @@ const Crm = () => {
                   Delete
                 </Button>
               </div>
-              <div className="icon-wrapper">
+              {/* <div className="icon-wrapper">
                 <span
                   className="btn-circle"
                   data-toggle="tooltip"
@@ -581,7 +582,7 @@ const Crm = () => {
                   <i className="fas fa-chevron-left" style={{ fontSize: "16px" }} />
                   <div className="bg-blue"></div>
                 </span>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -1591,27 +1592,60 @@ const Crm = () => {
 
           <Row>
             <Col xs={12}>
+              <div className="contact-tabs mb-2">
+                {["Groups", "Contacts"].map(
+                  (tab, index) => (
+                    <div
+                      key={tab}
+                      className={`contact-tab ${headerActiveTab === index
+                        ? "active"
+                        : ""
+                        }`}
+                      onClick={() =>
+                        setHeaderActiveTab(index)
+                      }
+                    >
+                      {tab}
+                    </div>
+                  )
+                )}
+              </div>
               <div className="container-fluid d-flex p-0 crm-layout">
-                {/* Groups Sidebar */}
-                <div
-                  className={`crm-sidebar ${isGroupsOpen
-                    ? "crm-sidebar--collapsed"
-                    : "crm-sidebar--expanded"
-                    }`}
-                >
-                  {renderGroups()}
-                </div>
+                {
+                  headerActiveTab === 0 && (
+                    <>
+                      <div
+                        className={`crm-sidebar ${isGroupsOpen
+                          ? "crm-sidebar--collapsed"
+                          : "crm-sidebar--expanded"
+                          }`}
+                      >
+                        {renderGroups()}
+                      </div>
 
-                {/* Contacts Sidebar */}
-                <div
-                  className={`crm-sidebar ${isContactSectionOpen
-                    ? "crm-sidebar--collapsed"
-                    : "crm-sidebar--expanded"
-                    }`}
-                >
-                  {renderContacts()}
-                </div>
-
+                      <div
+                        className={`crm-sidebar ${isContactSectionOpen
+                          ? "crm-sidebar--collapsed"
+                          : "crm-sidebar--expanded"
+                          }`}
+                      >
+                        {renderContacts()}
+                      </div>
+                    </>
+                  )
+                }
+                {
+                  headerActiveTab === 1 && (
+                    <div
+                      className={`crm-sidebar ${isContactSectionOpen
+                        ? "crm-sidebar--collapsed"
+                        : "crm-sidebar--expanded"
+                        }`}
+                    >
+                      {renderContacts()}
+                    </div>
+                  )
+                }
                 {/* Main Content */}
                 {renderMainContent()}
               </div>
