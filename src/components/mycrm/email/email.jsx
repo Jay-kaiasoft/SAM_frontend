@@ -282,7 +282,7 @@ const Email = () => {
             </div>
           </div>
 
-          <div className="labels-section mt-4">
+          <div className="labels-section">
             <div className="labels-header">LABELS</div>
             <div className="label-item">
               <i className="fas fa-circle mr-2 text-success" />
@@ -320,20 +320,30 @@ const Email = () => {
 
           <div className="email-actions">
             <div className="action-buttons">
-              <Checkbox
-                size="small"
-                sx={{
-                  "&.Mui-checked": {
-                    color: "#0478DC !important",
-                  },
-                  color: "#6b7280 !important",
-                }}
-                disableRipple
-              />
-              <i className="far fa-trash-alt" />
-              <i className="far fa-envelope" />
-              <i className="far fa-folder" />
-              <i class="far fa-tag"></i>
+              <div>
+                <Checkbox
+                  size="small"
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#0478DC !important",
+                    },
+                    color: "#6b7280 !important",
+                  }}
+                  disableRipple
+                />
+              </div>
+              <div>
+                <i className="far fa-trash-alt" />
+              </div>
+              <div>
+                <i className="far fa-envelope" />
+              </div>
+              <div>
+                <i className="far fa-folder" />
+              </div>
+              <div>
+                <i class="far fa-tag"></i>
+              </div>
             </div>
             <div className="pagination">
               <span className="mr-3">1-10 of 653</span>

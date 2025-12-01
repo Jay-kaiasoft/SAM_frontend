@@ -14,12 +14,13 @@ const Projects = lazy(() => import("./projects/projects"))
 const Crm = lazy(() => import("./crm/crm"))
 const Email = lazy(() => import("./email/email"))
 const Inventory = lazy(() => import("./inventory/inventory"))
+const MyCalendar = lazy(() => import("./myCalendar/myCalendar"))
 
 const Mycrm = (props) => {
-    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mail" };
+    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail" };
     const [value, setValue] = useState(0);
     const [replyCount, setReplyCount] = useState({});
-    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef()]);
+    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
     const [showPopper, setShowPopper] = useState(false);
     const [arrowRef, setArrowRef] = useState(null);
     const tabList = [
@@ -42,6 +43,11 @@ const Mycrm = (props) => {
             tabTo: "/inventory",
             tabIcon: <i className="fa-sharp far fa-box" data-toggle="tooltip" title="Inventory" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Inventory"
+        },
+        {
+            tabTo: "/mycalendar",
+            tabIcon: <i className="far fa-calendar-alt" data-toggle="tooltip" title="My Calendar" style={{ width: 22, textAlign: "center" }}></i>,
+            tabTitle: "My Calendar"
         },
         {
             tabTo: "/mail",
@@ -96,8 +102,11 @@ const Mycrm = (props) => {
                 case "/inventory":
                     setValue(3);
                     break;
-                case "/mail":
+                case "/mycalendar":
                     setValue(4);
+                    break;
+                case "/mail":
+                    setValue(5);
                     break;
                 // case "/mypipeline":
                 //     setValue(2);
@@ -182,6 +191,11 @@ const Mycrm = (props) => {
                     </Suspense>
                 </TabPanel>
                 <TabPanel value={value} index={4}>
+                    <Suspense fallback={<Loader />}>
+                        <MyCalendar />
+                    </Suspense>
+                </TabPanel>
+                <TabPanel value={value} index={5}>
                     <Suspense fallback={<Loader />}>
                         <Email />
                     </Suspense>

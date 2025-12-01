@@ -1,7 +1,9 @@
 import { Button, FormControl, IconButton, InputAdornment, Menu, MenuItem, Select, TextField, useMediaQuery } from "@mui/material"
 import { useMemo, useState } from "react";
 import { Col, Row } from "reactstrap"
-import "../crm/crm.css";
+import "./inventory.css";
+import AddProductModel from "./addProductModel";
+import AddSeviceModel from "./addSeviceModel";
 
 const searchTypes = [
     { id: 1, name: "All" },
@@ -49,6 +51,8 @@ const tableRows = [
 ];
 const Inventory = () => {
     const isDesktop = useMediaQuery("(min-width: 768px)");
+    const [openProductModel, setOpenProductModel] = useState(false);
+    const [openServiceModel, setOpenServiceModel] = useState(false);
 
     const [isSideBarOpen, setIsSideBarOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -213,6 +217,7 @@ const Inventory = () => {
             <div className="d-flex p-3 justify-content-between align-items-center border-bottom">
                 <div className="d-flex align-items-center" style={{ gap: 25 }}>
                     <Button
+                        onClick={(e) => handleClick(e)}
                         variant="text"
                         size="small"
                         startIcon={<i className="far fa-plus" />}
@@ -277,6 +282,30 @@ const Inventory = () => {
                     >
                         View/Hide Columns
                     </Button>
+
+                    <Menu
+                        id="basic-menu"
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        slotProps={{
+                            list: {
+                                'aria-labelledby': 'basic-button',
+                            },
+                        }}
+                        PaperProps={{
+                            sx: {
+                                width: 170
+                            }
+                        }}
+                    >
+                        <MenuItem onClick={() => { setAnchorEl(null); setOpenProductModel(true) }}>
+                            Product
+                        </MenuItem>
+                        <MenuItem onClick={() => { setAnchorEl(null); setOpenServiceModel(true) }}>
+                            Service
+                        </MenuItem>
+                    </Menu>
                 </div>
                 <div className="utility-buttons">
                     <div className="utility-btn">
@@ -473,6 +502,9 @@ const Inventory = () => {
                     </Col>
                 </Row>
             </Col>
+            <AddProductModel open={openProductModel} onClose={() => setOpenProductModel(false)} />
+            <AddSeviceModel open={openServiceModel} onClose={() => setOpenServiceModel(false)} />
+
         </Row>
     )
 }

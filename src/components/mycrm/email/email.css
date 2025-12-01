@@ -34,14 +34,10 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.sidebar-menu {
-  margin-bottom: 20px;
-}
-
 .menu-item {
   display: flex;
   align-items: center;
-  padding: 10px 15px;
+  padding: 6px 15px;
   margin-bottom: 5px;
   /* border-radius: 8px; */
   cursor: pointer;
@@ -77,25 +73,20 @@
   width: 20px;
 }
 
-.labels-section {
-  border-top: 1px solid #e0e0e0;
-  padding-top: 20px;
-}
 
 .labels-header {
   font-size: 12px;
   font-weight: 600;
   color: #999;
-  margin-bottom: 15px;
+  margin: 15px 0px;
   letter-spacing: 0.5px;
 }
 
 .label-item {
   display: flex;
   align-items: center;
-  padding: 8px 15px;
+  padding: 6px 15px;
   margin-bottom: 5px;
-  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s;
   color: #666;
@@ -171,14 +162,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 15px 25px;
+  padding: 15px 10px;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .action-buttons {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 25px;
 }
 
 .action-buttons i {
@@ -215,7 +206,7 @@
 .email-item {
   display: flex;
   align-items: center;
-  padding: 10px 25px;
+  padding: 10px 10px;
   border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -301,7 +292,7 @@
 .email-content {
   flex: 1;
   display: flex;
-  gap: 25px;
+  gap: 15px;
 }
 
 .email-sender {
@@ -316,6 +307,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* display: none; */
 }
 
 .email-meta {
@@ -395,17 +387,17 @@
 
   .menu-item,
   .label-item {
-    padding: 8px 10px;
+    padding: 6px 10px;
     font-size: 13px;
   }
 
   .email-toolbar,
   .email-actions {
-    padding: 12px 20px;
+    padding: 12px 10px;
   }
 
   .email-item {
-    padding: 12px 20px;
+    padding: 12px 10px;
   }
 
   .search-box {
@@ -476,7 +468,7 @@
 @media (max-width: 576px) {
   .email-item {
     flex-wrap: wrap;
-    padding: 10px 15px;
+    padding: 10px 10px;
   }
 
   .email-checkbox {
@@ -524,5 +516,6 @@
 
   .email-subject {
     font-size: 12px;
+    display: none;
   }
 }
