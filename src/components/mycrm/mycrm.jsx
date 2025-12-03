@@ -15,12 +15,13 @@ const Crm = lazy(() => import("./crm/crm"))
 const Email = lazy(() => import("./email/email"))
 const Inventory = lazy(() => import("./inventory/inventory"))
 const MyCalendar = lazy(() => import("./myCalendar/myCalendar"))
+const Invoice = lazy(() => import("./invoice/invoice"))
 
 const Mycrm = (props) => {
-    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail" };
+    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail", 6: "invoice" };
     const [value, setValue] = useState(0);
     const [replyCount, setReplyCount] = useState({});
-    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
+    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
     const [showPopper, setShowPopper] = useState(false);
     const [arrowRef, setArrowRef] = useState(null);
     const tabList = [
@@ -53,6 +54,11 @@ const Mycrm = (props) => {
             tabTo: "/mail",
             tabIcon: <i className="far fa-envelope" data-toggle="tooltip" title="Mail" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Mail"
+        },
+        {
+            tabTo: "/invoice",            
+            tabIcon: <i className="far fa-file-invoice-dollar" data-toggle="tooltip" title="Invoice" style={{ width: 22, textAlign: "center" }}></i>,
+            tabTitle: "Invoice"
         },
     ];
 
@@ -107,6 +113,9 @@ const Mycrm = (props) => {
                     break;
                 case "/mail":
                     setValue(5);
+                    break;
+                case "/invoice":
+                    setValue(6);
                     break;
                 // case "/mypipeline":
                 //     setValue(2);
@@ -198,6 +207,11 @@ const Mycrm = (props) => {
                 <TabPanel value={value} index={5}>
                     <Suspense fallback={<Loader />}>
                         <Email />
+                    </Suspense>
+                </TabPanel>
+                <TabPanel value={value} index={6}>
+                    <Suspense fallback={<Loader />}>
+                        <Invoice />
                     </Suspense>
                 </TabPanel>
                 {/*<TabPanel value={value} index={2}>*/}

@@ -240,7 +240,8 @@ const App = (props) => {
                     <UserRoute path="/crm" exact component={Mycrm} />
                     <UserRoute path="/mail" exact component={Mycrm} />
                     <UserRoute path="/inventory" exact component={Mycrm} />
-
+                    <UserRoute path="/invoice" exact component={Mycrm} />
+                    
                     <UserRoute path="/createimport" exact component={ImportClientContacts} />
                     <UserRoute path="/quickbookoauth2redirect" exact component={QuickBookOauth2redirect} />
                     <UserRoute path="/salesforceoauth2redirect" exact component={SalesForceOauth2redirect} />
