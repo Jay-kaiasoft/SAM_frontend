@@ -16,12 +16,13 @@ const Email = lazy(() => import("./email/email"))
 const Inventory = lazy(() => import("./inventory/inventory"))
 const MyCalendar = lazy(() => import("./myCalendar/myCalendar"))
 const Invoice = lazy(() => import("./invoice/invoice"))
+const MyTask = lazy(() => import("./myTasks/myTask"))
 
 const Mycrm = (props) => {
-    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail", 6: "invoice" };
+    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail", 6: "mytasks", 7: "invoice" };
     const [value, setValue] = useState(0);
     const [replyCount, setReplyCount] = useState({});
-    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
+    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
     const [showPopper, setShowPopper] = useState(false);
     const [arrowRef, setArrowRef] = useState(null);
     const tabList = [
@@ -56,7 +57,12 @@ const Mycrm = (props) => {
             tabTitle: "Mail"
         },
         {
-            tabTo: "/invoice",            
+            tabTo: "/myTasks",            
+            tabIcon: <i className="fa-sharp far fa-calendar-check" data-toggle="tooltip" title="My Tasks" style={{ width: 22, textAlign: "center" }}></i>,
+            tabTitle: "My Tasks"
+        },
+        {
+            tabTo: "/invoice",
             tabIcon: <i className="far fa-file-invoice-dollar" data-toggle="tooltip" title="Invoice" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Invoice"
         },
@@ -114,8 +120,11 @@ const Mycrm = (props) => {
                 case "/mail":
                     setValue(5);
                     break;
-                case "/invoice":
+                case "/myTasks":
                     setValue(6);
+                    break;
+                case "/invoice":
+                    setValue(7);
                     break;
                 // case "/mypipeline":
                 //     setValue(2);
@@ -210,6 +219,11 @@ const Mycrm = (props) => {
                     </Suspense>
                 </TabPanel>
                 <TabPanel value={value} index={6}>
+                    <Suspense fallback={<Loader />}>
+                        <MyTask />
+                    </Suspense>
+                </TabPanel>
+                <TabPanel value={value} index={7}>
                     <Suspense fallback={<Loader />}>
                         <Invoice />
                     </Suspense>
