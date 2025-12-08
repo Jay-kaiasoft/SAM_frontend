@@ -138,12 +138,6 @@ const interestedInOptions = [
   { key: "4", label: "Service 2" },
 ];
 
-const members = [
-  { id: 1, name: "Ava Patel" },
-  { id: 2, name: "Noah Khan" },
-  { id: 3, name: "Zoe Smith" },
-];
-
 const Crm = () => {
   const [searchType, setSearchType] = useState(searchTypes[0].id);
   const handleChange = (event) => {
@@ -1472,7 +1466,7 @@ const Crm = () => {
   return (
     <>
       <Row>
-        <Col xs={12} sm={12} md={12} lg={12} xl={12} className="p-0">
+        <Col xs={12} sm={12} md={12} lg={12} xl={12} className="px-2 p-md-0">
           <Row
             style={{
               gap: !isDesktop ? 10 : 0,

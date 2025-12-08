@@ -368,7 +368,7 @@ const Inventory = () => {
     );
     return (
         <Row>
-            <Col xs={12} sm={12} md={12} lg={12} xl={12} className="p-0">
+            <Col xs={12} sm={12} md={12} lg={12} xl={12} className="px-2 p-md-0">
                 <Row
                     style={{
                         gap: !isDesktop ? 10 : 0,

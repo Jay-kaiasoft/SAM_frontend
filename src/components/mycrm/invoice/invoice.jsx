@@ -113,7 +113,7 @@ const Invoice = () => {
 
     return (
         <Row>
-            <Col xs={12} sm={12} md={12} lg={12} xl={12} className="p-0">
+            <Col xs={12} sm={12} md={12} lg={12} xl={12} className="px-2 p-md-0">
                 <h3>Invoice</h3>
                 <Row>
                     <Col xs={12} sm={12} md={12} lg={3} xl={3}>

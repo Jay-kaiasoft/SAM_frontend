@@ -17,12 +17,13 @@ const Inventory = lazy(() => import("./inventory/inventory"))
 const MyCalendar = lazy(() => import("./myCalendar/myCalendar"))
 const Invoice = lazy(() => import("./invoice/invoice"))
 const MyTask = lazy(() => import("./myTasks/myTask"))
+const Journal = lazy(() => import("./journal/journal"))
 
 const Mycrm = (props) => {
-    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail", 6: "mytasks", 7: "invoice" };
+    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail", 6: "journal", 7: "mytasks", 8: "invoice" };
     const [value, setValue] = useState(0);
     const [replyCount, setReplyCount] = useState({});
-    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
+    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
     const [showPopper, setShowPopper] = useState(false);
     const [arrowRef, setArrowRef] = useState(null);
     const tabList = [
@@ -57,7 +58,12 @@ const Mycrm = (props) => {
             tabTitle: "Mail"
         },
         {
-            tabTo: "/myTasks",            
+            tabTo: "/journal",
+            tabIcon: <i className="far fa-list-ul" data-toggle="tooltip" title="Journal" style={{ width: 22, textAlign: "center" }}></i>,
+            tabTitle: "Journal"
+        },
+        {
+            tabTo: "/myTasks",
             tabIcon: <i className="fa-sharp far fa-calendar-check" data-toggle="tooltip" title="My Tasks" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "My Tasks"
         },
@@ -120,18 +126,15 @@ const Mycrm = (props) => {
                 case "/mail":
                     setValue(5);
                     break;
-                case "/myTasks":
+                case "/journal":
                     setValue(6);
                     break;
-                case "/invoice":
+                case "/myTasks":
                     setValue(7);
                     break;
-                // case "/mypipeline":
-                //     setValue(2);
-                //     break;
-                // case "/mytasks":
-                //     setValue(3);
-                //     break;               
+                case "/invoice":
+                    setValue(8);
+                    break;
             }
         } else {
             noPermission();
@@ -175,9 +178,7 @@ const Mycrm = (props) => {
                                         {...a11yProps(i)}
                                     />
                                 ))
-                            }
-                            {/*<Tab component={Link} to="/mypipeline" icon={<i className="far fa-layer-group" data-toggle="tooltip" title="My Pipeline"></i>} {...a11yProps(2)} />*/}
-                            {/*<Tab component={Link} to="/mytasks" icon={<i className="far fa-calendar-check" data-toggle="tooltip" title="My Tasks"></i>} {...a11yProps(3)} />*/}
+                            }                           
                         </Tabs>
                         {tabRef.current.length > 0 &&
                             tabList.map((v, i) => (
@@ -220,10 +221,15 @@ const Mycrm = (props) => {
                 </TabPanel>
                 <TabPanel value={value} index={6}>
                     <Suspense fallback={<Loader />}>
-                        <MyTask />
+                        <Journal />
                     </Suspense>
                 </TabPanel>
                 <TabPanel value={value} index={7}>
+                    <Suspense fallback={<Loader />}>
+                        <MyTask />
+                    </Suspense>
+                </TabPanel>
+                <TabPanel value={value} index={8}>
                     <Suspense fallback={<Loader />}>
                         <Invoice />
                     </Suspense>
