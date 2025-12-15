@@ -18,12 +18,13 @@ const MyCalendar = lazy(() => import("./myCalendar/myCalendar"))
 const Invoice = lazy(() => import("./invoice/invoice"))
 const MyTask = lazy(() => import("./myTasks/myTask"))
 const Journal = lazy(() => import("./journal/journal"))
+const Pipeline = lazy(() => import("./pipeline/pipeline"))
 
 const Mycrm = (props) => {
-    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail", 6: "journal", 7: "mytasks", 8: "invoice" };
+    const tabNameToIndex = { 0: "clientContact", 1: "projects", 2: "crm", 3: "inventory", 4: "mycalendar", 5: "mail", 6: "journal", 7: "mytasks", 8: "invoice", 9: "pipeline" };
     const [value, setValue] = useState(0);
     const [replyCount, setReplyCount] = useState({});
-    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
+    let tabRef = useRef([createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef(), createRef()]);
     const [showPopper, setShowPopper] = useState(false);
     const [arrowRef, setArrowRef] = useState(null);
     const tabList = [
@@ -71,6 +72,11 @@ const Mycrm = (props) => {
             tabTo: "/invoice",
             tabIcon: <i className="far fa-file-invoice-dollar" data-toggle="tooltip" title="Invoice" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Invoice"
+        },
+        {
+            tabTo: "/pipeline",            
+            tabIcon: <i className="far fa-stream" data-toggle="tooltip" title="Pipeline" style={{ width: 22, textAlign: "center" }}></i>,
+            tabTitle: "Pipeline"
         },
     ];
 
@@ -135,6 +141,9 @@ const Mycrm = (props) => {
                 case "/invoice":
                     setValue(8);
                     break;
+                case "/pipeline":
+                    setValue(9);
+                    break;
             }
         } else {
             noPermission();
@@ -178,7 +187,7 @@ const Mycrm = (props) => {
                                         {...a11yProps(i)}
                                     />
                                 ))
-                            }                           
+                            }
                         </Tabs>
                         {tabRef.current.length > 0 &&
                             tabList.map((v, i) => (
@@ -232,6 +241,11 @@ const Mycrm = (props) => {
                 <TabPanel value={value} index={8}>
                     <Suspense fallback={<Loader />}>
                         <Invoice />
+                    </Suspense>
+                </TabPanel>
+                <TabPanel value={value} index={9}>
+                    <Suspense fallback={<Loader />}>
+                        <Pipeline />
                     </Suspense>
                 </TabPanel>
                 {/*<TabPanel value={value} index={2}>*/}

@@ -243,6 +243,7 @@ const App = (props) => {
                     <UserRoute path="/invoice" exact component={Mycrm} />
                     <UserRoute path="/myTasks" exact component={Mycrm} />
                     <UserRoute path="/journal" exact component={Mycrm} />
+                    <UserRoute path="/pipeline" exact component={Mycrm} />
                     
                     <UserRoute path="/createimport" exact component={ImportClientContacts} />
                     <UserRoute path="/quickbookoauth2redirect" exact component={QuickBookOauth2redirect} />
