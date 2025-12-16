@@ -1,11 +1,7 @@
 
 import React, { useMemo, useState } from "react";
 import {
-    Avatar,
-    AvatarGroup,
-    Badge,
     Box,
-    Chip,
     FormControl,
     IconButton,
     InputAdornment,
@@ -19,16 +15,17 @@ import {
 } from "@mui/material";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { Row, Col } from "reactstrap";
+import PipelineList from "./pipelineList";
 
 // ---------- demo dynamic data (replace with API response) ----------
 const demoColumns = [
     {
         id: "unassigned",
-        title: "Unassigned",
+        title: "Proposal",
         count: 8,
-        color: "#ff6b6b",
+        color: "#377D50",
         total: 1020,
-        items: Array.from({ length: 5 }).map((_, i) => ({
+        items: Array.from({ length: 1 }).map((_, i) => ({
             id: `u-${i}`,
             title: "Need New Design for Website",
             amount: 3800,
@@ -38,16 +35,18 @@ const demoColumns = [
                 { id: 1, name: "A", src: "" },
                 { id: 2, name: "B", src: "" },
                 { id: 3, name: "C", src: "" },
+                { id: 4, name: "D", src: "" },
+                { id: 5, name: "E", src: "" },
             ],
         })),
     },
     {
         id: "responsible",
-        title: "Responsible Assign",
-        count: 4,
-        color: "#2ecc71",
+        title: "Proposal",
+        count: 8,
+        color: "#377D50",
         total: 1020,
-        items: Array.from({ length: 4 }).map((_, i) => ({
+        items: Array.from({ length: 1 }).map((_, i) => ({
             id: `r-${i}`,
             title: "Need New Design for Website",
             amount: 3800,
@@ -60,14 +59,14 @@ const demoColumns = [
         id: "inprocess",
         title: "In Process",
         count: 3,
-        color: "#4da3ff",
+        color: "#4097ED",
         total: 1020,
-        items: Array.from({ length: 3 }).map((_, i) => ({
+        items: Array.from({ length: 1 }).map((_, i) => ({
             id: `p-${i}`,
             title: "Need New Design for Website",
             amount: 3800,
             dateText: "July 21 2024",
-            priority: "Low",
+            priority: "Average",
             assignees: [
                 { id: 1, name: "E", src: "" },
                 { id: 2, name: "F", src: "" },
@@ -80,7 +79,7 @@ const demoColumns = [
         count: 8,
         color: "#f7b731",
         total: 1020,
-        items: Array.from({ length: 4 }).map((_, i) => ({
+        items: Array.from({ length: 1 }).map((_, i) => ({
             id: `d-${i}`,
             title: "Need New Design for Website",
             amount: 3800,
@@ -111,25 +110,25 @@ const money = (n) => {
 };
 
 const Pipeline = ({
-    columns = demoColumns,
     height = "calc(100vh - 220px)",
 }) => {
     const isDesktop = useMediaQuery("(min-width: 992px)");
     const [searchText, setSearchText] = useState("");
     const [searchType, setSearchType] = useState(searchTypes[0].id);
+    const [viewType, setViewType] = useState("grid");
 
     const handleChange = (event) => {
         setSearchType(event.target.value);
     };
 
     const filteredColumns = useMemo(() => {
-        if (!searchText) return columns;
+        if (!searchText) return demoColumns;
         const q = searchText.toLowerCase();
-        return columns.map((c) => ({
+        return demoColumns.map((c) => ({
             ...c,
             items: (c.items || []).filter((it) => (it.title || "").toLowerCase().includes(q)),
         }));
-    }, [columns, searchText]);
+    }, [demoColumns, searchText]);
 
     return (
         <Row>
@@ -141,7 +140,7 @@ const Pipeline = ({
                         marginBottom: "16px",
                     }}
                 >
-                    <Col xs={12} sm={2} md={2} lg={2} xl={2}>
+                    <Col xs={12} sm={3} md={3} lg={3} xl={3}>
                         <div className="d-flex item-center" style={{ gap: 10 }}>
                             <h3 className="mb-0 fw-bold" style={{ color: "#1f2937" }}>
                                 Pipeline
@@ -150,6 +149,14 @@ const Pipeline = ({
                                 <i className="far fa-plus-square"></i>
                                 <div className="bg-green"></div>
                             </Link>
+                            <div className="d-flex justify-contant-center align-items-center" style={{ gap: 15 }}>
+                                <div onClick={() => setViewType("grid")} className="border rounded d-flex justify-content-center align-items-center" style={{ backgroundColor: viewType === "grid" ? "#007BFF" : "transparent", cursor: "pointer", padding: "10px 12px" }}>
+                                    <i className="far fa-th-large" style={{ fontSize: "20px", color: viewType === "grid" ? "#ffffff" : "#000000" }}></i>
+                                </div>
+                                <div onClick={() => setViewType("list")} className="border rounded d-flex justify-content-center align-items-center" style={{ backgroundColor: viewType === "list" ? "#007BFF" : "transparent", cursor: "pointer", padding: "10px 12px" }}>
+                                    <i className="far fa-bars" style={{ fontSize: "20px", color: viewType === "list" ? "#ffffff" : "#000000" }}></i>
+                                </div>
+                            </div>
                         </div>
                     </Col>
                     <Col xs={12} sm={9} md={9} lg={9} xl={9}>
@@ -240,42 +247,49 @@ const Pipeline = ({
                             </Col>
                         </Row>
                     </Col>
-                    <Col xs={12} sm={1} md={1} lg={1} xl={1}>
-                        <div className="d-flex justify-contant-center align-items-center" style={{ gap: 10 }}>
-                            <i className="far fa-th-large" style={{ fontSize: "18px" }}></i>
-                            <i className="far fa-bars" style={{ fontSize: "18px" }}></i>
-                        </div>
-                    </Col>
                 </Row>
                 <Row>
                     <Col xs={12}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                gap: 2,               // Spacing between columns
-                                height: height,       // Full height
-                                width: "100%",        // Full width
-                                overflowX: "auto",    // Scroll if screen is too narrow
-                                overflowY: "hidden",
-                                pb: 1,
-                                px: 0, // Remove padding to align with edges
-                            }}
-                        >
-                            {filteredColumns?.map((col) => (
+                        {
+                            viewType === "grid" ? (
                                 <Box
-                                    key={col.id}
                                     sx={{
-                                        // THIS IS THE KEY CHANGE:
-                                        flex: 1,            // Grow to fill available space evenly
-                                        minWidth: "300px",  // Don't shrink below 300px (prevents squashing)
-                                        height: "100%"
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        gap: 2,               // Spacing between columns
+                                        height: height,       // Full height
+                                        width: "100%",        // Full width
+                                        overflowX: "auto",    // Scroll if screen is too narrow
+                                        overflowY: "hidden",
+                                        pb: 1,
+                                        px: 0, // Remove padding to align with edges
                                     }}
                                 >
-                                    <Column col={col} />
+                                    {filteredColumns?.map((col) => (
+                                        <Box
+                                            key={col.id}
+                                            sx={{
+                                                // THIS IS THE KEY CHANGE:
+                                                flex: 1,            // Grow to fill available space evenly
+                                                minWidth: "300px",  // Don't shrink below 300px (prevents squashing)
+                                                height: "100%"
+                                            }}
+                                        >
+                                            <Column col={col} />
+                                        </Box>
+                                    ))}
                                 </Box>
-                            ))}
-                        </Box>
+
+                            ) :
+                                <PipelineList
+                                    columns={filteredColumns}
+                                    height={height}
+                                    onAddRow={() => {
+                                        // hook this to your real add-row logic (API / state update)
+                                        console.log("Add Row clicked");
+                                    }}
+                                />
+                        }
                     </Col>
                 </Row>
             </Col>
