@@ -26,9 +26,9 @@ const DropDownControls = forwardRef((props, ref) => {
             props.onChange(event, props.index);
         } else {
             setError("");
-            if(props.multiple){
-                if(props.open !== null){
-                    if(value.props.value === "all" || event.target.value.length === 0) {
+            if (props.multiple) {
+                if (props.open !== null) {
+                    if (value.props.value === "all" || event.target.value.length === 0) {
                         props.onChange(event.target.name, ["all"])
                     } else {
                         if (event.target.value.indexOf("all") > -1) {
@@ -37,7 +37,7 @@ const DropDownControls = forwardRef((props, ref) => {
                         props.onChange(event.target.name, event.target.value);
                     }
                 } else {
-                props.onChange(event.target.name, event.target.value)
+                    props.onChange(event.target.name, event.target.value)
                 }
             } else {
                 props.onChange(event.target.name, value.props.value)
@@ -46,16 +46,16 @@ const DropDownControls = forwardRef((props, ref) => {
 
     }
 
-    const handleOpen = ()=>{
-        if(props.open === null) {
+    const handleOpen = () => {
+        if (props.open === null) {
             setOpen(true);
         } else {
             props.onOpen();
         }
     }
 
-    const handleClose = ()=>{
-        if(props.open === null) {
+    const handleClose = () => {
+        if (props.open === null) {
             setOpen(false);
         } else {
             props.onClose();
@@ -86,7 +86,11 @@ const DropDownControls = forwardRef((props, ref) => {
     return (
         <div>
             <FormControl variant="standard" className="w-100" error={error.length > 0}>
-                <InputLabel id="demo-mutiple-name-label">{props.label}</InputLabel>
+                {
+                    props.label && (
+                        <InputLabel id="demo-mutiple-name-label">{props.label}</InputLabel>
+                    )
+                }
                 <Select
                     labelId="demo-mutiple-name-label"
                     name={props.name}
@@ -98,13 +102,13 @@ const DropDownControls = forwardRef((props, ref) => {
                     MenuProps={MenuProps}
                     disabled={props.disabled}
                     multiple={props.multiple}
-                    open={props.open === null?open:props.open}
+                    open={props.open === null ? open : props.open}
                     onOpen={handleOpen}
                     onClose={handleClose}
                     className={props.className}
                     onClick={props?.onClick}
                 >
-                    {props.dropdownList.map((ele,i) => (
+                    {props.dropdownList.map((ele, i) => (
                         <MenuItem key={i} value={ele.key}>
                             {ele.value}
                         </MenuItem>
@@ -116,7 +120,7 @@ const DropDownControls = forwardRef((props, ref) => {
 })
 
 DropDownControls.defaultProps = {
-    multiple:false,
+    multiple: false,
     open: null,
     className: ""
 }

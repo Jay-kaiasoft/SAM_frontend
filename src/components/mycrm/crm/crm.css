@@ -117,7 +117,7 @@
 .crm-contact-filter {
     border-bottom: 1px solid #E1E1E1;
     background: #ffffff;
-    padding: 8px 16px;
+    padding: 8px 10px;
 }
 
 /* Contact row styles */
@@ -321,7 +321,6 @@
     font-weight: 500;
 }
 
-
 .contact-details-section {
     flex: 1;
     display: grid;
@@ -483,6 +482,52 @@
     gap: 30px;
     padding: 8px 0;
 }
+
+.crm-contact-tabs {
+    display: flex;
+    gap: 32px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.crm-contact-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 0;
+    font-size: 15px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s ease;
+    text-align: center;
+}
+
+.crm-contact-tab.active {
+    color: #0478DC;
+}
+
+.crm-contact-tab.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background-color: #0478DC;
+}
+
+/* settings icon behavior */
+.tab-setting-btn {
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+/* .crm-contact-tab:hover .tab-setting-btn,
+.crm-contact-tab.active .tab-setting-btn {
+    opacity: 1;
+} */
+
 
 /* Utility buttons */
 .utility-buttons {
@@ -657,8 +702,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    align-items: center;    
-    padding-top: 10px;    
+    align-items: center;
+    padding-top: 10px;
 }
 
 .badge-wrapper {

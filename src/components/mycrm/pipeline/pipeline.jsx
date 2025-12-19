@@ -25,7 +25,7 @@ const demoColumns = [
         count: 8,
         color: "#377D50",
         total: 1020,
-        items: Array.from({ length: 1 }).map((_, i) => ({
+        items: Array.from({ length: 6 }).map((_, i) => ({
             id: `u-${i}`,
             title: "Need New Design for Website",
             amount: 3800,
@@ -46,7 +46,7 @@ const demoColumns = [
         count: 8,
         color: "#377D50",
         total: 1020,
-        items: Array.from({ length: 1 }).map((_, i) => ({
+        items: Array.from({ length: 3 }).map((_, i) => ({
             id: `r-${i}`,
             title: "Need New Design for Website",
             amount: 3800,
@@ -61,7 +61,7 @@ const demoColumns = [
         count: 3,
         color: "#4097ED",
         total: 1020,
-        items: Array.from({ length: 1 }).map((_, i) => ({
+        items: Array.from({ length: 8 }).map((_, i) => ({
             id: `p-${i}`,
             title: "Need New Design for Website",
             amount: 3800,
@@ -79,7 +79,7 @@ const demoColumns = [
         count: 8,
         color: "#f7b731",
         total: 1020,
-        items: Array.from({ length: 1 }).map((_, i) => ({
+        items: Array.from({ length: 4 }).map((_, i) => ({
             id: `d-${i}`,
             title: "Need New Design for Website",
             amount: 3800,

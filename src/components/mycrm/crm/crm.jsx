@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   IconButton,
   InputAdornment,
@@ -14,13 +14,14 @@ import {
   Autocomplete,
   Menu,
 } from "@mui/material";
-import { Col, Input, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import "./crm.css";
 import DropDownControls from "../../shared/commonControlls/dropdownControl";
 import AddTask from "./addTask";
 import AddTags from "./addTags";
 import AddNote from "./addNote";
 import AddGroup from "./addGroup";
+import SendMailModel from "./sendMailModel";
 
 const searchTypes = [
   { id: 1, name: "All" },
@@ -138,6 +139,13 @@ const interestedInOptions = [
   { key: "4", label: "Service 2" },
 ];
 
+const contactTabs = [
+  { key: "contact", label: "Contact Info" },
+  { key: "communication", label: "Communication" },
+  { key: "status", label: "Status" },
+  { key: "social", label: "Social" },
+];
+
 const Crm = () => {
   const [searchType, setSearchType] = useState(searchTypes[0].id);
   const handleChange = (event) => {
@@ -164,13 +172,22 @@ const Crm = () => {
   const [expandedGroups, setExpandedGroups] = useState({});
 
   const [isContactSectionOpen, setIsContactSectionOpen] = useState(false);
+
+  // ✅ contacts in state + pin support
+  const [contactList, setContactList] = useState(
+    contacts.map((c) => ({ ...c, isPinned: c.isPinned ?? false }))
+  );
+
   const [selectedContactId, setSelectedContactId] = useState(
-    contacts[0]?.id || null
+    contactList[0]?.id || null
   );
 
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("contact-info");
-  const [headerActiveTab, setHeaderActiveTab] = useState(null);
+  const [activeContactTab, setActiveContactTab] = useState("contact");
+
+  // 0 = Contacts, 1 = Groups, 2 = Pinned
+  const [headerActiveTab, setHeaderActiveTab] = useState(0);
 
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -189,6 +206,21 @@ const Crm = () => {
   const [isTagOpen, setIsTagOpen] = useState(false);
   const [isReminderPannelOpen, setIsReminderPannelOpen] = useState(false);
   const [isNotePannelOpen, setIsNotePannelOpen] = useState(false);
+  const [tabMenuAnchor, setTabMenuAnchor] = useState(null);
+  const [activeTabKey, setActiveTabKey] = useState(null);
+  const [openMailModel, setOpenMailModel] = useState(false);
+
+  const openTabMenu = (event, tabKey) => {
+    event.stopPropagation(); // prevent tab switch
+    setTabMenuAnchor(event.currentTarget);
+    setActiveTabKey(tabKey);
+  };
+
+  const closeTabMenu = () => {
+    setTabMenuAnchor(null);
+    setActiveTabKey(null);
+  };
+
 
   const handleChangeFilter = (event, value) => {
     setSelectedFilter(value);
@@ -206,13 +238,41 @@ const Crm = () => {
     });
   };
 
-  const filteredContacts = contacts.filter((c) =>
-    c.name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const togglePinContact = (contactId) => {
+    setContactList((prev) =>
+      prev.map((c) =>
+        c.id === contactId ? { ...c, isPinned: !c.isPinned } : c
+      )
+    );
+  };
+
+  const filteredContacts = useMemo(() => {
+    const baseFiltered = contactList.filter((c) =>
+      (c.name || "").toLowerCase().includes(searchText.toLowerCase())
+    );
+
+    const list = headerActiveTab === 2
+      ? baseFiltered.filter((c) => c.isPinned)
+      : baseFiltered;
+
+    // pinned on top
+    return list
+    // .slice()
+    // .sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+  }, [contactList, searchText, headerActiveTab]);
 
   const activeContact =
     filteredContacts.find((c) => c.id === selectedContactId) ||
     filteredContacts[0];
+
+  // keep selection valid (e.g., when switching to Pinned tab)
+  React.useEffect(() => {
+    if (!selectedContactId) return;
+    const stillExists = filteredContacts.some((c) => c.id === selectedContactId);
+    if (!stillExists) {
+      setSelectedContactId(filteredContacts[0]?.id || null);
+    }
+  }, [filteredContacts, selectedContactId]);
 
   const closeAllPanels = () => {
     setIsTaskPanelOpen(false);
@@ -265,7 +325,7 @@ const Crm = () => {
         <>
           <div className="crm-contact-header">
             <div className="d-flex align-items-center justify-content-between">
-              <div className="d-flex align-items-center" style={{ gap: 20 }}>
+              <div className="d-flex align-items-center" style={{ gap: 15 }}>
                 <Button
                   onClick={(e) => handleClick(e)}
                   variant="text"
@@ -280,6 +340,7 @@ const Crm = () => {
                 >
                   Add
                 </Button>
+
                 <Button
                   variant="text"
                   size="small"
@@ -293,6 +354,7 @@ const Crm = () => {
                 >
                   Edit
                 </Button>
+
                 <Button
                   variant="text"
                   size="small"
@@ -333,7 +395,7 @@ const Crm = () => {
                   </MenuItem>
                 </Menu>
               </div>
-              {/* <div className="icon-wrapper">
+              <div className="icon-wrapper">
                 <span
                   className="btn-circle"
                   data-toggle="tooltip"
@@ -344,7 +406,7 @@ const Crm = () => {
                   <i className="fas fa-chevron-left" />
                   <div className="bg-blue"></div>
                 </span>
-              </div> */}
+              </div>
             </div>
           </div>
 
@@ -354,9 +416,9 @@ const Crm = () => {
                 size="small"
                 sx={{
                   "&.Mui-checked": {
-                    color: "#0478DC !important",
+                    color: "#ffffff !important",
                   },
-                  color: "#6b7280 !important",
+                  color: "#ffffff !important",
                 }}
               />
               <span>Select</span>
@@ -565,7 +627,7 @@ const Crm = () => {
                   Delete
                 </Button>
               </div>
-              {/* <div className="icon-wrapper">
+              <div className="icon-wrapper">
                 <span
                   className="btn-circle"
                   data-toggle="tooltip"
@@ -576,7 +638,7 @@ const Crm = () => {
                   <i className="fas fa-chevron-left" style={{ fontSize: "16px" }} />
                   <div className="bg-blue"></div>
                 </span>
-              </div> */}
+              </div>
             </div>
           </div>
 
@@ -628,19 +690,21 @@ const Crm = () => {
                     }`}
                   onClick={() => setSelectedContactId(c.id)}
                 >
-                  <div className="d-flex align-items-center">
-                    <Avatar
-                      sx={{
-                        width: 40,
-                        height: 40,
-                        mr: 2,
-                        bgcolor: isActive ? "#0478DC" : "#6b7280",
-                        fontSize: 14,
-                        fontWeight: "bold",
-                      }}
-                    >
-                      {initials}
-                    </Avatar>
+                  <div className="d-flex align-items-start justify-content-between" style={{ gap: 0 }}>
+                    <div>
+                      <Avatar
+                        sx={{
+                          width: 30,
+                          height: 30,
+                          mr: 2,
+                          bgcolor: isActive ? "#0478DC" : "#6b7280",
+                          fontSize: 12,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {initials}
+                      </Avatar>
+                    </div>
 
                     <div className="flex-grow-1">
                       <div className="contact-main-text">{c.name}</div>
@@ -676,102 +740,80 @@ const Crm = () => {
     </div>
   );
 
-  const renderMainContent = () => (
-    <div className="crm-main">
-      <div className="d-flex p-3 justify-content-between align-items-center border-bottom">
-        <div></div>
-        <div className="utility-buttons">
-          <div className="utility-btn">
-            <i className="far fa-expand"></i>
-            <span>Full Screen View</span>
-          </div>
-          <div className="utility-btn">
-            <i className="far fa-question-circle"></i>
-            <span>Help</span>
-          </div>
-        </div>
-      </div>
+  const renderMainContent = () => {
+    const headerName = activeContact?.name || "-";
+    const headerInitials =
+      activeContact?.initials ||
+      (activeContact?.name || "")
+        .split(" ")
+        .filter(Boolean)
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+    const headerCompany = activeContact?.company || "-";
 
-      {/* HEADER */}
-      <div className="px-4 py-3 d-flex justify-content-between align-items-start">
-        {/* LEFT SIDE */}
-        <div className="d-flex align-items-start">
-          <Avatar
-            sx={{
-              width: 60,
-              height: 60,
-              bgcolor: "#0A74DA",
-              mr: 2,
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            BR
-          </Avatar>
+    return (
+      <div className="crm-main" style={{ position: "relative" }}>
+        {/* HEADER */}
+        <div className="px-4 py-3 d-flex justify-content-start align-items-start" style={{ gap: 30 }}>
+          {/* LEFT SIDE */}
+          <div className="d-flex align-items-center justify-content-center" style={{ width: "25%" }}>
+            <div>
+              <div className="d-flex justify-content-center items-center mb-2">
+                <Avatar
+                  sx={{
+                    width: 50,
+                    height: 50,
+                    bgcolor: "#0A74DA",
+                    mr: 2,
+                    fontSize: 20,
+                    fontWeight: "bold",
+                  }}
+                >
+                  {headerInitials || "-"}
+                </Avatar>
+              </div>
 
-          <div>
-            <h5 className="fw-bold ml-2">Becht Raph</h5>
-            <div className="d-flex align-items-center my-2 ml-2">
-              <i className="far fa-building"></i>
-              <span className="text-muted ml-2">Metz Inc</span>
-            </div>
+              <h5 className="fw-bold text-center">
+                {headerName}
+                <span className="text-center ml-2">
+                  <IconButton
+                    size="small"
+                    onClick={() => activeContact?.id && togglePinContact(activeContact.id)}
+                    title={activeContact?.isPinned ? "Unpin" : "Pin"}
+                  >
+                    <i
+                      className="far fa-thumbtack"
+                      style={{
+                        color: activeContact?.isPinned ? "#0478DC" : "#9ca3af",
+                        // fontSize: 18,
+                        transform: activeContact?.isPinned
+                          ? "rotate(0deg)"
+                          : "rotate(40deg)",
+                        transition: "transform 0.25s ease, color 0.25s ease",
+                      }}
+                    />
 
-            <div className="icon-wrapper">
-              <span
-                component="a"
-                className="btn-circle"
-                data-toggle="tooltip"
-                title="Send Mail"
-                style={{ zIndex: 1 }}
-              >
-                <i className="far fa-envelope"></i>
-                <div className="bg-blue"></div>
-              </span>
+                  </IconButton>
+                </span>
+              </h5>
 
-              <span
-                component="a"
-                className="btn-circle"
-                data-toggle="tooltip"
-                title="Call"
-                style={{ zIndex: 1 }}
-              >
-                <i className="far fa-phone-alt"></i>
-                <div className="bg-blue"></div>
-              </span>
-
-              <span
-                component="a"
-                className="btn-circle"
-                data-toggle="tooltip"
-                title="SMS"
-                style={{ zIndex: 1 }}
-              >
-                <i className="fal fa-sms"></i>
-                <div className="bg-blue"></div>
-              </span>
-
-              <span
-                component="a"
-                className="btn-circle"
-                data-toggle="tooltip"
-                title="Calender"
-                style={{ zIndex: 1 }}
-              >
-                <i className="far fa-calendar-alt"></i>
-                <div className="bg-blue"></div>
-              </span>
+              <div className="d-flex align-items-center my-2 text-center justify-content-center">
+                <i className="far fa-building"></i>
+                <span className="text-muted ml-2">{headerCompany}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* RIGHT SIDE HEADER FORM */}
-        <div style={{ width: "60%" }}>
-          <Row>
-            <Col xs={12} md={6}>
-              <div className="mb-3 d-flex align-items-center">
-                <span className="fw-bold w-50">Contact Role :</span>
-                <div className="w-100 ml-3">
+          {/* RIGHT SIDE HEADER FORM */}
+          <div className="w-100">
+            <div className="mb-3 d-flex align-items-center justify-content-start" style={{ gap: 20 }}>
+              <div className="d-flex align-items-center w-100">
+                <span className="fw-bold">Role:</span>
+                <div className="ml-4 w-100">
                   <Autocomplete
+                    fullWidth
                     size="small"
                     disablePortal
                     options={contactRoles}
@@ -785,12 +827,11 @@ const Crm = () => {
                   />
                 </div>
               </div>
-            </Col>
-            <Col xs={12} md={6}>
-              <div className="mb-3 d-flex align-items-center">
-                <span className="fw-bold w-75">Contact Status :</span>
-                <div className="w-100">
+              <div className="d-flex align-items-center w-100">
+                <span className="fw-bold">Status:</span>
+                <div className="ml-4 w-100">
                   <Autocomplete
+                    fullWidth
                     size="small"
                     disablePortal
                     options={contactStatuses}
@@ -803,334 +844,401 @@ const Crm = () => {
                   />
                 </div>
               </div>
-            </Col>
-          </Row>
+            </div>
 
-          <Row>
-            <Col xs={12}>
-              <div className="mb-3 d-flex align-items-center">
-                <span className="fw-bold">Interested In :</span>
-                <div className="w-100">
-                  <Autocomplete
-                    multiple
-                    size="small"
-                    disablePortal
-                    options={interestedInOptions}
-                    value={interestedIn}
-                    onChange={(_, v) => setInterestedIn(v)}
-                    renderTags={(selected) =>
-                      selected.map((op, i) => (
-                        <span
-                          key={i}
-                          style={{
-                            color: "#0A74DA",
-                            fontSize: 13,
-                            fontWeight: 600,
-                            marginRight: 4,
-                          }}
-                        >
-                          {op.label}
-                          {i < selected.length - 1 ? "," : ""}
-                        </span>
-                      ))
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} variant="standard" />
-                    )}
-                    getOptionLabel={(o) => o.label}
-                  />
-                </div>
+            <div className="d-flex align-items-center w-100" style={{ marginBottom: "13px" }}>
+              <span className="fw-bold">Interest:</span>
+              <div className="ml-4 w-100">
+                <Autocomplete
+                  fullWidth
+                  multiple
+                  size="small"
+                  disablePortal
+                  options={interestedInOptions}
+                  value={interestedIn}
+                  onChange={(_, v) => setInterestedIn(v)}
+                  renderTags={(selected) =>
+                    selected.map((op, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          color: "#0A74DA",
+                          fontSize: 13,
+                          fontWeight: 600,
+                          marginRight: 4,
+                        }}
+                      >
+                        {op.label}
+                        {i < selected.length - 1 ? "," : ""}
+                      </span>
+                    ))
+                  }
+                  renderInput={(params) => (
+                    <TextField {...params} variant="standard" />
+                  )}
+                  getOptionLabel={(o) => o.label}
+                />
               </div>
-            </Col>
-          </Row>
-        </div>
-      </div>
+            </div>
 
-      {/* CONTACT INFO + RIGHT ICONS + TASK PANEL */}
-      <Row style={{ position: "relative" }}>
-        {/* MAIN CONTENT */}
-        <Col xs={11}>
-          <div className="contact-tabs-container">
-            <div className="contact-tabs">
-              {["Contact Info", "Communication", "Status", "Social"].map(
-                (tab) => (
-                  <div
-                    key={tab}
-                    className={`contact-tab ${activeTab === tab.toLowerCase().replace(" ", "-")
-                      ? "active"
-                      : ""
-                      }`}
-                    onClick={() =>
-                      setActiveTab(tab.toLowerCase().replace(" ", "-"))
-                    }
-                  >
-                    {tab}
-                  </div>
-                )
-              )}
+            <div style={{ display: "flex", justifyContent: "start", alignItems: "center", gap: 10 }}>
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Send Mail"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+                onClick={() => setOpenMailModel(true)}
+              >
+                <i className="far fa-envelope" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Call"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+              >
+                <i className="far fa-phone-alt" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="SMS"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+              >
+                <i className="fal fa-sms" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Calender"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+              >
+                <i className="far fa-calendar-alt" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Add Task"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+                onClick={() => handleOpenPanel("task")}
+              >
+                <i className="fas fa-list-ul" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Tags"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+                onClick={() => handleOpenPanel("tag")}
+              >
+                <i className="far fa-tag" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Reminder"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+                onClick={() => handleOpenPanel("reminder")}
+              >
+                <i className="far fa-clock" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Notes"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+                onClick={() => handleOpenPanel("note")}
+              >
+                <i className="far fa-edit" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Invoice"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+              >
+                <i className="far fa-file-alt" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Sign Contract"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+              >
+                <i className="far fa-file" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Book & Schedule"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+              >
+                <i className="far fa-calendar-alt" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Trake Inquiries"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+              >
+                <i className="far fa-archive" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
+
+              <span
+                component="a"
+                className="btn-circle"
+                data-toggle="tooltip"
+                title="Manage Project"
+                style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+              >
+                <i className="far fa-briefcase" style={{ fontSize: '16px' }}></i>
+                <div className="bg-blue"></div>
+              </span>
             </div>
           </div>
+        </div>
 
-          <div className="mt-3 px-4">
-            <div className="tab-actions border-bottom border-top mb-3">
-              <Button
-                variant="text"
-                size="small"
-                startIcon={<i className="far fa-pencil-alt" />}
-                sx={{
-                  textTransform: "none",
-                  color: "#000",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                }}
-              >
-                Edit
-              </Button>
-              <Button
-                variant="text"
-                size="small"
-                startIcon={<i className="far fa-plus" />}
-                sx={{
-                  textTransform: "none",
-                  color: "#000",
-                  fontSize: "14px",
-                  fontWeight: 500,
-                }}
-              >
-                Add Fields
-              </Button>
-            </div>
-
-            <div className="border-bottom">
-              <h5 className="text-blue mb-3">Personal Information</h5>
-              <Row>
-                <Col sm={12} md={6} style={{ gap: 20 }}>
-                  <div className="info-item">
-                    <span className="info-label">First name:</span>
-                    <span className="info-value">Becht</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Full name:</span>
-                    <span className="info-value">Becht Raph</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Phone:</span>
-                    <span className="info-value">
-                      727-702-9986 (Work) <br />
-                      727-702-9986 (Personal)
-                    </span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Date of birth:</span>
-                    <span className="info-value">12/23/2001</span>
-                  </div>
-                </Col>
-                <Col sm={12} md={6}>
-                  <div className="info-item">
-                    <span className="info-label">Last name:</span>
-                    <span className="info-value">Raph</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Gender:</span>
-                    <span className="info-value">Male</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Email:</span>
-                    <p
-                      className="info-value"
-                      style={{ color: "#0A74DA !important" }}
+        {/* CONTACT INFO + RIGHT ICONS + TASK PANEL */}
+        <Row>
+          {/* MAIN CONTENT */}
+          <Col xs={12}>
+            <div className="contact-tabs-container">
+              <div className="contact-tabs">
+                <div className="crm-contact-tabs">
+                  {contactTabs.map((tab) => (
+                    <div
+                      key={tab.key}
+                      className={`crm-contact-tab ${activeContactTab === tab.key ? "active" : ""
+                        }`}
+                      onClick={() => setActiveContactTab(tab.key)}
                     >
-                      becht_raph@sample.com (Work) <br />
-                      becht_raph@sample.com (Personal)
-                    </p>
-                  </div>
-                </Col>
-              </Row>
+                      <span>{tab.label}</span>
+
+                      {/* Settings icon per tab */}
+                      <IconButton
+                        size="small"
+                        className="tab-setting-btn"
+                        onClick={(e) => openTabMenu(e, tab.key)}
+                      >
+                        <i className="far fa-cog" />
+                      </IconButton>
+                    </div>
+                  ))}
+                </div>
+
+                <Menu
+                  anchorEl={tabMenuAnchor}
+                  open={Boolean(tabMenuAnchor)}
+                  onClose={closeTabMenu}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      console.log("Edit clicked for tab:", activeTabKey);
+                      closeTabMenu();
+                    }}
+                  >
+                    <i className="far fa-pencil-alt mr-2" />
+                    Edit
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={() => {
+                      console.log("Add Fields clicked for tab:", activeTabKey);
+                      closeTabMenu();
+                    }}
+                  >
+                    <i className="far fa-plus mr-2" />
+                    Add Fields
+                  </MenuItem>
+                </Menu>
+
+
+              </div>
+
+              <div>
+                <span
+                  component="a"
+                  className="btn-circle "
+                  data-toggle="tooltip"
+                  title="Add Tab"
+                  style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
+                >
+                  <i className="far fa-plus" style={{ fontSize: '16px' }}></i>
+                  <div className="bg-blue"></div>
+                </span>
+              </div>
             </div>
 
-            <div className="border-bottom">
-              <h5 className="text-blue my-3">Demographic Information</h5>
-              <Row>
-                <Col sm={12} md={6} style={{ gap: 20 }}>
-                  <div className="info-item">
-                    <span className="info-label">Country:</span>
-                    <span className="info-value">United States</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Street Address 1:</span>
-                    <span className="info-value">28067 Haag Skyway</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">City:</span>
-                    <span className="info-value">Auburn</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Language:</span>
-                    <p className="info-value">English</p>
-                  </div>
-                </Col>
-                <Col sm={12} md={6}>
-                  <div className="info-item">
-                    <span className="info-label">State/Prov/Region:</span>
-                    <span className="info-value">Alabama</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Street Address 2:</span>
-                    <span className="info-value">28067 Haag Skyway</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Zip / Post Code:</span>
-                    <span className="info-value">12509</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Time Zone</span>
-                    <span className="info-value">-05.00 CDT</span>
-                  </div>
-                </Col>
-              </Row>
-            </div>
+            <div className="mt-3 px-4">
 
-            {/* CORPORATE INFORMATION */}
-            <div className="border-bottom">
-              <h5 className="text-blue my-3">Corporate Information</h5>
-
-              <Row>
-                <Col sm={12} md={6} style={{ gap: 20 }}>
-                  <div className="info-item">
-                    <span className="info-label">Company :</span>
-                    <span className="info-value">Metz Inc</span>
-                  </div>
-                </Col>
-
-                <Col sm={12} md={6} style={{ gap: 20 }}>
-                  <span className="info-label ml-2">Group(s) :</span>
-                  <div className="info-item d-flex align-items-center flex-wrap">
-                    <div className="info-value d-flex flex-wrap">
-                      <span className="badge rounded-pill bg-primary text-white ml-2 mb-2 p-2">
-                        Sales <span className="mr-1">&times;</span>
-                      </span>
-                      <span className="badge rounded-pill bg-primary text-white ml-2 mb-2 p-2">
-                        Marketing <span className="mr-1">&times;</span>
+              <div className="border-bottom">
+                <h5 className="text-blue mb-3">Personal Information</h5>
+                <Row>
+                  <Col sm={12} md={6} style={{ gap: 20 }}>
+                    <div className="info-item">
+                      <span className="info-label">First name:</span>
+                      <span className="info-value">Becht</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Full name:</span>
+                      <span className="info-value">Becht Raph</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Phone:</span>
+                      <span className="info-value">
+                        727-702-9986 (Work) <br />
+                        727-702-9986 (Personal)
                       </span>
                     </div>
-                  </div>
-                </Col>
-              </Row>
-
-              {/* Edit button */}
-              <div className="text-center my-3">
-                <Button
-                  variant="contained"
-                  color="primary"
-                // size="small"
-                >
-                  Edit Information
-                </Button>
+                    <div className="info-item">
+                      <span className="info-label">Date of birth:</span>
+                      <span className="info-value">12/23/2001</span>
+                    </div>
+                  </Col>
+                  <Col sm={12} md={6}>
+                    <div className="info-item">
+                      <span className="info-label">Last name:</span>
+                      <span className="info-value">Raph</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Gender:</span>
+                      <span className="info-value">Male</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Email:</span>
+                      <p
+                        className="info-value"
+                        style={{ color: "#0A74DA !important" }}
+                      >
+                        becht_raph@sample.com (Work) <br />
+                        becht_raph@sample.com (Personal)
+                      </p>
+                    </div>
+                  </Col>
+                </Row>
               </div>
+
+              <div className="border-bottom">
+                <h5 className="text-blue my-3">Demographic Information</h5>
+                <Row>
+                  <Col sm={12} md={6} style={{ gap: 20 }}>
+                    <div className="info-item">
+                      <span className="info-label">Country:</span>
+                      <span className="info-value">United States</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Street Address 1:</span>
+                      <span className="info-value">28067 Haag Skyway</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">City:</span>
+                      <span className="info-value">Auburn</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Language:</span>
+                      <p className="info-value">English</p>
+                    </div>
+                  </Col>
+                  <Col sm={12} md={6}>
+                    <div className="info-item">
+                      <span className="info-label">State/Prov/Region:</span>
+                      <span className="info-value">Alabama</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Street Address 2:</span>
+                      <span className="info-value">28067 Haag Skyway</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Zip / Post Code:</span>
+                      <span className="info-value">12509</span>
+                    </div>
+                    <div className="info-item">
+                      <span className="info-label">Time Zone</span>
+                      <span className="info-value">-05.00 CDT</span>
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+
+              {/* CORPORATE INFORMATION */}
+              <div className="border-bottom">
+                <h5 className="text-blue my-3">Corporate Information</h5>
+
+                <Row>
+                  <Col sm={12} md={6} style={{ gap: 20 }}>
+                    <div className="info-item">
+                      <span className="info-label">Company :</span>
+                      <span className="info-value">Metz Inc</span>
+                    </div>
+                  </Col>
+
+                  <Col sm={12} md={6} style={{ gap: 20 }}>
+                    <span className="info-label ml-2">Group(s) :</span>
+                    <div className="info-item d-flex align-items-center flex-wrap">
+                      <div className="info-value d-flex flex-wrap">
+                        <span className="badge rounded-pill bg-primary text-white ml-2 mb-2 p-2">
+                          Sales <span className="mr-1">&times;</span>
+                        </span>
+                        <span className="badge rounded-pill bg-primary text-white ml-2 mb-2 p-2">
+                          Marketing <span className="mr-1">&times;</span>
+                        </span>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+
+                {/* Edit button */}
+                <div className="text-center my-3">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                  // size="small"
+                  >
+                    Edit Information
+                  </Button>
+                </div>
+              </div>
+
             </div>
-
-          </div>
-        </Col>
-
-        {/* RIGHT ICON STRIP */}
-        <Col xs={1}>
-          <div className="icon-wrapper left-icon-strip">
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Add Task"
-              style={{ zIndex: 1 }}
-              onClick={() => handleOpenPanel("task")}
-            >
-              <i className="fas fa-list-ul"></i>
-              <div className="bg-blue"></div>
-            </span>
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Tags"
-              style={{ zIndex: 1 }}
-              onClick={() => handleOpenPanel("tag")}
-            >
-              <i className="far fa-tag"></i>
-              <div className="bg-blue"></div>
-            </span>
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Reminder"
-              style={{ zIndex: 1 }}
-              onClick={() => handleOpenPanel("reminder")}
-            >
-              <i className="far fa-clock"></i>
-              <div className="bg-blue"></div>
-            </span>
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Notes"
-              style={{ zIndex: 1 }}
-              onClick={() => handleOpenPanel("note")}
-            >
-              <i className="far fa-edit"></i>
-              <div className="bg-blue"></div>
-            </span>
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Invoice"
-              style={{ zIndex: 1 }}
-            >
-              <i className="far fa-file-alt"></i>
-              <div className="bg-blue"></div>
-            </span>
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Sign Contract"
-              style={{ zIndex: 1 }}
-            >
-              <i className="far fa-file"></i>
-              <div className="bg-blue"></div>
-            </span>
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Book & Schedule"
-              style={{ zIndex: 1 }}
-            >
-              <i className="far fa-calendar-alt"></i>
-              <div className="bg-blue"></div>
-            </span>
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Trake Inquiries"
-              style={{ zIndex: 1 }}
-            >
-              <i className="far fa-archive"></i>
-              <div className="bg-blue"></div>
-            </span>
-            <span
-              component="a"
-              className="btn-circle"
-              data-toggle="tooltip"
-              title="Manage Project"
-              style={{ zIndex: 1 }}
-            >
-              <i className="far fa-briefcase"></i>
-              <div className="bg-blue"></div>
-            </span>
-          </div>
-        </Col>
+          </Col>
+        </Row>
 
         {/* TASK PANEL - BETWEEN MAIN CONTENT AND ICON STRIP */}
         {isTaskPanelOpen && (
@@ -1139,7 +1247,7 @@ const Crm = () => {
               position: "absolute",
               top: 0,
               bottom: 0,
-              right: isDesktop ? 90 : 0, // keep space for icon strip on desktop
+              right: 0, // keep space for icon strip on desktop
               width: isDesktop ? "28%" : "100%",
               minWidth: 260,
               backgroundColor: "#ffffff",
@@ -1224,7 +1332,7 @@ const Crm = () => {
               position: "absolute",
               top: 0,
               bottom: 0,
-              right: isDesktop ? 90 : 0, // keep space for icon strip on desktop
+              right: 0, // keep space for icon strip on desktop
               width: isDesktop ? "28%" : "100%",
               minWidth: 260,
               backgroundColor: "#ffffff",
@@ -1309,7 +1417,7 @@ const Crm = () => {
               position: "absolute",
               top: 0,
               bottom: 0,
-              right: isDesktop ? 90 : 0, // keep space for icon strip on desktop
+              right: 0, // keep space for icon strip on desktop
               width: isDesktop ? "28%" : "100%",
               minWidth: 260,
               backgroundColor: "#ffffff",
@@ -1382,7 +1490,7 @@ const Crm = () => {
               position: "absolute",
               top: 0,
               bottom: 0,
-              right: isDesktop ? 90 : 0, // keep space for icon strip on desktop
+              right: 0, // keep space for icon strip on desktop
               width: isDesktop ? "28%" : "100%",
               minWidth: 260,
               backgroundColor: "#ffffff",
@@ -1459,9 +1567,9 @@ const Crm = () => {
             </div>
           </div>
         )}
-      </Row>
-    </div>
-  );
+      </div>
+    );
+  };
 
   return (
     <>
@@ -1587,26 +1695,32 @@ const Crm = () => {
           <Row>
             <Col xs={12}>
               <div className="contact-tabs mb-2">
-                {["Groups", "Contacts"].map(
-                  (tab, index) => (
-                    <div
-                      key={tab}
-                      className={`contact-tab ${headerActiveTab === index
-                        ? "active"
-                        : ""
-                        }`}
-                      onClick={() =>
-                        setHeaderActiveTab(index)
-                      }
-                    >
-                      {tab}
-                    </div>
-                  )
-                )}
+                <div style={{ flex: 1, display: 'flex' }}>
+                  {["Contacts", "Groups", "Pinned"].map(
+                    (tab, index) => (
+                      <div
+                        key={tab}
+                        className={`contact-tab ${headerActiveTab === index
+                          ? "active"
+                          : ""
+                          }`}
+                        onClick={() =>
+                          setHeaderActiveTab(index)
+                        }
+                      >
+                        {tab}
+                      </div>
+                    )
+                  )}
+                </div>
+                <div className="utility-btn">
+                  <i className="far fa-question-circle"></i>
+                  <span>Help</span>
+                </div>
               </div>
               <div className="container-fluid d-flex p-0 crm-layout">
                 {
-                  headerActiveTab === 0 && (
+                  headerActiveTab === 1 && (
                     <>
                       <div
                         className={`crm-sidebar ${isGroupsOpen
@@ -1629,7 +1743,19 @@ const Crm = () => {
                   )
                 }
                 {
-                  headerActiveTab === 1 && (
+                  headerActiveTab === 0 && (
+                    <div
+                      className={`crm-sidebar ${isContactSectionOpen
+                        ? "crm-sidebar--collapsed"
+                        : "crm-sidebar--expanded"
+                        }`}
+                    >
+                      {renderContacts()}
+                    </div>
+                  )
+                }
+                {
+                  headerActiveTab === 2 && (
                     <div
                       className={`crm-sidebar ${isContactSectionOpen
                         ? "crm-sidebar--collapsed"
@@ -1647,6 +1773,7 @@ const Crm = () => {
           </Row>
         </Col>
       </Row>
+      <SendMailModel open={openMailModel} onClose={() => setOpenMailModel(false)} />
       <AddGroup open={openAddGroup} onClose={() => setOpenAddGroup(false)} />
       <AddTask open={openAddTaks} onClose={() => setOpenAddTaks(false)} />
       <AddTags open={openAddTags} onClose={() => setOpenAddTags(false)} />
