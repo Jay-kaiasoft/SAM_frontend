@@ -6,6 +6,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
+import '../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 const toolbarProperties = {
     options: ['inline', 'list', 'link', 'emoji', 'history'],
@@ -104,18 +105,19 @@ const SendMailModel = ({ open, onClose }) => {
                         </div>
                     </div>
 
-                    <div>
+                    <div style={{ position: "relative" }}>
                         <Editor
                             editorState={editorState}
                             wrapperClassName="wrapper-class d-inline-block"
-                            editorClassName="editor-class"
-                            toolbarClassName="toolbar-class"
+                            // editorClassName="editor-class"
+                            toolbarClassName="editor-toolbar-custom"
                             onEditorStateChange={(state) => {
                                 setEditorState(state)
                             }}
                             toolbar={toolbarProperties}
                             wrapperStyle={{ width: "98%" }}
                         />
+
                     </div>
                 </ModalBody>
 
@@ -124,7 +126,7 @@ const SendMailModel = ({ open, onClose }) => {
                         Send
                     </Button>
                     <Button type="submit" variant="contained" color="primary" className="mr-3">
-                        Send later
+                        Send Later
                     </Button>
                     <Button variant="contained" color="primary" onClick={onClose}>
                         Cancel
