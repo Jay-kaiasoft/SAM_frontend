@@ -990,7 +990,7 @@ const Crm = () => {
                 component="a"
                 className="btn-circle"
                 data-toggle="tooltip"
-                title="Sign Contract"
+                title="Sign Document"
                 style={{ zIndex: 1, border: "1px solid #808080", borderRadius: "50%" }}
               >
                 <i className="far fa-file" style={{ fontSize: '16px' }}></i>

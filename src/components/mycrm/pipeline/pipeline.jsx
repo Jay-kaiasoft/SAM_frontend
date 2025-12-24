@@ -149,6 +149,11 @@ const Pipeline = ({
                                 <i className="far fa-plus-square"></i>
                                 <div className="bg-green"></div>
                             </Link>
+
+                            <Link component="a" className="btn-circle" data-toggle="tooltip" title="Setting">
+                                <i className="far fa-cog" />
+                                <div className="bg-secondary"></div>
+                            </Link>                            
                             <div className="d-flex justify-contant-center align-items-center" style={{ gap: 15 }}>
                                 <div onClick={() => setViewType("grid")} className="border rounded d-flex justify-content-center align-items-center" style={{ backgroundColor: viewType === "grid" ? "#007BFF" : "transparent", cursor: "pointer", padding: "10px 12px" }}>
                                     <i className="far fa-th-large" style={{ fontSize: "20px", color: viewType === "grid" ? "#ffffff" : "#000000" }}></i>
