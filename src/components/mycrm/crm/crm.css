@@ -723,8 +723,28 @@
 
 
 .editor-toolbar-custom {
-    border: 1px solid #ccc;
+    border: 1px solid #ccc;    
     /* position: absolute;
     bottom: 0; */
     /* width: 100%; */
+}
+
+/* Put toolbar at bottom */
+.rdw-editor-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* editor area first */
+.rdw-editor-main {
+  order: 1;
+}
+
+/* toolbar last */
+.rdw-editor-toolbar {
+  order: 2;
+  margin-top: 8px;     /* spacing */
+  margin-bottom: 0;
+  border-top: 1px solid #e5e7eb;  /* optional */
+  border-bottom: 0;    /* optional */
 }
