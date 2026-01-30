@@ -1,7 +1,7 @@
 {
   "name": "sam_webapp",
   "version": "0.1.0",
-  "homepage": "https://webapp.salesandmarketing.ai",
+  "homepage": "https://www.salesandmarketing.ai/newcrm",
   "private": true,
   "dependencies": {
     "@authid/react-component": "^1.4.0",

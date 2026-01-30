@@ -120,7 +120,7 @@ const Projects = () => {
           <Col xs={12} sm={12} md={12} lg={9} xl={9}>
             <div className='d-md-flex items-center'>
               <div className="icon-wrapper w-100">
-                <Link href='/addProject' component="a" className="btn-circle" data-toggle="tooltip" title="Add">
+                <Link href='/newcrm/addProject' component="a" className="btn-circle" data-toggle="tooltip" title="Add">
                   <i className="far fa-plus-square"></i>
                   <div className="bg-green"></div>
                 </Link>

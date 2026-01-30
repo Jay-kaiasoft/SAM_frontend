@@ -119,8 +119,8 @@ window.jQuery = $;
 window.$ = $;
 
 const App = (props) => {
-    const noHeader = ["/quickbookoauth2redirect", "/salesforceoauth2redirect", "/viewtemplate", "/viewinbrowser", "/facebookoauthredirect", "/twitteroauthredirect", "/linkedinoauthredirect", "/shopifyoauthredirect", "/zoomoauthredirect"];
-    const noFooter = ["/addmysurveytemplates", "/addmyassessmenttemplates", "/createform"];
+    const noHeader = ["/newcrm/quickbookoauth2redirect", "/newcrm/salesforceoauth2redirect", "/newcrm/viewtemplate", "/newcrm/viewinbrowser", "/newcrm/facebookoauthredirect", "/newcrm/twitteroauthredirect", "/newcrm/linkedinoauthredirect", "/newcrm/shopifyoauthredirect", "/newcrm/zoomoauthredirect"];
+    const noFooter = ["/newcrm/addmysurveytemplates", "/newcrm/addmyassessmenttemplates", "/newcrm/createform"];
     const [lastId, setLastId] = useState(0);
     const tooltips = () => {
         let tooltipId = $('.tooltip.show').attr("id");
@@ -144,7 +144,7 @@ const App = (props) => {
                                 text: "You have got SMS campaign reply",
                                 open: true,
                                 onClick: () => {
-                                    History.push("/managesmsinbox");
+                                    History.push("/newcrm/managesmsinbox");
                                 }
                             });
                             setLastId(res.result.lastId);
@@ -179,141 +179,142 @@ const App = (props) => {
                 <Loader2 />
             }>
                 <Switch>
-                    <Route path="/" exact render={() => <Redirect to="/login" />} />
-                    <Route path="/index.html" exact render={() => <Redirect to="/login" />} />
-                    <Route path="/login" exact component={Login} />
-                    <Route path="/otp" exact component={Otp} />
-                    <Route path="/register" exact component={Register} />
-                    <Route path="/thanksregister" exact component={ThanksRegister} />
-                    <Route path="/chooseplan" exact component={ChoosePlan} />
-                    <Route path="/activesetup" exact component={ActiveSetup} />
-                    <Route path="/subaccountactivesetup" exact component={SubAccountActiveSetup} />
-                    <Route path="/registerstep2" exact component={RegisterStep2} />
-                    <Route path="/forgotpassword" exact component={ForgotPassword} />
-                    <Route path="/forgotpasswordstep2" exact component={ForgotPasswordStep2} />
-                    <Route path="/resetpassword" exact component={ResetPassword} />
-                    <Route path="/emailverification" exact component={EmailVerification} />
-                    <Route path="/inviteurl" exact component={InviteUrl} />
-                    <Route path="/unsubscribe" exact component={OptIn} />
-                    <UserRoute path="/dashboard" exact component={Dashboard} />
-                    <UserRoute path="/mydesktop" exact component={MyDesktop} />
-                    <UserRoute path="/mypages" exact component={MyDesktop} />
-                    <UserRoute path="/managesupportticket" exact component={ManageSupportTicket} />
-                    <UserRoute path="/addticket" exact component={AddTicket} />
-                    <UserRoute path="/viewticket" exact component={ViewTicket} />
-                    <UserRoute path="/smstemplates" exact component={MyDesktop} />
-                    <UserRoute path="/builditforme" exact component={MyDesktop} />
-                    <UserRoute path="/myforms" exact component={MyDesktop} />
-                    <UserRoute path="/mysurveytemplates" exact component={MyDesktop} />
-                    <UserRoute path="/myassessmenttemplates" exact component={MyDesktop} />
-                    <UserRoute path="/mydrive" exact component={MyDesktop} />
-                    <UserRoute path="/buildsmstemplate" exact component={BuildSmsTemplate} />
-                    <UserRoute path="/addmypage" exact component={AddMyPage} />
-                    <UserRoute path="/memberinfo" exact component={MyProfileTab} />
-                    <UserRoute path="/mybrandkit" exact component={MyProfileTab} />
-                    <UserRoute path="/changepassword" exact component={MyProfileTab} />
-                    <UserRoute path="/securityquestions" exact component={MyProfileTab} />
-                    <UserRoute path="/communication" exact component={MyProfileTab} />
-                    <UserRoute path="/account" exact component={MyProfileTab} />
-                    <UserRoute path="/carddetails" exact component={MyProfileTab} />
-                    <UserRoute path="/manageapps" exact component={MyProfileTab} />
-                    <UserRoute path="/manageplan" exact component={MyProfileTab} />
-                    <UserRoute path="/sms" exact component={MyProfileTab} />
-                    <UserRoute path="/apisettings" exact component={MyProfileTab} />
-                    <UserRoute path="/emailsignatures" exact component={MyProfileTab} />
-                    <UserRoute path="/emailcampaignfooter" exact component={MyProfileTab} />
-                    <UserRoute path="/invoicepdf" exact component={InvoicePdf} />
-                    <UserRoute path="/manageusers" exact component={ManageUsers} />
-                    <UserRoute path="/subaccount" exact component={AddSubUsers} />
-                    <UserRoute path="/subaccounttype" exact component={AddSubAccountType} />
-                    <UserRoute path="/domainemailverification" exact component={DomainEmailVerification} />
-                    <UserRoute path="/domainverification" exact component={DomainVerification} />
-                    <UserRoute path="/contactus" exact component={ContactUs} />
-                    <UserRoute path="/createform" exact component={CreateForm} />
-                    <UserRoute path="/mycrm" exact component={Mycrm} />
-                    <UserRoute path="/clientContact" exact component={Mycrm} />
-                    <UserRoute path="/mypipeline" exact component={Mycrm} />
-                    <UserRoute path="/mytasks" exact component={Mycrm} />
-                    <UserRoute path="/mycalendar" exact component={Mycrm} />
-                    <UserRoute path="/managesmsinbox" exact component={Mycrm} />
-                    <UserRoute path="/projects" exact component={Mycrm} />
-                    <UserRoute path="/crm" exact component={Mycrm} />
-                    <UserRoute path="/mail" exact component={Mycrm} />
-                    <UserRoute path="/inventory" exact component={Mycrm} />
-                    <UserRoute path="/invoice" exact component={Mycrm} />
-                    <UserRoute path="/myTasks" exact component={Mycrm} />
-                    <UserRoute path="/journal" exact component={Mycrm} />
-                    <UserRoute path="/pipeline" exact component={Mycrm} />
+                    <Route path="/newcrm/" exact render={() => <Redirect to="/newcrm/login" />} />
+                    <Route path="/newcrm/index.html" exact render={() => <Redirect to="/newcrm/login" />} />
+                    <Route path="/newcrm/login" exact component={Login} />
+                    <Route path="/newcrm/otp" exact component={Otp} />
+                    <Route path="/newcrm/register" exact component={Register} />
+                    <Route path="/newcrm/thanksregister" exact component={ThanksRegister} />
+                    <Route path="/newcrm/chooseplan" exact component={ChoosePlan} />
+                    <Route path="/newcrm/activesetup" exact component={ActiveSetup} />
+                    <Route path="/newcrm/subaccountactivesetup" exact component={SubAccountActiveSetup} />
+                    <Route path="/newcrm/registerstep2" exact component={RegisterStep2} />
+                    <Route path="/newcrm/forgotpassword" exact component={ForgotPassword} />
+                    <Route path="/newcrm/forgotpasswordstep2" exact component={ForgotPasswordStep2} />
+                    <Route path="/newcrm/resetpassword" exact component={ResetPassword} />
+                    <Route path="/newcrm/emailverification" exact component={EmailVerification} />
+                    <Route path="/newcrm/inviteurl" exact component={InviteUrl} />
+                    <Route path="/newcrm/unsubscribe" exact component={OptIn} />
+                    <UserRoute path="/newcrm/dashboard" exact component={Dashboard} />
+                    <UserRoute path="/newcrm/mydesktop" exact component={MyDesktop} />
+                    <UserRoute path="/newcrm/mypages" exact component={MyDesktop} />
+                    <UserRoute path="/newcrm/managesupportticket" exact component={ManageSupportTicket} />
+                    <UserRoute path="/newcrm/addticket" exact component={AddTicket} />
+                    <UserRoute path="/newcrm/viewticket" exact component={ViewTicket} />
+                    <UserRoute path="/newcrm/smstemplates" exact component={MyDesktop} />
+                    <UserRoute path="/newcrm/builditforme" exact component={MyDesktop} />
+                    <UserRoute path="/newcrm/myforms" exact component={MyDesktop} />
+                    <UserRoute path="/newcrm/mysurveytemplates" exact component={MyDesktop} />
+                    <UserRoute path="/newcrm/myassessmenttemplates" exact component={MyDesktop} />
+                    <UserRoute path="/newcrm/mydrive" exact component={MyDesktop} />
+                    <UserRoute path="/newcrm/buildsmstemplate" exact component={BuildSmsTemplate} />
+                    <UserRoute path="/newcrm/addmypage" exact component={AddMyPage} />
+                    <UserRoute path="/newcrm/memberinfo" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/mybrandkit" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/changepassword" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/securityquestions" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/communication" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/account" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/carddetails" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/manageapps" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/manageplan" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/sms" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/apisettings" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/emailsignatures" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/emailcampaignfooter" exact component={MyProfileTab} />
+                    <UserRoute path="/newcrm/invoicepdf" exact component={InvoicePdf} />
+                    <UserRoute path="/newcrm/manageusers" exact component={ManageUsers} />
+                    <UserRoute path="/newcrm/subaccount" exact component={AddSubUsers} />
+                    <UserRoute path="/newcrm/subaccounttype" exact component={AddSubAccountType} />
+                    <UserRoute path="/newcrm/domainemailverification" exact component={DomainEmailVerification} />
+                    <UserRoute path="/newcrm/domainverification" exact component={DomainVerification} />
+                    <UserRoute path="/newcrm/contactus" exact component={ContactUs} />
+                    <UserRoute path="/newcrm/createform" exact component={CreateForm} />
                     
-                    <UserRoute path="/createimport" exact component={ImportClientContacts} />
-                    <UserRoute path="/quickbookoauth2redirect" exact component={QuickBookOauth2redirect} />
-                    <UserRoute path="/salesforceoauth2redirect" exact component={SalesForceOauth2redirect} />
-                    <UserRoute path="/manageemailcampaign" exact component={ManageEmailCampaign} />
-                    <UserRoute path="/managesmscampaign" exact component={ManageSmsCampaign} />
-                    <UserRoute path="/buildsmscampaign" exact component={BuildSmsCampaign} />
-                    <UserRoute path="/buildemailcampaign" exact component={BuildEmailCampaign} />
-                    <UserRoute path="/managecampaignreport" exact component={ManageCampaignReport} />
-                    <UserRoute path="/campaignreport" exact component={CampaignReport} />
-                    <UserRoute path="/campaignreportpdf" exact component={CampaignReportPdf} />
-                    <UserRoute path="/campaignreportabtesting" exact component={CampaignReport} />
-                    <UserRoute path="/campaignreportpdfabtesting" exact component={CampaignReportPdfABTesting} />
-                    <UserRoute path="/buildbuilditforme" exact component={BuildBuildItForMe} />
-                    <UserRoute path="/googledriveoauthredirect" exact component={GoogleDriveOauthRedirect} />
-                    <UserRoute path="/managesmspolling" exact component={ManageSmsPolling} />
-                    <UserRoute path="/createsmspolling" exact component={CreateSmsPolling} />
-                    <UserRoute path="/managesocialmedia" exact component={ManageSocialMedia} />
-                    <UserRoute path="/createsocialmediapost" exact component={CreateNewPost} />
-                    <Route path="/viewtemplate" exact component={ViewTemplate} />
-                    <Route path="/viewinbrowser" exact component={ViewInBrowser} />
-                    <UserRoute path="/dropboxoauthredirect" exact component={DropBoxOauthRedirect} />
-                    <UserRoute path="/onedriveoauthredirect" exact component={OneDriveOauthRedirect} />
-                    <UserRoute path="/facebookoauthredirect" exact component={FaceBookOauthRedirect} />
-                    <UserRoute path="/twitteroauthredirect" exact component={TwitterOauthRedirect} />
-                    <UserRoute path="/linkedinoauthredirect" exact component={LinkedInOauthRedirect} />
-                    <UserRoute path="/googlecalendaroauthredirect" exact component={GoogleCalendarOauthRedirect} />
-                    <UserRoute path="/outlookcalendaroauthredirect" exact component={OutlookCalendarOauthRedirect} />
-                    <UserRoute path="/managesurvey" exact component={ManageSurvey} />
-                    <UserRoute path="/managesurveycategory" exact component={ManageSurveyCategory} />
-                    <UserRoute path="/createsurvey" exact component={CreateSurvey} />
-                    <UserRoute path="/buildautomation" exact component={BuildAutomation} />
-                    <UserRoute path="/manageautomation" exact component={ManageAutomation} />
-                    <Route path="/customform" exact component={DisplayForm} />
-                    <Route path="/survey" exact component={DisplaySurvey} />
-                    <UserRoute path="/surveyReport" exact component={SurveyReport} />
-                    <UserRoute path="/formreport" exact component={FormReport} />
-                    <UserRoute path="/addmysurveytemplates" exact component={AddMySurveyTemplates} />
-                    <UserRoute path="/manageassessmentcategory" exact component={ManageAssessmentCategory} />
-                    <UserRoute path="/addmyassessmenttemplates" exact component={AddMyAssessmentTemplates} />
-                    <UserRoute path="/manageassessment" exact component={ManageAssessment} />
-                    <UserRoute path="/assessmentReport" exact component={AssessmentReport} />
-                    <UserRoute path="/createassessment" exact component={CreateAssessment} />
-                    <UserRoute path="/mycalendarsettings" exact component={MyCalendarSettings} />
-                    <UserRoute path="/managesmsreport" exact component={ManageSmsReport} />
-                    <UserRoute path="/smsreport" exact component={SmsReport} />
-                    <UserRoute path="/smscampaignreportpdf" exact component={SmsCampaignReportPdf} />
-                    <UserRoute path="/managesocialmediareport" exact component={ManageSocialMediaReport} />
-                    <UserRoute path="/socialmediareport" exact component={SocialMediaReport} />
-                    <UserRoute path="/smspollingreport" exact component={SmsPollingReport} />
-                    <UserRoute path="/reportpdf" exact component={ReportPdf} />
-                    <UserRoute path="/reportcommentpdf" exact component={ReportCommentPdf} />
-                    <UserRoute path="/reporttextanswerpdf" exact component={ReportTextAnswerPdf} />
-                    <UserRoute path="/shopifyoauthredirect" exact component={ShopifyOauthRedirect} />
-                    <UserRoute path="/zoomoauthredirect" exact component={ZoomOauthRedirect} />
-                    <Route path="/assessment" exact component={DisplayAssessment} />
-                    <Route path="/appointment" exact component={Appointment} />
-                    <Route path="/linkclick" exact component={LinkClick} />
-                    <Route path="/optout" exact component={OptOut} />
-                    <Route path="/subscribelink" exact component={SubscribeLink} />
-                    <UserRoute path="/emailcampaignautomationreport" exact component={EmailCampaignAutomationReport} />
-                    <UserRoute path="/myanalytics" exact component={MyAnalytics} />
-                    <UserRoute path="/dashboardanalytics" exact component={MyAnalytics} />
-                    <UserRoute path="/usermonetisation" exact component={MyAnalytics} />
-                    <UserRoute path="/campaignmonetisation" exact component={MyAnalytics} />
-                    <UserRoute path="/affiliateprogram" exact component={AffiliateProgram} />
-                    <Route path="/temprecievecall" exact component={ReceiveCall} />
-                    <UserRoute path="/addclient" exact component={AddClient} />
-                    <UserRoute path="/addProject" exact component={AddProject} />
-                    <Route path="/**" component={PageNotFound} />
+                    <UserRoute path="/newcrm/mycrm" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/clientContact" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/mypipeline" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/mytasks" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/mycalendar" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/managesmsinbox" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/projects" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/crm" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/mail" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/inventory" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/invoice" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/myTasks" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/journal" exact component={Mycrm} />
+                    <UserRoute path="/newcrm/pipeline" exact component={Mycrm} />
+                    
+                    <UserRoute path="/newcrm/createimport" exact component={ImportClientContacts} />
+                    <UserRoute path="/newcrm/quickbookoauth2redirect" exact component={QuickBookOauth2redirect} />
+                    <UserRoute path="/newcrm/salesforceoauth2redirect" exact component={SalesForceOauth2redirect} />
+                    <UserRoute path="/newcrm/manageemailcampaign" exact component={ManageEmailCampaign} />
+                    <UserRoute path="/newcrm/managesmscampaign" exact component={ManageSmsCampaign} />
+                    <UserRoute path="/newcrm/buildsmscampaign" exact component={BuildSmsCampaign} />
+                    <UserRoute path="/newcrm/buildemailcampaign" exact component={BuildEmailCampaign} />
+                    <UserRoute path="/newcrm/managecampaignreport" exact component={ManageCampaignReport} />
+                    <UserRoute path="/newcrm/campaignreport" exact component={CampaignReport} />
+                    <UserRoute path="/newcrm/campaignreportpdf" exact component={CampaignReportPdf} />
+                    <UserRoute path="/newcrm/campaignreportabtesting" exact component={CampaignReport} />
+                    <UserRoute path="/newcrm/campaignreportpdfabtesting" exact component={CampaignReportPdfABTesting} />
+                    <UserRoute path="/newcrm/buildbuilditforme" exact component={BuildBuildItForMe} />
+                    <UserRoute path="/newcrm/googledriveoauthredirect" exact component={GoogleDriveOauthRedirect} />
+                    <UserRoute path="/newcrm/managesmspolling" exact component={ManageSmsPolling} />
+                    <UserRoute path="/newcrm/createsmspolling" exact component={CreateSmsPolling} />
+                    <UserRoute path="/newcrm/managesocialmedia" exact component={ManageSocialMedia} />
+                    <UserRoute path="/newcrm/createsocialmediapost" exact component={CreateNewPost} />
+                    <Route path="/newcrm/viewtemplate" exact component={ViewTemplate} />
+                    <Route path="/newcrm/viewinbrowser" exact component={ViewInBrowser} />
+                    <UserRoute path="/newcrm/dropboxoauthredirect" exact component={DropBoxOauthRedirect} />
+                    <UserRoute path="/newcrm/onedriveoauthredirect" exact component={OneDriveOauthRedirect} />
+                    <UserRoute path="/newcrm/facebookoauthredirect" exact component={FaceBookOauthRedirect} />
+                    <UserRoute path="/newcrm/twitteroauthredirect" exact component={TwitterOauthRedirect} />
+                    <UserRoute path="/newcrm/linkedinoauthredirect" exact component={LinkedInOauthRedirect} />
+                    <UserRoute path="/newcrm/googlecalendaroauthredirect" exact component={GoogleCalendarOauthRedirect} />
+                    <UserRoute path="/newcrm/outlookcalendaroauthredirect" exact component={OutlookCalendarOauthRedirect} />
+                    <UserRoute path="/newcrm/managesurvey" exact component={ManageSurvey} />
+                    <UserRoute path="/newcrm/managesurveycategory" exact component={ManageSurveyCategory} />
+                    <UserRoute path="/newcrm/createsurvey" exact component={CreateSurvey} />
+                    <UserRoute path="/newcrm/buildautomation" exact component={BuildAutomation} />
+                    <UserRoute path="/newcrm/manageautomation" exact component={ManageAutomation} />
+                    <Route path="/newcrm/customform" exact component={DisplayForm} />
+                    <Route path="/newcrm/survey" exact component={DisplaySurvey} />
+                    <UserRoute path="/newcrm/surveyReport" exact component={SurveyReport} />
+                    <UserRoute path="/newcrm/formreport" exact component={FormReport} />
+                    <UserRoute path="/newcrm/addmysurveytemplates" exact component={AddMySurveyTemplates} />
+                    <UserRoute path="/newcrm/manageassessmentcategory" exact component={ManageAssessmentCategory} />
+                    <UserRoute path="/newcrm/addmyassessmenttemplates" exact component={AddMyAssessmentTemplates} />
+                    <UserRoute path="/newcrm/manageassessment" exact component={ManageAssessment} />
+                    <UserRoute path="/newcrm/assessmentReport" exact component={AssessmentReport} />
+                    <UserRoute path="/newcrm/createassessment" exact component={CreateAssessment} />
+                    <UserRoute path="/newcrm/mycalendarsettings" exact component={MyCalendarSettings} />
+                    <UserRoute path="/newcrm/managesmsreport" exact component={ManageSmsReport} />
+                    <UserRoute path="/newcrm/smsreport" exact component={SmsReport} />
+                    <UserRoute path="/newcrm/smscampaignreportpdf" exact component={SmsCampaignReportPdf} />
+                    <UserRoute path="/newcrm/managesocialmediareport" exact component={ManageSocialMediaReport} />
+                    <UserRoute path="/newcrm/socialmediareport" exact component={SocialMediaReport} />
+                    <UserRoute path="/newcrm/smspollingreport" exact component={SmsPollingReport} />
+                    <UserRoute path="/newcrm/reportpdf" exact component={ReportPdf} />
+                    <UserRoute path="/newcrm/reportcommentpdf" exact component={ReportCommentPdf} />
+                    <UserRoute path="/newcrm/reporttextanswerpdf" exact component={ReportTextAnswerPdf} />
+                    <UserRoute path="/newcrm/shopifyoauthredirect" exact component={ShopifyOauthRedirect} />
+                    <UserRoute path="/newcrm/zoomoauthredirect" exact component={ZoomOauthRedirect} />
+                    <Route path="/newcrm/assessment" exact component={DisplayAssessment} />
+                    <Route path="/newcrm/appointment" exact component={Appointment} />
+                    <Route path="/newcrm/linkclick" exact component={LinkClick} />
+                    <Route path="/newcrm/optout" exact component={OptOut} />
+                    <Route path="/newcrm/subscribelink" exact component={SubscribeLink} />
+                    <UserRoute path="/newcrm/emailcampaignautomationreport" exact component={EmailCampaignAutomationReport} />
+                    <UserRoute path="/newcrm/myanalytics" exact component={MyAnalytics} />
+                    <UserRoute path="/newcrm/dashboardanalytics" exact component={MyAnalytics} />
+                    <UserRoute path="/newcrm/usermonetisation" exact component={MyAnalytics} />
+                    <UserRoute path="/newcrm/campaignmonetisation" exact component={MyAnalytics} />
+                    <UserRoute path="/newcrm/affiliateprogram" exact component={AffiliateProgram} />
+                    <Route path="/newcrm/temprecievecall" exact component={ReceiveCall} />
+                    <UserRoute path="/newcrm/addclient" exact component={AddClient} />
+                    <UserRoute path="/newcrm/addProject" exact component={AddProject} />
+                    <Route path="/newcrm/**" component={PageNotFound} />
                 </Switch>
             </Suspense>
             {(sessionStorage.getItem('isLoggedInUser') === "yes") && ((!noHeader.includes(props.location.pathname)) && (!noFooter.includes(props.location.pathname)) && props.location.pathname.split("/")[1] !== "appointment") &&

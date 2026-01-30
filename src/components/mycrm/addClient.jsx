@@ -630,7 +630,7 @@ const AddClient = () => {
                     <Row className='my-2'>
                         <Col>
                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 15 }}>
-                                <Link href="/clientContact" component="a">
+                                <Link href="/newcrm/clientContact" component="a">
                                     <Button type='button' variant="contained" color="primary"><i className="far fa-times mr-2"></i>CANCEL</Button>
                                 </Link>
                                 {

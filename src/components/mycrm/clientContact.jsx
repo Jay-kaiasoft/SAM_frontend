@@ -1493,7 +1493,7 @@ const ClientContact = (props) => {
                     <Col xs={12} lg={3}>
                         <div className="icon-wrapper">
                             <CheckPermissionButton module="group" action="add">
-                                <Link href="/addclient" component="a" className="btn-circle" data-toggle="tooltip" title="Add">
+                                <Link href="/newcrm/addclient" component="a" className="btn-circle" data-toggle="tooltip" title="Add">
                                     <i className="far fa-plus-square"></i>
                                     <div className="bg-green"></div>
                                 </Link>

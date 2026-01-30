@@ -29,53 +29,53 @@ const Mycrm = (props) => {
     const [arrowRef, setArrowRef] = useState(null);
     const tabList = [
         {
-            tabTo: "/clientContact",
+            tabTo: "/newcrm/clientContact",
             tabIcon: <i className="far fa-address-book" data-toggle="tooltip" title="Client Contact" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Client Contact"
         },
         {
-            tabTo: "/projects",
+            tabTo: "/newcrm/projects",
             tabIcon: <i className="far fa-layer-group" data-toggle="tooltip" title="Projects" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Projects"
         },
         {
-            tabTo: "/crm",
+            tabTo: "/newcrm/crm",
             tabIcon: <i className="far fa-address-book" data-toggle="tooltip" title="CRM" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "CRM"
         },
         {
-            tabTo: "/inventory",
+            tabTo: "/newcrm/inventory",
             tabIcon: <i className="fa-sharp far fa-box" data-toggle="tooltip" title="Inventory" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Inventory"
         },
         {
-            tabTo: "/mycalendar",
+            tabTo: "/newcrm/mycalendar",
             tabIcon: <i className="far fa-calendar-alt" data-toggle="tooltip" title="My Calendar" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "My Calendar"
         },
         {
-            tabTo: "/myTasks",
+            tabTo: "/newcrm/myTasks",
             tabIcon: <i className="fa-sharp far fa-calendar-check" data-toggle="tooltip" title="My Tasks" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "My Tasks"
         },
         {
-            tabTo: "/mail",
+            tabTo: "/newcrm/mail",
             tabIcon: <i className="far fa-envelope" data-toggle="tooltip" title="Mail" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Mail"
         },
         {
-            tabTo: "/journal",
+            tabTo: "/newcrm/journal",
             tabIcon: <i className="far fa-list-ul" data-toggle="tooltip" title="Journal" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Journal"
         },
 
         {
-            tabTo: "/invoice",
+            tabTo: "/newcrm/invoice",
             tabIcon: <i className="far fa-file-invoice-dollar" data-toggle="tooltip" title="Invoice" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Invoice"
         },
         {
-            tabTo: "/pipeline",
+            tabTo: "/newcrm/pipeline",
             tabIcon: <i className="far fa-stream" data-toggle="tooltip" title="Pipeline" style={{ width: 22, textAlign: "center" }}></i>,
             tabTitle: "Pipeline"
         },
@@ -115,40 +115,40 @@ const Mycrm = (props) => {
                 default:
                     setValue(0);
                     break;
-                case "/clientContact":
+                case "/newcrm/clientContact":
                     setValue(0);
                     break;
-                case "/projects":
+                case "/newcrm/projects":
                     setValue(1);
                     break;
-                case "/crm":
+                case "/newcrm/crm":
                     setValue(2);
                     break;
-                case "/inventory":
+                case "/newcrm/inventory":
                     setValue(3);
                     break;
-                case "/mycalendar":
+                case "/newcrm/mycalendar":
                     setValue(4);
                     break;
-                case "/myTasks":
+                case "/newcrm/myTasks":
                     setValue(5);
                     break;
-                case "/mail":
+                case "/newcrm/mail":
                     setValue(6);
                     break;
-                case "/journal":
+                case "/newcrm/journal":
                     setValue(7);
                     break;
-                case "/invoice":
+                case "/newcrm/invoice":
                     setValue(8);
                     break;
-                case "/pipeline":
+                case "/newcrm/pipeline":
                     setValue(9);
                     break;
             }
         } else {
             noPermission();
-            History.push(`/dashboard`);
+            History.push(`/newcrm/dashboard`);
         }
     }, [props.history.location.pathname]);
     useEffect(() => {

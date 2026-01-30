@@ -180,10 +180,10 @@ const Header = props => {
                         ) : (
                             <>
                                 <Box>
-                                    <Button onClick={() => { return history.push("/dashboard") }}>Dashboard</Button>
+                                    <Button onClick={() => { return history.push("/newcrm//dashboard") }}>Dashboard</Button>
                                     <Button aria-controls="start-mycrm" aria-haspopup="true" onClick={handleMyCrm}>My CRM</Button>
                                     <Menu id="start-mycrm" anchorEl={anchorE3} keepMounted open={Boolean(anchorE3)} onClose={() => { closeMyCrm("") }}>
-                                        <MenuItem onClick={() => { return user.planModuleList.includes("Client Contact") ? (props.menuLists.includes("my crm") || subUser.memberId === 0) ? closeMyCrm("clientContact") : noPermission() : noPermission2() }}>Client Contact</MenuItem>
+                                        <MenuItem onClick={() => { return user.planModuleList.includes("Client Contact") ? (props.menuLists.includes("my crm") || subUser.memberId === 0) ? closeMyCrm("/newcrm/clientContact") : noPermission() : noPermission2() }}>Client Contact</MenuItem>
                                         <MenuItem onClick={() => { return user.planModuleList.includes("My Calendar") ? (props.menuLists.includes("my crm") || subUser.memberId === 0) ? closeMyCrm("mycalendar") : noPermission() : noPermission2() }}>My Calendar</MenuItem>
                                         {/*<MenuItem onClick={()=>{ return props.menuLists.includes("my crm") || subUser.memberId === 0 ? closeMyCrm("mypipeline") : noPermission()}}>My Pipeline</MenuItem>*/}
                                         {/*<MenuItem onClick={()=>{ return props.menuLists.includes("my crm") || subUser.memberId === 0 ? closeMyCrm("mytasks") : noPermission()}}>My Tasks</MenuItem>*/}

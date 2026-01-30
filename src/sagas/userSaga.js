@@ -38,7 +38,7 @@ function* login({creds}) {
             if(localStorage.getItem("t") === "z") {
                 History.push("/managesupportticket");
             } else {
-                History.push("/dashboard");
+                History.push("/newcrm/dashboard");
             }
             let tz = (typeof user.timeZone === "undefined" || user.timeZone === "" || user.timeZone === null) ? getClientTimeZone() : user.timeZone;
             yield call(getSync, tz);
@@ -116,7 +116,7 @@ function* verifiedOtp({data}) {
             yield put(setMenuListAction(user.result.menuList));
             yield put(setModuleListAction(user.result.moduleList));
             yield put(setCountrySettingAction(user.result.countrySetting));
-            History.push("/dashboard");
+            History.push("/newcrm/dashboard");
             let tz = (typeof user.timeZone === "undefined" || user.timeZone === "" || user.timeZone === null) ? getClientTimeZone() : user.timeZone;
             yield call(getSync, tz);
             let time = new Date(new Date().getTime() + (60 * 60 * 24 * 1000 * 1));
@@ -233,7 +233,7 @@ function* getProcessActivation({id, d}) {
         const user = yield call(Userservice.getprocessActivation, id, d);
         if (user.status === 200) {
             if (user.result.callingPage === "login") {
-                History.push("/login");
+                History.push("/newcrm/login");
                 yield put(
                     globalAlert.setGlobalAlertAction({
                         type: "Success",
@@ -273,7 +273,7 @@ function* forgotPassword({data}) {
         const user = yield call(Userservice.forgotPassword, data)
         if (user.status === 200) {
             yield put(actions.forgotPasswordData(user.result.member));
-            History.push("/forgotpasswordstep2");
+            History.push("/newcrm/forgotpasswordstep2");
         } else {
             yield put(
                 globalAlert.setGlobalAlertAction({
@@ -306,7 +306,7 @@ function* forgotPasswordStep2({data}) {
                 })
             );
             yield put(actions.forgotPasswordData(null));
-            History.push("/forgotpassword");
+            History.push("/newcrm/forgotpassword");
         } else {
             yield put(
                 globalAlert.setGlobalAlertAction({
@@ -316,7 +316,7 @@ function* forgotPasswordStep2({data}) {
                 })
             );
             yield put(actions.forgotPasswordData(null));
-            History.push("/forgotpassword");
+            History.push("/newcrm/forgotpassword");
         }
     } catch (e) {
         yield put(
@@ -327,7 +327,7 @@ function* forgotPasswordStep2({data}) {
             })
         );
         yield put(actions.forgotPasswordData(null));
-        History.push("/forgotpassword");
+        History.push("/newcrm/forgotpassword");
     }
 }
 function* resetPassword({data}) {
@@ -341,7 +341,7 @@ function* resetPassword({data}) {
                     open: true,
                 })
             );
-            History.push("/login");
+            History.push("/newcrm/login");
         } else {
             yield put(
                 globalAlert.setGlobalAlertAction({
@@ -476,7 +476,7 @@ function* setCompleteActivation({data}) {
             yield put(setMenuListAction(user.result.menuList));
             yield put(setModuleListAction(user.result.moduleList));
             yield put(setCountrySettingAction(user.result.countrySetting));
-            History.push("/clientContact");
+            History.push("/newcrm/clientContact");
         } else {
             yield put(
                 globalAlert.setGlobalAlertAction({
@@ -501,7 +501,7 @@ function* saveSubUsers({data}) {
     try {
         const user = yield call(Userservice.saveSubUsers, data);
         if (user.status === 200) {
-            History.push("/manageusers");
+            History.push("/newcrm/manageusers");
             yield put(
                 globalAlert.setGlobalAlertAction({
                     type: "Success",

@@ -535,7 +535,7 @@ const AddProject = () => {
           <Row className="my-2">
             <Col>
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 15 }}>
-                <Link href="/projects" component="a">
+                <Link href="/newcrm/projects" component="a">
                   <Button type='button' variant="contained" color="primary"><i className="far fa-times mr-2"></i>CANCEL</Button>
                 </Link>
                 {
